@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: homework-service
+spec:
+  selector:
+    app: homeworkapp
+  ports:
+  - port: 15000
+    targetPort: 80

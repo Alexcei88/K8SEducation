@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: homework
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: homeworkapp
+  template:
+    metadata:
+      labels:
+        app: homeworkapp
+    spec:
+      containers:
+      - name: homeworkapp
+        image: alexcei88/otushomeworkrestapi
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"          
+        ports:
+        - containerPort: 80
+        readinessProbe:
+          httpGet:
+            port: 80
+            path: /health
+          initialDelaySeconds: 1
+          periodSeconds: 5
+          timeoutSeconds: 2
+            
