@@ -7,4 +7,4 @@ spec:
     app: homeworkapp
   ports:
   - port: 15000
-    targetPort: 80
+    targetPort: 80  
