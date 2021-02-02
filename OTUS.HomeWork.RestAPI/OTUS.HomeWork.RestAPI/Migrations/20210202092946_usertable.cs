@@ -25,6 +25,11 @@ namespace OTUS.HomeWork.RestAPI.Migrations
                 {
                     table.PrimaryKey("pk_users", x => x.id);
                 });
+
+            migrationBuilder.InsertData(
+                table: "users",
+                columns: new[] { "id", "email", "first_name", "last_name", "phone", "user_name" },
+                values: new object[] { new Guid("323baa9f-94c8-4b9f-a1a8-4524553cf81a"), "kuber@otus.ru", "OTUS", "Kubernetovich", "+9876543210", "User1" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

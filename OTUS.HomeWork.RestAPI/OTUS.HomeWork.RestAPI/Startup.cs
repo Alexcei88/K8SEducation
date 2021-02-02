@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using OTUS.HomeWork.RestAPI.DAL;
 
@@ -43,11 +44,12 @@ namespace OTUS.HomeWork.RestAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IMapper mapper)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IMapper mapper, ILoggerFactory factory)
         {
             mapper.ConfigurationProvider.AssertConfigurationIsValid();
             mapper.ConfigurationProvider.CompileMappings();
 
+            factory.CreateLogger("Startup").LogWarning($"ConnectionString: {Configuration.GetConnectionString("DefaultConnection")}");
             AutomaticallyApplyDBMigrations(app);
 
             if (env.IsDevelopment())
@@ -57,7 +59,7 @@ namespace OTUS.HomeWork.RestAPI
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "OTUS.HomeWork.RestAPI v1"));
             }
 
-            app.UseHealthChecks("api/service/health", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions()
+            app.UseHealthChecks("/api/service/health", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions()
             {
                 AllowCachingResponses = true,
                 ResponseWriter = async (c, r) =>

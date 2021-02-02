@@ -1,0 +1,147 @@
+{
+	"info": {
+		"_postman_id": "ef4aeb79-231e-45ff-b389-481b07436cab",
+		"name": "OTUS HomeWork",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "getUser",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://arch.homework:5000/api/user/8ee72d98-066b-4b76-a956-eabd6ff04e26",
+					"protocol": "http",
+					"host": [
+						"arch",
+						"homework"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"user",
+						"8ee72d98-066b-4b76-a956-eabd6ff04e26"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createUser",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"userName\": \"User4\",\r\n  \"firstName\": \"OTUS\",\r\n  \"lastName\": \"Kubernetovich\",\r\n  \"email\": \"otus@otus.ru\",\r\n  \"phone\": \"+9123456789\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://arch.homework:5000/api/user",
+					"protocol": "http",
+					"host": [
+						"arch",
+						"homework"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateUser",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"userId\": \"8ee72d98-066b-4b76-a956-eabd6ff04e27\",\r\n  \"userName\": \"User2\",\r\n  \"firstName\": \"OTUS\",\r\n  \"lastName\": \"Kubernetovich\",\r\n  \"email\": \"otus@otus.ru\",\r\n  \"phone\": \"+9123456789\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://arch.homework:5000/api/user/8ee72d98-066b-4b76-a956-eabd6ff04e27",
+					"protocol": "http",
+					"host": [
+						"arch",
+						"homework"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"user",
+						"8ee72d98-066b-4b76-a956-eabd6ff04e27"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteUser",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://arch.homework:5000/api/user/8ee72d98-066b-4b76-a956-eabd6ff04e26",
+					"protocol": "http",
+					"host": [
+						"arch",
+						"homework"
+					],
+					"port": "5000",
+					"path": [
+						"api",
+						"user",
+						"8ee72d98-066b-4b76-a956-eabd6ff04e26"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "health",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"host": true
+				}
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "host",
+						"value": "arch.homework",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://arch.homework:80/api/service/health",
+					"protocol": "http",
+					"host": [
+						"arch",
+						"homework"
+					],
+					"port": "80",
+					"path": [
+						"api",
+						"service",
+						"health"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

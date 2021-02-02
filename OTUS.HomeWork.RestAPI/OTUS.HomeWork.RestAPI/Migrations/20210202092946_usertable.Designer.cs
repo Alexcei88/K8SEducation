@@ -10,7 +10,7 @@ using OTUS.HomeWork.RestAPI.DAL;
 namespace OTUS.HomeWork.RestAPI.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20210201121453_usertable")]
+    [Migration("20210202092946_usertable")]
     partial class usertable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,6 +54,17 @@ namespace OTUS.HomeWork.RestAPI.Migrations
                         .HasName("pk_users");
 
                     b.ToTable("users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("323baa9f-94c8-4b9f-a1a8-4524553cf81a"),
+                            Email = "kuber@otus.ru",
+                            FirstName = "OTUS",
+                            LastName = "Kubernetovich",
+                            Phone = "+9876543210",
+                            UserName = "User1"
+                        });
                 });
 #pragma warning restore 612, 618
         }

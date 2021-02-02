@@ -1,0 +1,17 @@
+postgresqlUsername: postgres
+postgresqlPassword: tc_123456
+postgresqlDatabase: otushomework
+fullnameOverride: postgres
+
+service:
+    type: NodePort
+    port: 5432
+
+persistence:
+    enabled: true
+    size: 1Gi
+
+resources:
+    requests:
+        memory: 512Mi
+        cpu: 500m

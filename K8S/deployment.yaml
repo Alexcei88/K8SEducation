@@ -20,12 +20,31 @@ spec:
             memory: "128Mi"
             cpu: "500m"          
         ports:
-        - containerPort: 80
-        readinessProbe:
+          - containerPort: 80
+        env:
+          - name: "ConnectionStrings__DefaultConnection"
+            valueFrom:
+              secretKeyRef:
+                name: homework-secret
+                key: DATABASE_URI
+        volumeMounts:
+          - name: config-volume
+            mountPath: /app/config          
+        livenessProbe:
           httpGet:
             port: 80
             path: /health
           initialDelaySeconds: 1
           periodSeconds: 5
+          timeoutSeconds: 1
+        readinessProbe:
+          httpGet:
+            port: 80
+            path: /api/service/health
+          initialDelaySeconds: 1
+          periodSeconds: 5
           timeoutSeconds: 2
-            
+      volumes:
+      - name: config-volume
+        configMap:
+          name: homework-config
