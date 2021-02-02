@@ -11,17 +11,19 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://arch.homework:5000/api/user/8ee72d98-066b-4b76-a956-eabd6ff04e26",
+					"raw": "http://arch.homework:80/otus/shmakov.a/api/user/afd3097f-a376-47a6-94da-2e72c68694bd",
 					"protocol": "http",
 					"host": [
 						"arch",
 						"homework"
 					],
-					"port": "5000",
+					"port": "80",
 					"path": [
+						"otus",
+						"shmakov.a",
 						"api",
 						"user",
-						"8ee72d98-066b-4b76-a956-eabd6ff04e26"
+						"afd3097f-a376-47a6-94da-2e72c68694bd"
 					]
 				}
 			},
@@ -42,14 +44,16 @@
 					}
 				},
 				"url": {
-					"raw": "http://arch.homework:5000/api/user",
+					"raw": "http://arch.homework:80/otus/shmakov.a/api/user",
 					"protocol": "http",
 					"host": [
 						"arch",
 						"homework"
 					],
-					"port": "5000",
+					"port": "80",
 					"path": [
+						"otus",
+						"shmakov.a",
 						"api",
 						"user"
 					]
@@ -64,7 +68,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"userId\": \"8ee72d98-066b-4b76-a956-eabd6ff04e27\",\r\n  \"userName\": \"User2\",\r\n  \"firstName\": \"OTUS\",\r\n  \"lastName\": \"Kubernetovich\",\r\n  \"email\": \"otus@otus.ru\",\r\n  \"phone\": \"+9123456789\"\r\n}",
+					"raw": "{\r\n  \"userId\": \"9d6b0ba4-f976-4ab9-91eb-08a21c5f1b7a\",\r\n  \"userName\": \"User2\",\r\n  \"firstName\": \"OTUSNew\",\r\n  \"lastName\": \"Kubernetovich\",\r\n  \"email\": \"otus@otus.ru\",\r\n  \"phone\": \"+9123456789\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -72,17 +76,19 @@
 					}
 				},
 				"url": {
-					"raw": "http://arch.homework:5000/api/user/8ee72d98-066b-4b76-a956-eabd6ff04e27",
+					"raw": "http://arch.homework:80/otus/shmakov.a/api/user/9d6b0ba4-f976-4ab9-91eb-08a21c5f1b7a",
 					"protocol": "http",
 					"host": [
 						"arch",
 						"homework"
 					],
-					"port": "5000",
+					"port": "80",
 					"path": [
+						"otus",
+						"shmakov.a",
 						"api",
 						"user",
-						"8ee72d98-066b-4b76-a956-eabd6ff04e27"
+						"9d6b0ba4-f976-4ab9-91eb-08a21c5f1b7a"
 					]
 				}
 			},
@@ -94,17 +100,19 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://arch.homework:5000/api/user/8ee72d98-066b-4b76-a956-eabd6ff04e26",
+					"raw": "http://arch.homework:80/otus/shmakov.a/api/user/9d6b0ba4-f976-4ab9-91eb-08a21c5f1b7a",
 					"protocol": "http",
 					"host": [
 						"arch",
 						"homework"
 					],
-					"port": "5000",
+					"port": "80",
 					"path": [
+						"otus",
+						"shmakov.a",
 						"api",
 						"user",
-						"8ee72d98-066b-4b76-a956-eabd6ff04e26"
+						"9d6b0ba4-f976-4ab9-91eb-08a21c5f1b7a"
 					]
 				}
 			},
@@ -127,7 +135,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://arch.homework:80/api/service/health",
+					"raw": "http://arch.homework:80/otus/shmakov.a/api/service/health",
 					"protocol": "http",
 					"host": [
 						"arch",
@@ -135,6 +143,8 @@
 					],
 					"port": "80",
 					"path": [
+						"otus",
+						"shmakov.a",
 						"api",
 						"service",
 						"health"
