@@ -4,9 +4,9 @@ import "./libs/shim/core.js";
 
 export let options = {
   stages: [
-    { duration: '4m', target: 25 },
-    { duration: '2m', target: 35 },
-    { duration: '3m', target: 55 },
+    { duration: '4m', target: 30 },
+    { duration: '4m', target: 45 },
+    { duration: '4m', target: 60 },
   ],
   userAgent: 'MyK6UserAgentString/1.0',
 };
