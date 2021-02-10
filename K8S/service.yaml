@@ -2,9 +2,13 @@ apiVersion: v1
 kind: Service
 metadata:
   name: homework-service
+  labels:
+    app: homeworkapp
 spec:
   selector:
     app: homeworkapp
   ports:
   - port: 15000
     targetPort: 80  
+    name: "homework-service" 
+    

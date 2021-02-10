@@ -9,6 +9,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using OTUS.HomeWork.RestAPI.DAL;
+using OTUS.HomeWork.RestAPI.Middlewares;
+using OTUS.HomeWork.RestAPI.Monitoring;
+using Prometheus;
 
 namespace OTUS.HomeWork.RestAPI
 {
@@ -34,7 +37,10 @@ namespace OTUS.HomeWork.RestAPI
                     cfg.AddProfile(new AutoMapperProfile());
                 }).CreateMapper();
             });
+            
             services.AddScoped<UserRepository>();
+            services.AddSingleton<MetricReporter>();
+            
             services.AddControllers();
             services.AddHealthChecks();
             services.AddSwaggerGen(c =>
@@ -69,6 +75,10 @@ namespace OTUS.HomeWork.RestAPI
                 }
             });
 
+            app.UseMetricServer();
+            
+            app.UseMiddleware<ResponseTimeMiddleware>();
+            
             app.UseRouting();
             app.UseAuthorization();
 

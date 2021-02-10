@@ -15,6 +15,7 @@ namespace OTUS.HomeWork.RestAPI.Controllers
     {
         private readonly UserRepository _userRepository;
         private readonly IMapper _mapper;
+        private readonly Random _random = new Random();
 
         public UserController(UserRepository userRepository, IMapper mapper)		
         {
@@ -25,6 +26,8 @@ namespace OTUS.HomeWork.RestAPI.Controllers
         [HttpGet("{userId}")]
         public async Task<ActionResult<UserDTO>> Get(Guid userId)
         {
+            if(_random.Next() % 4 == 0)
+                return StatusCode(500);
             var user = await _userRepository.GetUserAsync(userId);
             if (user != null)
                 return Ok(_mapper.Map<UserDTO>(user));
