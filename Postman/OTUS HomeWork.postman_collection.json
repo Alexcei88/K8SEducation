@@ -1,17 +1,28 @@
 {
 	"info": {
-		"_postman_id": "ef4aeb79-231e-45ff-b389-481b07436cab",
+		"_postman_id": "93bca66d-179e-4dd7-a1a4-3fb202af0682",
 		"name": "OTUS HomeWork",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
 			"name": "getUser",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"host": true
+				}
+			},
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "host",
+						"value": "arch.homework",
+						"type": "text"
+					}
+				],
 				"url": {
-					"raw": "http://arch.homework:80/otus/shmakov.a/api/user/afd3097f-a376-47a6-94da-2e72c68694bd",
+					"raw": "http://arch.homework:80/otus/shmakov.a/api/user/8814f6ae-f7b5-4751-8c26-d202f6abfc90",
 					"protocol": "http",
 					"host": [
 						"arch",
@@ -23,7 +34,7 @@
 						"shmakov.a",
 						"api",
 						"user",
-						"afd3097f-a376-47a6-94da-2e72c68694bd"
+						"8814f6ae-f7b5-4751-8c26-d202f6abfc90"
 					]
 				}
 			},
@@ -31,9 +42,20 @@
 		},
 		{
 			"name": "createUser",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"host": true
+				}
+			},
 			"request": {
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "host",
+						"value": "arch.homework",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
 					"raw": "{\r\n  \"userName\": \"User4\",\r\n  \"firstName\": \"OTUS\",\r\n  \"lastName\": \"Kubernetovich\",\r\n  \"email\": \"otus@otus.ru\",\r\n  \"phone\": \"+9123456789\"\r\n}",
@@ -63,9 +85,20 @@
 		},
 		{
 			"name": "updateUser",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"host": true
+				}
+			},
 			"request": {
 				"method": "PUT",
-				"header": [],
+				"header": [
+					{
+						"key": "host",
+						"value": "arch.homework",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
 					"raw": "{\r\n  \"userId\": \"9d6b0ba4-f976-4ab9-91eb-08a21c5f1b7a\",\r\n  \"userName\": \"User2\",\r\n  \"firstName\": \"OTUSNew\",\r\n  \"lastName\": \"Kubernetovich\",\r\n  \"email\": \"otus@otus.ru\",\r\n  \"phone\": \"+9123456789\"\r\n}",
@@ -98,7 +131,13 @@
 			"name": "deleteUser",
 			"request": {
 				"method": "DELETE",
-				"header": [],
+				"header": [
+					{
+						"key": "host",
+						"value": "arch.homework",
+						"type": "text"
+					}
+				],
 				"url": {
 					"raw": "http://arch.homework:80/otus/shmakov.a/api/user/9d6b0ba4-f976-4ab9-91eb-08a21c5f1b7a",
 					"protocol": "http",
@@ -148,6 +187,39 @@
 						"api",
 						"service",
 						"health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "metrics",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"host": true
+				}
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "host",
+						"value": "arch.homework",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://arch.homework:80/otus/shmakov.a/metrics",
+					"protocol": "http",
+					"host": [
+						"arch",
+						"homework"
+					],
+					"port": "80",
+					"path": [
+						"otus",
+						"shmakov.a",
+						"metrics"
 					]
 				}
 			},

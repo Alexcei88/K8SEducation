@@ -1,45 +1,37 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using OTUS.HomeWork.RestAPI.DAL;
 using OTUS.HomeWork.RestAPI.Domain;
 using System;
 using System.Threading.Tasks;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using OTUS.HomeWork.UserService;
+using OTUS.HomeWork.UserService.Domain;
 
 namespace OTUS.HomeWork.RestAPI.Controllers
 {
+    [Authorize(Policy = "OnlyOwner")]
     [Route("api/user")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UserController 
+        : ControllerBase
     {
-        private readonly UserRepository _userRepository;
+        private readonly IUserService _userService;
         private readonly IMapper _mapper;
-        private readonly Random _random = new Random();
 
-        public UserController(UserRepository userRepository, IMapper mapper)		
+        public UserController(IUserService userService, IMapper mapper)		
         {
-            _userRepository = userRepository;
+            _userService = userService;
             _mapper = mapper;
         }
        
         [HttpGet("{userId}")]
         public async Task<ActionResult<UserDTO>> Get(Guid userId)
         {
-            if(_random.Next() % 4 == 0)
-                return StatusCode(500);
-            var user = await _userRepository.GetUserAsync(userId);
+            var user = await _userService.GetUserAsync(userId);
             if (user != null)
                 return Ok(_mapper.Map<UserDTO>(user));
             else
                 return NotFound();
-        }
-
-        [HttpPost]
-        public async Task<ActionResult<UserDTO>> Post([FromBody]UserDTO user)
-        {
-            var newUser = await _userRepository.CreateUserAsync(_mapper.Map<User>(user));
-            return _mapper.Map<UserDTO>(newUser); 
         }
 
         [HttpPut("{userId}")]
@@ -49,7 +41,7 @@ namespace OTUS.HomeWork.RestAPI.Controllers
             {
                 return BadRequest();
             }
-            var updatedUser = await _userRepository.UpdateUserAsync(userId, _mapper.Map<User>(user));
+            var updatedUser = await _userService.UpdateUserAsync(userId, _mapper.Map<User>(user));
             if (updatedUser == null)
                 return NotFound();
             return _mapper.Map<UserDTO>(updatedUser);
@@ -58,7 +50,7 @@ namespace OTUS.HomeWork.RestAPI.Controllers
         [HttpDelete("{userId}")]
         public async Task<ActionResult> Delete(Guid userId)
         {
-            int count = await _userRepository.DeleteUserAsync(userId);
+            int count = await _userService.DeleteUserAsync(userId);
             if (count <= 0)
                 return NotFound();
 

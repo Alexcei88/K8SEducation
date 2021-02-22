@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace OTUS.HomeWork.RestAPI.Controllers
 {
-    [Route("api/service")]
+	[AllowAnonymous]
+	[Route("api/service")]
     [ApiController]
     public class ServiceController : ControllerBase
     {

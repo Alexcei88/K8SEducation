@@ -1,16 +1,23 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using OTUS.HomeWork.RestAPI.DAL;
+using OTUS.HomeWork.RestAPI.Authentification;
+using OTUS.HomeWork.RestAPI.Authentification.Handlers;
+using OTUS.HomeWork.RestAPI.Authentification.Requirements;
 using OTUS.HomeWork.RestAPI.Middlewares;
 using OTUS.HomeWork.RestAPI.Monitoring;
+using OTUS.HomeWork.UserService;
+using OTUS.HomeWork.UserService.DAL;
+using OTUS.HomeWork.UserService.Domain;
 using Prometheus;
 
 namespace OTUS.HomeWork.RestAPI
@@ -37,10 +44,27 @@ namespace OTUS.HomeWork.RestAPI
                     cfg.AddProfile(new AutoMapperProfile());
                 }).CreateMapper();
             });
-            
+
+            services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+            services.AddScoped<IUserService, UserService.UserService>();
             services.AddScoped<UserRepository>();
             services.AddSingleton<MetricReporter>();
-            
+
+            services.AddAuthentication(g =>
+            {
+                g.DefaultAuthenticateScheme = SimpleCustomAuthenticationHandler.AuthentificationScheme;
+                g.DefaultChallengeScheme = SimpleCustomAuthenticationHandler.AuthentificationScheme;
+                g.DefaultForbidScheme = SimpleCustomAuthenticationHandler.AuthentificationScheme;
+            }).AddScheme<RestAPIAuthOption, SimpleCustomAuthenticationHandler>(SimpleCustomAuthenticationHandler.AuthentificationScheme, o => { });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("OnlyOwner", policy =>
+                policy.Requirements.Add(new OwnerPermission()));
+            });
+
+            services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
+
             services.AddControllers();
             services.AddHealthChecks();
             services.AddSwaggerGen(c =>
@@ -80,6 +104,8 @@ namespace OTUS.HomeWork.RestAPI
             app.UseMiddleware<ResponseTimeMiddleware>();
             
             app.UseRouting();
+
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -93,7 +119,7 @@ namespace OTUS.HomeWork.RestAPI
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 var context = serviceScope.ServiceProvider.GetService<UserContext>();
-                context.Database.Migrate();
+                context?.Database.Migrate();
             }
         }
     }

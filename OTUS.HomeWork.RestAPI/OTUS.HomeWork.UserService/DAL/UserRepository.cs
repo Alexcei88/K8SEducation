@@ -1,11 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OTUS.HomeWork.RestAPI.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using OTUS.HomeWork.UserService.Domain;
 
-namespace OTUS.HomeWork.RestAPI.DAL
+namespace OTUS.HomeWork.UserService.DAL
 {
     public class UserRepository
     {

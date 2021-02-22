@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace OTUS.HomeWork.RestAPI.Domain
+namespace OTUS.HomeWork.UserService.Domain
 {
     public class User
     {
@@ -19,5 +19,7 @@ namespace OTUS.HomeWork.RestAPI.Domain
         public string Email { get; set; }
 
         public string Phone { get; set; }
+
+        public string Password { get; set; }
     }
 }

@@ -1,8 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OTUS.HomeWork.RestAPI.Domain;
-using System;
+using OTUS.HomeWork.UserService.Domain;
 
-namespace OTUS.HomeWork.RestAPI.DAL
+namespace OTUS.HomeWork.UserService.DAL
 {
     public class UserContext
         : DbContext
@@ -19,16 +18,6 @@ namespace OTUS.HomeWork.RestAPI.DAL
                            .Entity<User>()
                            .Property(e => e.Id)
                            .HasDefaultValueSql("uuid_generate_v4()");
-
-            modelBuilder.Entity<User>().HasData(new
-            {
-                Id = Guid.NewGuid(),
-                UserName = "User1",
-                FirstName = "OTUS",
-                LastName = "Kubernetovich",
-                Email = "kuber@otus.ru",
-                Phone = "+9876543210"
-            });
         }
     }
 }

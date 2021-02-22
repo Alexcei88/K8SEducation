@@ -3,7 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OTUS.HomeWork.RestAPI", "OTUS.HomeWork.RestAPI\OTUS.HomeWork.RestAPI.csproj", "{A8BEA2B2-016D-4176-90C8-4477C724CD7D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OTUS.HomeWork.RestAPI", "OTUS.HomeWork.RestAPI\OTUS.HomeWork.RestAPI.csproj", "{A8BEA2B2-016D-4176-90C8-4477C724CD7D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OTUS.HomeWork.AuthService", "OTUS.HomeWork.AuthService\OTUS.HomeWork.AuthService.csproj", "{3AABF0E0-03D1-47BB-89D7-8A89D35ED684}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OTUS.HomeWork.UserService", "OTUS.HomeWork.UserService\OTUS.HomeWork.UserService.csproj", "{A648DC12-7D01-4011-8DD6-025EDC949B73}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OTUS.HomeWork.Common", "OTUS.HomeWork.Common\OTUS.HomeWork.Common.csproj", "{571FC97F-A8BA-456A-AFEA-5569A759CB01}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +21,18 @@ Global
 		{A8BEA2B2-016D-4176-90C8-4477C724CD7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8BEA2B2-016D-4176-90C8-4477C724CD7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8BEA2B2-016D-4176-90C8-4477C724CD7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3AABF0E0-03D1-47BB-89D7-8A89D35ED684}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AABF0E0-03D1-47BB-89D7-8A89D35ED684}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AABF0E0-03D1-47BB-89D7-8A89D35ED684}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AABF0E0-03D1-47BB-89D7-8A89D35ED684}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A648DC12-7D01-4011-8DD6-025EDC949B73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A648DC12-7D01-4011-8DD6-025EDC949B73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A648DC12-7D01-4011-8DD6-025EDC949B73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A648DC12-7D01-4011-8DD6-025EDC949B73}.Release|Any CPU.Build.0 = Release|Any CPU
+		{571FC97F-A8BA-456A-AFEA-5569A759CB01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{571FC97F-A8BA-456A-AFEA-5569A759CB01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{571FC97F-A8BA-456A-AFEA-5569A759CB01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{571FC97F-A8BA-456A-AFEA-5569A759CB01}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

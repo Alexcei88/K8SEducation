@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace OTUS.HomeWork.RestAPI.Migrations
+namespace OTUS.HomeWork.UserService.Migrations
 {
     public partial class usertable : Migration
     {
