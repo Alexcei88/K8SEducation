@@ -6,6 +6,7 @@ using System;
 using System.Threading.Tasks;
 using OTUS.HomeWork.UserService;
 using OTUS.HomeWork.UserService.Domain;
+using Microsoft.Extensions.Logging;
 
 namespace OTUS.HomeWork.RestAPI.Controllers
 {
@@ -17,11 +18,12 @@ namespace OTUS.HomeWork.RestAPI.Controllers
     {
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
-
-        public UserController(IUserService userService, IMapper mapper)		
+        private readonly ILogger<UserController> _logger;
+        public UserController(IUserService userService, IMapper mapper, ILogger<UserController> logger)		
         {
             _userService = userService;
             _mapper = mapper;
+            _logger = logger;
         }
        
         [HttpGet("{userId}")]

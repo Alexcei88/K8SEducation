@@ -20,7 +20,7 @@ namespace OTUS.HomeWork.Common
 
         public static AuthToken Decode(this AuthToken token, string input)
         {
-            token = JsonSerializer.Deserialize<AuthToken>(Convert.FromBase64String(input));
+            token = JsonSerializer.Deserialize<AuthToken>(Encoding.UTF8.GetString(Convert.FromBase64String(input)));
             return token;
         }
     }

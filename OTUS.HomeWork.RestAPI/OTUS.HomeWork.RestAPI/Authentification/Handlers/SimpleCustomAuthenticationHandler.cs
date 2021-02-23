@@ -37,7 +37,7 @@ namespace OTUS.HomeWork.RestAPI.Authentification.Handlers
             var endpoint = Context.GetEndpoint();
             if (endpoint?.Metadata?.GetMetadata<IAllowAnonymous>() != null)
                 return AuthenticateResult.NoResult();
-
+ 
             if (!Request.Headers.ContainsKey(Constants.X_AUTH_HEADER))
                 return AuthenticateResult.Fail("Missing Authorization Header");
 
@@ -46,7 +46,7 @@ namespace OTUS.HomeWork.RestAPI.Authentification.Handlers
             try
             {
                 var authHeader = Request.Headers[Constants.X_AUTH_HEADER].ToString();
-                token.Decode(authHeader);
+                token = token.Decode(authHeader);
                 user = await _userService.GetUserAsync(token.UserId);
             }
             catch
@@ -54,7 +54,7 @@ namespace OTUS.HomeWork.RestAPI.Authentification.Handlers
                 return AuthenticateResult.Fail("Invalid Authorization Header");
             }
 
-            if (user == null || token.ExpiredUTCDateTime > DateTime.UtcNow)
+            if (user == null || token.ExpiredUTCDateTime < DateTime.UtcNow)
                 return AuthenticateResult.Fail("Invalid Authorization Header");
 
             var claims = new[] 

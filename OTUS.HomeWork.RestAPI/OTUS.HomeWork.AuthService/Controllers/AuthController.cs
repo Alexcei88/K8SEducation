@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using OTUS.HomeWork.AuthService.Domain;
 using OTUS.HomeWork.Common;
 using OTUS.HomeWork.RestAPI.Domain;
@@ -17,11 +20,13 @@ namespace OTUS.HomeWork.AuthService.Controllers
     {
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
+        private readonly ILogger<AuthController> _logger;
 
-        public AuthController(IUserService userService, IMapper mapper)
+        public AuthController(IUserService userService, IMapper mapper, ILogger<AuthController> logger)
         {
             _userService = userService;
             _mapper = mapper;
+            _logger = logger;
         }
 
         [HttpPost]
@@ -32,20 +37,39 @@ namespace OTUS.HomeWork.AuthService.Controllers
             return _mapper.Map<UserDTO>(newUser);
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("api/login")]
-        public async Task<IActionResult> Login([FromBody]AuthentificateUserDTO model)
+        public async Task<IActionResult> Authentification()
         {
-            var user = await _userService.Authenticate(model.UserId, model.Password);
+            if (!Request.Headers.ContainsKey("Authorization"))
+                return Unauthorized();
 
-            if (user == null)
-                return BadRequest (new { message = "User or password is incorrect" });
-
-            // на этом месте должен быть JWT
+            User user;
+            try
+            {
+                var authHeader = AuthenticationHeaderValue.Parse(Request.Headers["Authorization"]);
+                var credentialBytes = Convert.FromBase64String(authHeader.Parameter);
+                var credentials = Encoding.UTF8.GetString(credentialBytes).Split(new[] { ':' }, 2);
+                var username = credentials[0];
+                var password = credentials[1];
+                user = await _userService.Authenticate(Guid.Parse(username), password);
+                if (user == null)
+                {
+                    _logger.LogError("Specified user hasn't found");
+                    return Unauthorized("Invalid Username or Password");
+                }
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "Error parse authorization header");
+                return Unauthorized("Invalid Authorization Header");
+            }            
             Response.Headers.Add(Constants.X_AUTH_HEADER, new AuthToken
             {
-                UserId = user.Id, ExpiredUTCDateTime = DateTime.UtcNow.AddMinutes(60)
+                UserId = user.Id,
+                ExpiredUTCDateTime = DateTime.UtcNow.AddMinutes(60)
             }.Encode());
+
             return Ok();
         }
     }

@@ -1,3 +1,4 @@
+### rest api
 apiVersion: v1
 kind: Service
 metadata:
@@ -10,5 +11,22 @@ spec:
   ports:
   - port: 15000
     targetPort: 80  
-    name: "homework-service" 
-    
+    name: "homework-service"
+  type: NodePort
+  
+--- 
+### auth service
+apiVersion: v1
+kind: Service
+metadata:
+  name: homeworkapp-authservice
+  labels:
+    app: homeworkapp-authservice
+spec:
+  selector:
+    app: homeworkapp-authservice
+  ports:
+  - port: 16000
+    targetPort: 80  
+    name: "homeworkapp-authservice"
+  type: NodePort
