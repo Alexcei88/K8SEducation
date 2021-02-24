@@ -34,7 +34,7 @@ namespace OTUS.HomeWork.AuthService.Controllers
         public async Task<ActionResult<UserDTO>> Register([FromBody]RegisterUserDTO user)
         {
             var newUser = await _userService.CreateUserAsync(_mapper.Map<User>(user));
-            return _mapper.Map<UserDTO>(newUser);
+            return Ok(_mapper.Map<UserDTO>(newUser));
         }
 
         [HttpGet]

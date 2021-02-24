@@ -18,12 +18,11 @@ namespace OTUS.HomeWork.RestAPI.Controllers
     {
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
-        private readonly ILogger<UserController> _logger;
+
         public UserController(IUserService userService, IMapper mapper, ILogger<UserController> logger)		
         {
             _userService = userService;
             _mapper = mapper;
-            _logger = logger;
         }
        
         [HttpGet("{userId}")]

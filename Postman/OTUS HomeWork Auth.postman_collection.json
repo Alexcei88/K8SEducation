@@ -6,7 +6,37 @@
 	},
 	"item": [
 		{
-			"name": "registerUser",
+			"name": "registerUser1",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"password\", pm.variables.replaceIn('{{$randomPassword}}'))\r",
+							"pm.collectionVariables.set(\"email\", pm.variables.replaceIn('{{$randomEmail}}'))\r",
+							"pm.collectionVariables.set(\"userName\", pm.variables.replaceIn('{{$randomUserName}}'))\r",
+							"pm.collectionVariables.set(\"firstName\", pm.variables.replaceIn('{{$randomFirstName}}'))\r",
+							"pm.collectionVariables.set(\"phone\", pm.variables.replaceIn('{{$randomPhoneNumber}}'))\r",
+							"pm.collectionVariables.set(\"lastName\", pm.variables.replaceIn('{{$randomLastName}}'))"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);\r",
+							"pm.collectionVariables.set(\"userId1\", jsonData.userId);\r",
+							"\r",
+							"pm.test(\"user registered successfully\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"protocolProfileBehavior": {
 				"disabledSystemHeaders": {
 					"host": true
@@ -23,7 +53,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"userName\": \"User\",\r\n  \"firstName\": \"OTUS\",\r\n  \"lastName\": \"Kubernetovich\",\r\n  \"email\": \"otus@otus.ru\",\r\n  \"phone\": \"+9123456789\",\r\n  \"password\": \"123\"\r\n}",
+					"raw": "{\r\n  \"userName\": \"{{userName}}\",\r\n  \"firstName\": \"{{firstName}}\",\r\n  \"lastName\": \"{{lastName}}\",\r\n  \"email\": \"{{email}}\",\r\n  \"phone\": \"{{phone}}\",\r\n  \"password\": \"{{password}}\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -31,9 +61,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/api/register",
+					"raw": "{{authbaseUrl}}/api/register",
 					"host": [
-						"{{baseUrl}}"
+						"{{authbaseUrl}}"
 					],
 					"path": [
 						"api",
@@ -44,7 +74,299 @@
 			"response": []
 		},
 		{
-			"name": "login",
+			"name": "getUser1 Not Auth",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"get user failed by not authorization\", function() {\r",
+							"    pm.response.to.have.status(401);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"host": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "host",
+						"value": "arch.homework",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/api/user/{{usedId1}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"user",
+						"{{usedId1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getUser1 Auth",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"get user succesfully\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"host": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{userId1}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "host",
+						"value": "arch.homework",
+						"type": "text"
+					},
+					{
+						"key": "X-Custom-Authentification",
+						"value": "eyJVc2VySWQiOiJjNjk0ZDQxMi1iMGQ3LTQxNTAtOWM1My04MTQxYzExZmNmNmYiLCJFeHBpcmVkVVRDRGF0ZVRpbWUiOiIyMDIxLTAyLTIyVDIwOjA0OjE5Ljc0MTg2MDNaIn0=",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/api/user/{{userId1}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"user",
+						"{{userId1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateUser1",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"email\", pm.variables.replaceIn('{{$randomEmail}}'))\r",
+							"pm.collectionVariables.set(\"userName\", pm.variables.replaceIn('{{$randomUserName}}'))\r",
+							"pm.collectionVariables.set(\"firstName\", pm.variables.replaceIn('{{$randomFirstName}}'))\r",
+							"pm.collectionVariables.set(\"phone\", pm.variables.replaceIn('{{$randomPhoneNumber}}'))\r",
+							"pm.collectionVariables.set(\"lastName\", pm.variables.replaceIn('{{$randomLastName}}'))"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"user has updated succesfully\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"host": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{userId1}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "host",
+						"value": "arch.homework",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"userId\": \"{{userId1}}\",\r\n  \"userName\": \"{{userName}}\",\r\n  \"firstName\": \"{{firstName}}\",\r\n  \"lastName\": \"{{lastName}}\",\r\n  \"email\": \"{{email}}\",\r\n  \"phone\": \"{{phone}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/user/{{userId1}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"user",
+						"{{userId1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getUpdatedUser1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"user was updated successfully\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    \r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.userId).to.eql(pm.collectionVariables.get(\"userId1\"));\r",
+							"    pm.expect(responseJson.userName).to.eql(pm.collectionVariables.get(\"userName\"));\r",
+							"    pm.expect(responseJson.firstName).to.eql(pm.collectionVariables.get(\"firstName\"));\r",
+							"    pm.expect(responseJson.lastName).to.eql(pm.collectionVariables.get(\"lastName\"));\r",
+							"    pm.expect(responseJson.email).to.eql(pm.collectionVariables.get(\"email\"));\r",
+							"    pm.expect(responseJson.phone).to.eql(pm.collectionVariables.get(\"phone\"));\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"host": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{userId1}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "host",
+						"value": "arch.homework",
+						"type": "text"
+					},
+					{
+						"key": "X-Custom-Authentification",
+						"value": "eNfqOKmH10WfaNLBQaEHjA==",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/api/user/{{userId1}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"user",
+						"{{userId1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "registerUser2",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"password\", pm.variables.replaceIn('{{$randomPassword}}'))\r",
+							"pm.collectionVariables.set(\"email\", pm.variables.replaceIn('{{$randomEmail}}'))\r",
+							"pm.collectionVariables.set(\"userName\", pm.variables.replaceIn('{{$randomUserName}}'))\r",
+							"pm.collectionVariables.set(\"firstName\", pm.variables.replaceIn('{{$randomFirstName}}'))\r",
+							"pm.collectionVariables.set(\"phone\", pm.variables.replaceIn('{{$randomFirstName}}'))\r",
+							"pm.collectionVariables.set(\"lastName\", pm.variables.replaceIn('{{$randomLastName}}'))"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);\r",
+							"pm.collectionVariables.set(\"userId2\", jsonData.userId);\r",
+							"\r",
+							"pm.test(\"user registered successfully\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"protocolProfileBehavior": {
 				"disabledSystemHeaders": {
 					"host": true
@@ -61,7 +383,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"userId\": \"38ead778-87a9-45d7-9f68-d2c141a1078c\",\r\n  \"password\": \"123\"\r\n}",
+					"raw": "{\r\n  \"userName\": \"{{userName}}\",\r\n  \"firstName\": \"{{firstName}}\",\r\n  \"lastName\": \"{{lastName}}\",\r\n  \"email\": \"{{email}}\",\r\n  \"phone\": \"{{phone}}\",\r\n  \"password\": \"{{password}}\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -69,56 +391,54 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrl}}/api/login",
+					"raw": "{{authbaseUrl}}/api/register",
 					"host": [
-						"{{baseUrl}}"
+						"{{authbaseUrl}}"
 					],
 					"path": [
 						"api",
-						"login"
+						"register"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "getUser Not Auth",
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"host": true
-				}
-			},
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "host",
-						"value": "arch.homework",
-						"type": "text"
+			"name": "getUser1 Auth2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"get user is failed by forbidden\", function() {\r",
+							"    pm.response.to.have.status(403);\r",
+							"})"
+						],
+						"type": "text/javascript"
 					}
-				],
-				"url": {
-					"raw": "{{baseUrl}}/api/user/38ead778-87a9-45d7-9f68-d2c141a1078c",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"api",
-						"user",
-						"38ead778-87a9-45d7-9f68-d2c141a1078c"
-					]
 				}
-			},
-			"response": []
-		},
-		{
-			"name": "getUser Auth",
+			],
 			"protocolProfileBehavior": {
 				"disabledSystemHeaders": {
 					"host": true
 				}
 			},
 			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{userId2}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [
 					{
@@ -129,18 +449,99 @@
 					{
 						"key": "X-Custom-Authentification",
 						"value": "eNfqOKmH10WfaNLBQaEHjA==",
-						"type": "text"
+						"type": "text",
+						"disabled": true
 					}
 				],
 				"url": {
-					"raw": "{{baseUrl}}/api/user/38ead778-87a9-45d7-9f68-d2c141a1078c",
+					"raw": "{{baseUrl}}/api/user/{{userId1}}",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
 						"api",
 						"user",
-						"38ead778-87a9-45d7-9f68-d2c141a1078c"
+						"{{userId1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateUser1 Auth2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"user is failed fo updating by forbidden\", function() {\r",
+							"    pm.response.to.have.status(403);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"email\", pm.variables.replaceIn('{{$randomEmail}}'))\r",
+							"pm.collectionVariables.set(\"userName\", pm.variables.replaceIn('{{$randomUserName}}'))\r",
+							"pm.collectionVariables.set(\"firstName\", pm.variables.replaceIn('{{$randomFirstName}}'))\r",
+							"pm.collectionVariables.set(\"phone\", pm.variables.replaceIn('{{$randomPhoneNumber}}'))\r",
+							"pm.collectionVariables.set(\"lastName\", pm.variables.replaceIn('{{$randomLastName}}'))"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"host": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{userId2}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "host",
+						"value": "arch.homework",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"userId\": \"38ead778-87a9-45d7-9f68-d2c141a1078c\",\r\n  \"userName\": \"{{userName}}\",\r\n  \"firstName\": \"{{firstName}}\",\r\n  \"lastName\": \"{{lastName}}\",\r\n  \"email\": \"{{email}}\",\r\n  \"phone\": \"{{phone}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/user/{{userId1}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"user",
+						"{{userId1}}"
 					]
 				}
 			},
@@ -170,7 +571,62 @@
 	"variable": [
 		{
 			"key": "baseUrl",
+			"value": "http://arch.homework:80/otus"
+		},
+		{
+			"key": "authbaseUrl",
+			"value": "http://arch.homework:80/auth"
+		},
+		{
+			"key": "authbaseUrlD",
+			"value": "http://localhost:31950"
+		},
+		{
+			"key": "baseUrlD",
 			"value": "http://localhost:5000"
+		},
+		{
+			"key": "passwordUser1",
+			"value": ""
+		},
+		{
+			"key": "email",
+			"value": ""
+		},
+		{
+			"key": "login",
+			"value": ""
+		},
+		{
+			"key": "firstName",
+			"value": ""
+		},
+		{
+			"key": "phone",
+			"value": ""
+		},
+		{
+			"key": "lastName",
+			"value": ""
+		},
+		{
+			"key": "password",
+			"value": ""
+		},
+		{
+			"key": "userName",
+			"value": ""
+		},
+		{
+			"key": "userId1",
+			"value": ""
+		},
+		{
+			"key": "userId2",
+			"value": ""
+		},
+		{
+			"value": ""
 		}
 	]
 }
