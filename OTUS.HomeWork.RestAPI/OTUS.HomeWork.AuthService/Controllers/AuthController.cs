@@ -7,16 +7,14 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using OTUS.HomeWork.AuthService.Domain;
-using OTUS.HomeWork.Common;
-using OTUS.HomeWork.RestAPI.Domain;
-using OTUS.HomeWork.UserService;
-using OTUS.HomeWork.UserService.Domain;
+using OTUS.HomeWork.RestAPI.Abstraction;
+using OTUS.HomeWork.RestAPI.Abstraction.Domain;
 
 namespace OTUS.HomeWork.AuthService.Controllers
 {
     [ApiController]
     [AllowAnonymous]
-    public class AuthController : Controller
+    public class AuthController : ControllerBase
     {
         private readonly IUserService _userService;
         private readonly IMapper _mapper;

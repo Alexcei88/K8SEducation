@@ -21,12 +21,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="DAL" />
     <Folder Include="Middlewares\" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OTUS.HomeWork.Common\OTUS.HomeWork.Common.csproj" />
-    <ProjectReference Include="..\OTUS.HomeWork.UserService\OTUS.HomeWork.UserService.csproj" />
+    <ProjectReference Include="..\OTUS.HomeWork.AuthService\OTUS.HomeWork.AuthService.csproj" />
   </ItemGroup>
 
 </Project>

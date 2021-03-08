@@ -5,11 +5,15 @@ VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OTUS.HomeWork.RestAPI", "OTUS.HomeWork.RestAPI\OTUS.HomeWork.RestAPI.csproj", "{A8BEA2B2-016D-4176-90C8-4477C724CD7D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OTUS.HomeWork.AuthService", "OTUS.HomeWork.AuthService\OTUS.HomeWork.AuthService.csproj", "{3AABF0E0-03D1-47BB-89D7-8A89D35ED684}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OTUS.HomeWork.AuthService", "OTUS.HomeWork.AuthService\OTUS.HomeWork.AuthService.csproj", "{3AABF0E0-03D1-47BB-89D7-8A89D35ED684}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OTUS.HomeWork.UserService", "OTUS.HomeWork.UserService\OTUS.HomeWork.UserService.csproj", "{A648DC12-7D01-4011-8DD6-025EDC949B73}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OTUS.HomeWork.BillingService", "OTUS.HomeWork.BillingService\OTUS.HomeWork.BillingService.csproj", "{D27702AF-32A5-4C01-84E6-A2DBA6B3B9DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OTUS.HomeWork.Common", "OTUS.HomeWork.Common\OTUS.HomeWork.Common.csproj", "{571FC97F-A8BA-456A-AFEA-5569A759CB01}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OTUS.HomeWork.RestAPI.Common", "OTUS.HomeWork.RestAPI.Common\OTUS.HomeWork.RestAPI.Common.csproj", "{D1D79633-8497-4CA9-BCEB-B2609B4C54CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OTUS.HomeWork.NotificationService", "OTUS.HomeWork.NotificationService\OTUS.HomeWork.NotificationService.csproj", "{5272C394-839E-46DB-915E-864E81B6C52D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OTUS.HomeWork.NotificationService.Contract", "OTUS.HomeWork.NotificationService.Contract\OTUS.HomeWork.NotificationService.Contract.csproj", "{22294F4B-231A-432C-81E0-FA0BB09B6187}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,14 +29,22 @@ Global
 		{3AABF0E0-03D1-47BB-89D7-8A89D35ED684}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3AABF0E0-03D1-47BB-89D7-8A89D35ED684}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3AABF0E0-03D1-47BB-89D7-8A89D35ED684}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A648DC12-7D01-4011-8DD6-025EDC949B73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A648DC12-7D01-4011-8DD6-025EDC949B73}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A648DC12-7D01-4011-8DD6-025EDC949B73}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A648DC12-7D01-4011-8DD6-025EDC949B73}.Release|Any CPU.Build.0 = Release|Any CPU
-		{571FC97F-A8BA-456A-AFEA-5569A759CB01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{571FC97F-A8BA-456A-AFEA-5569A759CB01}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{571FC97F-A8BA-456A-AFEA-5569A759CB01}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{571FC97F-A8BA-456A-AFEA-5569A759CB01}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D27702AF-32A5-4C01-84E6-A2DBA6B3B9DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D27702AF-32A5-4C01-84E6-A2DBA6B3B9DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D27702AF-32A5-4C01-84E6-A2DBA6B3B9DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D27702AF-32A5-4C01-84E6-A2DBA6B3B9DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1D79633-8497-4CA9-BCEB-B2609B4C54CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1D79633-8497-4CA9-BCEB-B2609B4C54CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1D79633-8497-4CA9-BCEB-B2609B4C54CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1D79633-8497-4CA9-BCEB-B2609B4C54CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5272C394-839E-46DB-915E-864E81B6C52D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5272C394-839E-46DB-915E-864E81B6C52D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5272C394-839E-46DB-915E-864E81B6C52D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5272C394-839E-46DB-915E-864E81B6C52D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22294F4B-231A-432C-81E0-FA0BB09B6187}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22294F4B-231A-432C-81E0-FA0BB09B6187}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22294F4B-231A-432C-81E0-FA0BB09B6187}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22294F4B-231A-432C-81E0-FA0BB09B6187}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

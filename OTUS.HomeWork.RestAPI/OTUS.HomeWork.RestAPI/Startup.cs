@@ -10,14 +10,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using OTUS.HomeWork.RestAPI.Authentification;
-using OTUS.HomeWork.RestAPI.Authentification.Handlers;
-using OTUS.HomeWork.RestAPI.Authentification.Requirements;
+using OTUS.HomeWork.RestAPI.Abstraction.Authentication;
+using OTUS.HomeWork.RestAPI.Abstraction.Authentication.Handlers;
+using OTUS.HomeWork.RestAPI.Abstraction.Authentication.Requirements;
 using OTUS.HomeWork.RestAPI.Middlewares;
 using OTUS.HomeWork.RestAPI.Monitoring;
-using OTUS.HomeWork.UserService;
-using OTUS.HomeWork.UserService.DAL;
-using OTUS.HomeWork.UserService.Domain;
 using Prometheus;
 
 namespace OTUS.HomeWork.RestAPI
@@ -34,9 +31,9 @@ namespace OTUS.HomeWork.RestAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<UserContext>(options =>
+            /*services.AddDbContext<UserContext>(options =>
                     options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")).UseSnakeCaseNamingConvention());
-
+*/
             services.AddSingleton(provider => {
                 return new MapperConfiguration(cfg =>
                 {
@@ -45,9 +42,9 @@ namespace OTUS.HomeWork.RestAPI
                 }).CreateMapper();
             });
 
-            services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+            /*services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddScoped<IUserService, UserService.UserService>();
-            services.AddScoped<UserRepository>();
+            services.AddScoped<UserRepository>();*/
             services.AddSingleton<MetricReporter>();
 
             services.AddAuthentication(g =>
@@ -80,14 +77,15 @@ namespace OTUS.HomeWork.RestAPI
             mapper.ConfigurationProvider.CompileMappings();
 
             factory.CreateLogger("Startup").LogWarning($"ConnectionString: {Configuration.GetConnectionString("DefaultConnection")}");
-            AutomaticallyApplyDBMigrations(app);
+            //AutomaticallyApplyDBMigrations(app);
 
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "OTUS.HomeWork.RestAPI v1"));
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "OTUS.HomeWork.RestAPI v1"));
 
             app.UseHealthChecks("/api/service/health", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions()
             {
@@ -112,15 +110,6 @@ namespace OTUS.HomeWork.RestAPI
             {
                 endpoints.MapControllers();
             });
-        }
-
-        private void AutomaticallyApplyDBMigrations(IApplicationBuilder app)
-        {
-            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
-            {
-                var context = serviceScope.ServiceProvider.GetService<UserContext>();
-                context?.Database.Migrate();
-            }
         }
     }
 }

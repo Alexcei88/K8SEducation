@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OTUS.HomeWork.RestAPI.Domain
+namespace OTUS.HomeWork.AuthService.Domain
 {
     public class UserDTO
     {

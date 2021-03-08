@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using OTUS.HomeWork.AuthService.Domain;
-using OTUS.HomeWork.RestAPI.Domain;
-using OTUS.HomeWork.UserService.Domain;
+using User = OTUS.HomeWork.RestAPI.Abstraction.Domain.User;
 
 namespace OTUS.HomeWork.AuthService
 {
