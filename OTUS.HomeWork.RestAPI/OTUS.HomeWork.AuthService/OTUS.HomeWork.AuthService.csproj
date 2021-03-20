@@ -16,7 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OTUS.HomeWork.RestAPI.Common\OTUS.HomeWork.RestAPI.Common.csproj" />
+    <ProjectReference Include="..\OTUS.HomeWork.Clients\OTUS.HomeWork.Clients.csproj" />
+    <ProjectReference Include="..\OTUS.HomeWork.RestAPI.User\OTUS.HomeWork.RestAPI.User.csproj" />
   </ItemGroup>
 
 

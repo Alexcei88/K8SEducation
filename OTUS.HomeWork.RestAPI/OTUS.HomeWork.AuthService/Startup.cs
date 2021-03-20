@@ -1,3 +1,5 @@
+using System;
+using System.Net.Http;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -8,10 +10,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using OTUS.HomeWork.AuthService.DAL;
-using OTUS.HomeWork.AuthService.Services;
+using OTUS.HomeWork.Common;
+using OTUS.HomeWork.Eshop;
 using OTUS.HomeWork.RestAPI.Abstraction;
+using OTUS.HomeWork.RestAPI.Abstraction.DAL;
 using OTUS.HomeWork.RestAPI.Abstraction.Domain;
+using OTUS.HomeWork.RestAPI.Abstraction.Services;
 
 namespace OTUS.HomeWork.AuthService
 {
@@ -41,6 +45,15 @@ namespace OTUS.HomeWork.AuthService
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<UserRepository>();
+            services.AddHttpClient();
+            
+            var billingSettingSection = Configuration.GetSection("BillingService");
+            services.AddScoped<BillingServiceClient>((sp) =>
+            {
+                var options = billingSettingSection.Get<ServiceAddressOption>();
+                var client = sp.GetService<IHttpClientFactory>()?.CreateClient("BillingClient");
+                return new BillingServiceClient(options.Ulr, client);
+            });
             
             services.AddControllers();
             
@@ -84,11 +97,9 @@ namespace OTUS.HomeWork.AuthService
         
         private void AutomaticallyApplyDBMigrations(IApplicationBuilder app)
         {
-            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
-            {
-                var context = serviceScope.ServiceProvider.GetService<UserContext>();
-                context?.Database.Migrate();
-            }
+            using var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
+            var context = serviceScope.ServiceProvider.GetService<UserContext>();
+            context?.Database.Migrate();
         }
     }
 }

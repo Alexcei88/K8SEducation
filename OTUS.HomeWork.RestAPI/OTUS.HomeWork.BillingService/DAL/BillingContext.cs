@@ -3,7 +3,7 @@ using OTUS.HomeWork.BillingService.Domain;
 
 namespace OTUS.HomeWork.BillingService.DAL
 {
-    internal class BillingContext
+    public class BillingContext
         : DbContext
     {
         public BillingContext(DbContextOptions<BillingContext> options)

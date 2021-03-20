@@ -1,0 +1,15 @@
+### billing service
+apiVersion: v1
+kind: Service
+metadata:
+  name: billing-service
+  labels:
+    app: billing
+spec:
+  selector:
+    app: billing
+  ports:
+  - port: 15010
+    targetPort: 5010  
+    name: "billing-service"
+  type: NodePort

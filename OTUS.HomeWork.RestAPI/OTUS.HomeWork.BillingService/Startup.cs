@@ -30,7 +30,7 @@ namespace OTUS.HomeWork.BillingService
             services.AddHealthChecks();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "OTUS.HomeWork.AuthService", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "OTUS.HomeWork.BillingService", Version = "v1" });
             });
         }
 

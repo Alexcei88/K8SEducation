@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using OTUS.HomeWork.AuthService.Domain;
+using OTUS.HomeWork.Common;
+using OTUS.HomeWork.Eshop;
 using OTUS.HomeWork.RestAPI.Abstraction;
 using OTUS.HomeWork.RestAPI.Abstraction.Domain;
 
@@ -19,12 +21,16 @@ namespace OTUS.HomeWork.AuthService.Controllers
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
         private readonly ILogger<AuthController> _logger;
+        private readonly BillingServiceClient _billingServiceClient;
 
-        public AuthController(IUserService userService, IMapper mapper, ILogger<AuthController> logger)
+        public AuthController(IUserService userService, IMapper mapper
+            , ILogger<AuthController> logger
+            , BillingServiceClient billingServiceClient)
         {
             _userService = userService;
             _mapper = mapper;
             _logger = logger;
+            _billingServiceClient = billingServiceClient;
         }
 
         [HttpPost]
@@ -32,6 +38,14 @@ namespace OTUS.HomeWork.AuthService.Controllers
         public async Task<ActionResult<UserDTO>> Register([FromBody]RegisterUserDTO user)
         {
             var newUser = await _userService.CreateUserAsync(_mapper.Map<User>(user));
+            try
+            {
+                var balance = await _billingServiceClient.CreateUserAsync(newUser.Id);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("Не удалось создать пользователя в BillingService");
+            }
             return Ok(_mapper.Map<UserDTO>(newUser));
         }
 

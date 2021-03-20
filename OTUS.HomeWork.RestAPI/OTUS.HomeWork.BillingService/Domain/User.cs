@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace OTUS.HomeWork.BillingService.Domain
 {
-    internal class User
+    public class User
     {
         [Key]
         public Guid Id { get; set; }

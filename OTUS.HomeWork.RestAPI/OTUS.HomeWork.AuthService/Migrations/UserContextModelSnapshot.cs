@@ -3,7 +3,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using OTUS.HomeWork.AuthService.DAL;
+using OTUS.HomeWork.RestAPI.Abstraction.DAL;
 
 namespace OTUS.HomeWork.AuthService.Migrations
 {
@@ -19,7 +19,7 @@ namespace OTUS.HomeWork.AuthService.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
                 .HasAnnotation("ProductVersion", "5.0.2");
 
-            modelBuilder.Entity("OTUS.HomeWork.RestAPI.Domain.User", b =>
+            modelBuilder.Entity("OTUS.HomeWork.Eshop.Domain.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()

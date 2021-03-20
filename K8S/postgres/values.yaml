@@ -1,6 +1,6 @@
 postgresqlUsername: postgres
 postgresqlPassword: tc_123456
-postgresqlDatabase: otushomework
+postgresqlDatabase: otus_eshop
 fullnameOverride: postgres
 
 service:

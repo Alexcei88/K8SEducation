@@ -9,15 +9,26 @@ namespace OTUS.HomeWork.BillingService.Controllers
 {
     [ApiController]
     [Authorize(Policy = "OnlyOwner")]
-    public class UserControler : ControllerBase
+    public class UserController : ControllerBase
     {
         private readonly IBillingService _billingService;
 
-        public UserControler(IBillingService billingService)
+        public UserController(IBillingService billingService)
         {
             _billingService = billingService;
         }
 
+        [HttpPost("{userId}")]
+        public async Task<ActionResult<decimal>> CreateUser(Guid userId)
+        {
+            var balance = await _billingService.CreateBalance(userId);
+            return Ok(new UserDto
+            {
+                Balance = balance,
+                Id = userId
+            });
+        }
+        
         [HttpGet("{userId}/balance")]
         public async Task<ActionResult<UserDto>> GetBalance(Guid userId)
         {

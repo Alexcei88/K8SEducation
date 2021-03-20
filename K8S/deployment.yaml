@@ -1,4 +1,4 @@
-### rest api
+### eshop api
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -35,7 +35,7 @@ spec:
               do echo waiting for database; sleep 2; done;
       containers:
       - name: homeworkapp
-        image: alexcei88/otushomeworkrestapi
+        image: alexcei88/otushomeworkeshop
         resources:
           limits:
             memory: "128Mi"
@@ -48,6 +48,11 @@ spec:
               secretKeyRef:
                 name: homework-secret
                 key: DATABASE_URI
+          - name: "BillingService__Url"
+            valueFrom:
+               configMapKeyRef: 
+                  name: homework-config
+                  key: BILLING_SERVICE_URL
         volumeMounts:
           - name: config-volume
             mountPath: /app/config          
@@ -75,16 +80,16 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: homeworkapp-authservice
+  name: auth-service
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: homeworkapp-authservice
+      app: auth-service
   template:
     metadata:
       labels:
-        app: homeworkapp-authservice
+        app: auth-service
     spec:
       initContainers:
         - name: check-db-ready
@@ -120,7 +125,12 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: homework-secret
-                key: DATABASE_URI
+                key: ESHOP_DATABASE_URI
+          - name: "BillingService__Url"
+            valueFrom:
+               configMapKeyRef: 
+                  name: homework-config
+                  key: BILLING_SERVICE_URL
         volumeMounts:
           - name: config-volume
             mountPath: /app/config          
