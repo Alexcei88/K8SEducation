@@ -1,3 +1,4 @@
+using DataBuffer.MessageExchangeSerializer;
 using RabbitMQ.Client;
 using System;
 using System.Linq;
@@ -6,7 +7,6 @@ using System.Threading.Tasks;
 namespace DataBuffer.BusClient.RabbitMq
 {
 	public class RabbitMQMessageSender
-		: IMessageSender
 	{	
 		private readonly string _routeKey;
 
@@ -22,10 +22,7 @@ namespace DataBuffer.BusClient.RabbitMq
 			, string routeKey
 			, RabbitMQChannelPool rabbitMQChannelPool
 			, IMessageExchangeSerializer serializer)
-		{
-			_logger = ServiceLocator.Instance.LogService.GetLogger(GetType());
-			_logger.CustomProperties.Add(LogPropertiesConstants.NAME_QUEUE_LOG_ITEM, $"{exchangeName}:{routeKey}");
-
+		{			
 			_routeKey = routeKey;
 			_serializer = serializer;
 			_exchangeName = exchangeName;
@@ -40,7 +37,7 @@ namespace DataBuffer.BusClient.RabbitMq
 		}
 
 
-		public bool SendRequests(Request[] requests, string destination)
+		public bool SendRequests<T>(T[] requests, string destination) where T : new()
 		{
 			if (!requests.Any()) return true;
 
@@ -58,13 +55,13 @@ namespace DataBuffer.BusClient.RabbitMq
 				}
 				channel.Value.Channel.WaitForConfirmsOrDie();
 
-				_logger.Debug($"Запросы({requests.Length}) типа {requests.First().Type} отправлен в RabbitMQ {_exchangeName}/{destination}");
+				Console.WriteLine($"Запросы({requests.Length}) типа {typeof(T)} отправлен в RabbitMQ {_exchangeName}/{destination}");
 
 				return requests.Length > 0;
 			}
 			catch (Exception ex)
 			{
-				_logger.Error(string.Format("Ошибка отправки запросов типа {0} в RabbitMQ", requests.First().Type), ex);
+				Console.WriteLine(string.Format("Ошибка отправки запросов типа {0} в RabbitMQ", typeof(T)), ex);
 				return false;
 			}
 			finally
@@ -73,7 +70,7 @@ namespace DataBuffer.BusClient.RabbitMq
 			}
 		}
 
-		public Task<bool> SendRequestsAsync(Request[] requests, string destination = null)
+		public Task<bool> SendRequestsAsync<T>(T[] requests, string destination = null) where T : new()
 		{
 			return Task.FromResult(SendRequests(requests, destination));
 		}

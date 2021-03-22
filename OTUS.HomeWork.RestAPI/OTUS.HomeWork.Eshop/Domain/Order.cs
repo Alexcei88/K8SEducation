@@ -7,18 +7,20 @@ namespace OTUS.HomeWork.Eshop.Domain
     public record Order
     {
         [Key]
-        public string OrderNumber { get; init; }
-        
-        public decimal TotalPrice { get; init; }
-        
-        public int BillingId { get; init; }
+        public string OrderNumber { get; set; }
+       
+        public Guid UserId { get; set; }
 
-        public OrderStatus Status { get; init; }
+        public decimal TotalPrice { get; set; }
         
-        public DateTime CreatedOnUtc { get; init; }
+        public string BillingId { get; set; }
+
+        public OrderStatus Status { get; set; }
         
-        public DateTime? PaidDateUtc { get; init; }
+        public DateTime CreatedOnUtc { get; set; }
         
-        public SortedSet<OrderItem> Items { get; init; }
+        public DateTime? PaidDateUtc { get; set; }
+        
+        public SortedSet<OrderItem> Items { get; set; }
     }
 }

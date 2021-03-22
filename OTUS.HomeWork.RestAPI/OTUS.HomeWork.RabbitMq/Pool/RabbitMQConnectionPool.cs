@@ -2,7 +2,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
-using Infrastructure;
 using RabbitMQ.Client;
 
 namespace DataBuffer.BusClient.RabbitMq.Pool
@@ -11,8 +10,6 @@ namespace DataBuffer.BusClient.RabbitMq.Pool
 		: IDisposable
 	{
 		public string ConnectionString { get; }
-
-		private static readonly ILogger Logger = ServiceLocator.Instance.LogService.GetLogger(typeof(RabbitMqConnectionPool));
 
 		private readonly ConnectionFactory _connectionFactory;
 
@@ -93,7 +90,7 @@ namespace DataBuffer.BusClient.RabbitMq.Pool
 			catch (IOException) { }
 			catch (Exception ex)
 			{
-				Logger.Error("RabbitMQ connection closure failed", ex);
+				Console.WriteLine("RabbitMQ connection closure failed", ex);
 			}
 		}
 

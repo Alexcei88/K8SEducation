@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using OTUS.HomeWork.AuthService.Domain;
+using OTUS.HomeWork.Clients;
 using OTUS.HomeWork.Common;
-using OTUS.HomeWork.Eshop;
 using OTUS.HomeWork.RestAPI.Abstraction;
 using OTUS.HomeWork.RestAPI.Abstraction.Domain;
 
@@ -44,7 +44,9 @@ namespace OTUS.HomeWork.AuthService.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError("Не удалось создать пользователя в BillingService");
+                _logger.LogError(e, "Не удалось создать пользователя в BillingService");
+                await _userService.DeleteUserAsync(newUser.Id);
+                throw;
             }
             return Ok(_mapper.Map<UserDTO>(newUser));
         }

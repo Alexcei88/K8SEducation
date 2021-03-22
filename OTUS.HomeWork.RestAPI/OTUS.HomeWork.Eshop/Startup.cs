@@ -14,6 +14,8 @@ using OTUS.HomeWork.Eshop.Authentication;
 using OTUS.HomeWork.Eshop.DAL;
 using OTUS.HomeWork.Eshop.Middlewares;
 using OTUS.HomeWork.Eshop.Monitoring;
+using OTUS.HomeWork.EShop.DAL;
+using OTUS.HomeWork.EShop.Services;
 using OTUS.HomeWork.RestAPI.Abstraction;
 using OTUS.HomeWork.RestAPI.Abstraction.Authentication;
 using OTUS.HomeWork.RestAPI.Abstraction.Authentication.Handlers;
@@ -49,9 +51,9 @@ namespace OTUS.HomeWork.Eshop
             });
 
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<UserRepository>();
             services.AddSingleton<MetricReporter>();
+            services.AddScoped<OrderService>();
+            services.AddScoped<ProductRepository>();
 
             services.AddAuthentication(g =>
             {

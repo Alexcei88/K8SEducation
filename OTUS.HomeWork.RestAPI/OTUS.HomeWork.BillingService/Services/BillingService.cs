@@ -7,14 +7,17 @@ namespace OTUS.HomeWork.BillingService.Services
 {
     public interface IBillingService
     {
-        Task<decimal> CreateBalance(Guid userId);
+        Task<decimal> CreateBalanceAsync(Guid userId);
         
-        Task<decimal> ChangeBalance(Guid userId, decimal balance);
+        Task<decimal> GetBalanceAsync(Guid userId);
 
-        Task<decimal> GetBalance(Guid userId);
+        Task<Payment> MakePaymentAsync(PaymentRequestDTO payment);
+
+        Task<Payment> RollbackPaymentAsync(PaymentRequestDTO payment);
     }
 
-    public class BillingService : IBillingService
+    public class BillingService 
+        : IBillingService
     {
         private readonly BillingContext _context;
         
@@ -23,7 +26,7 @@ namespace OTUS.HomeWork.BillingService.Services
             _context = context;
         }
 
-        public async Task<decimal> CreateBalance(Guid userId)
+        public async Task<decimal> CreateBalanceAsync(Guid userId)
         {
             await _context.Users.AddAsync(new User
             {
@@ -34,22 +37,20 @@ namespace OTUS.HomeWork.BillingService.Services
             return 0.0m;
         }
         
-        public async Task<decimal> ChangeBalance(Guid userId, decimal balance)
-        {
-            var user = await _context.Users.FindAsync(userId);
-            if (user != null)
-            {
-                user.Balance += balance;
-                await _context.SaveChangesAsync();
-                return user.Balance;
-            }
-            return -1.0m;
-        }
-
-        public async Task<decimal> GetBalance(Guid userId)
+        public async Task<decimal> GetBalanceAsync(Guid userId)
         {
             var user = await _context.Users.FindAsync(userId);
             return user?.Balance ?? 0.0m;
+        }
+
+        public Task<Payment> MakePaymentAsync(PaymentRequestDTO payment)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Payment> RollbackPaymentAsync(PaymentRequestDTO payment)
+        {
+            throw new NotImplementedException();
         }
     }
 }

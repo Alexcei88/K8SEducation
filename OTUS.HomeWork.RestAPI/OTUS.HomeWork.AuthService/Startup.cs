@@ -11,11 +11,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using OTUS.HomeWork.Common;
-using OTUS.HomeWork.Eshop;
 using OTUS.HomeWork.RestAPI.Abstraction;
 using OTUS.HomeWork.RestAPI.Abstraction.DAL;
 using OTUS.HomeWork.RestAPI.Abstraction.Domain;
 using OTUS.HomeWork.RestAPI.Abstraction.Services;
+using OTUS.HomeWork.Clients;
 
 namespace OTUS.HomeWork.AuthService
 {
@@ -52,7 +52,7 @@ namespace OTUS.HomeWork.AuthService
             {
                 var options = billingSettingSection.Get<ServiceAddressOption>();
                 var client = sp.GetService<IHttpClientFactory>()?.CreateClient("BillingClient");
-                return new BillingServiceClient(options.Ulr, client);
+                return new BillingServiceClient(options.Url, client);
             });
             
             services.AddControllers();

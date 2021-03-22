@@ -2,7 +2,7 @@ using System;
 
 namespace OTUS.HomeWork.BillingService.Domain
 {
-    public record UserDto
+    public record UserDTO
     {
         public Guid Id { get; init; }
         

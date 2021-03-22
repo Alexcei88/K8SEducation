@@ -1,4 +1,3 @@
-using Infrastructure;
 using RabbitMQ.Client;
 using System;
 using System.Collections.Concurrent;
@@ -10,8 +9,6 @@ namespace DataBuffer.BusClient.RabbitMq
 	public class RabbitMQChannelPool
 		: IDisposable
 	{
-		private static ILogger _logger = ServiceLocator.Instance.LogService.GetLogger(typeof(RabbitMQChannelPool));
-
 		private readonly RabbitMqConnectionPool _connectionPool;
 
 		private bool _disposed = false;
@@ -60,7 +57,8 @@ namespace DataBuffer.BusClient.RabbitMq
 			}
 			channel.ModelShutdown += (sender, args) =>
 			{
-				_logger.Info("The connection to rabbitMQ broker was closed");
+				Console.WriteLine("The connection to rabbitMQ broker was closed");
+				//_logger.Info("The connection to rabbitMQ broker was closed");
 			};
 			return new RabbitMQChannel(channel, connection);
 		}
@@ -85,7 +83,8 @@ namespace DataBuffer.BusClient.RabbitMq
 			}
 			catch (Exception ex)
 			{
-				_logger.Error("Channel closure failed", ex);
+				Console.WriteLine("Channel closure failed", ex);
+				//_logger.Error("Channel closure failed", ex);
 			}
 		}
 

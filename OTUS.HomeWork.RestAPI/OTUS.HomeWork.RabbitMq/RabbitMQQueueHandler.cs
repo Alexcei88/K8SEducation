@@ -1,8 +1,4 @@
-using Core;
-using DataBuffer.BusClient.Abstraction;
-using DataBuffer.Core.QueueHandler;
 using DataBuffer.MessageExchangeSerializer;
-using DataBuffer.Queue.Models.Responses;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
@@ -14,6 +10,7 @@ using System.Collections.Generic;
 
 namespace DataBuffer.BusClient.RabbitMq
 {
+	/*
 	public class RabbitMQQueueHandler
 		: AbstractQueueHandler
 	{
@@ -303,5 +300,5 @@ namespace DataBuffer.BusClient.RabbitMq
 			string s1 = HashHelper.GenerateSHA512Hash(HashHelper.MessagePackSerialize(Settings));
 			return string.Compare(s, s1, StringComparison.Ordinal);
 		}
-	}
+	}*/
 }

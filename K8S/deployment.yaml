@@ -47,7 +47,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: homework-secret
-                key: DATABASE_URI
+                key: ESHOP_DATABASE_URI
           - name: "BillingService__Url"
             valueFrom:
                configMapKeyRef: 
