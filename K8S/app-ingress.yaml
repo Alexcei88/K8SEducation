@@ -23,7 +23,7 @@ spec:
           service:
             name: homework-service
             port:
-              number: 15000
+              number: 15020
       - pathType: Prefix
         path: /billing/(.*)
         backend:
@@ -31,4 +31,11 @@ spec:
             name: billing-service
             port:
               number: 15010
+      - pathType: Prefix
+        path: /notification/(.*)
+        backend:
+          service:
+            name: notification-service
+            port:
+              number: 15030
 

@@ -105,17 +105,17 @@ namespace DataBuffer.BusClient.RabbitMq.Pool
 					{
 						var connection = _connectionFactory.CreateConnection();
 
-						Logger.Debug("A connection to RabbitMQ broker was opened");
+						Console.WriteLine("A connection to RabbitMQ broker was opened");
 						// !!!!the connection variable not must use in the lambda function, else we will have a memory leak.
 						// Otherwise(if we want to use the varialbe inside lambda), we must somewhere unsubscribe from the events.
 						connection.ConnectionShutdown += (sender, args) =>
-							Logger.Debug($"The connection to RabbitMQ broker was closed by reason: {args.ReplyText}");
+							Console.WriteLine($"The connection to RabbitMQ broker was closed by reason: {args.ReplyText}");
 
 						connection.ConnectionBlocked += (sender, args) =>
-							Logger.Debug($"The connection to RabbitMQ was blocked by reason: {args.Reason}");
+							Console.WriteLine($"The connection to RabbitMQ was blocked by reason: {args.Reason}");
 
 						connection.ConnectionUnblocked += (sender, args) =>
-							Logger.Debug($"The connection to RabbitMQ was unblocked");
+							Console.WriteLine($"The connection to RabbitMQ was unblocked");
 
 						return new RabbitMqConnection(connection);
 					}

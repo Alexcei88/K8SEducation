@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OTUS.HomeWork.Eshop.Domain;
 using OTUS.HomeWork.EShop.DAL;
-using OTUS.HomeWork.EShop.Domain;
-using OTUS.HomeWork.EShop.Services;
 using System.ComponentModel;
 using System.Threading.Tasks;
 
@@ -28,7 +26,7 @@ namespace OTUS.HomeWork.Eshop.Controllers
         public async Task<ActionResult<ProductDTO[]>> GetProducts([DefaultValue(0)]int skip, [DefaultValue(20)] int limit)
         {
             var products = await _productRepository.GetProductsAsync(skip, limit);
-            return _mapper.Map<ProductDTO[]>(products);
+            return Ok(_mapper.Map<ProductDTO[]>(products));
         }
     }
 }

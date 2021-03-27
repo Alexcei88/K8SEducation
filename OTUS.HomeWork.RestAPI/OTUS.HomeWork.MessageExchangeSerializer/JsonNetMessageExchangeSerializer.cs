@@ -1,5 +1,6 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using OTUS.HomeWork.NotificationService.Contract.Messages;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -41,7 +42,7 @@ namespace DataBuffer.MessageExchangeSerializer
 		}
 
 		public TRequest DeserializeRequest<TRequest>(Stream stream)
-			where TRequest : new()
+			where TRequest : NotificationMessage, new()
 		{
 			var sr = new StreamReader(stream);
 			var jsonTextReader = new JsonTextReader(sr);
@@ -56,7 +57,7 @@ namespace DataBuffer.MessageExchangeSerializer
 		}
 
 		public TResponse DeserializeResponse<TResponse>(Stream stream)
-			where TResponse : new()
+			where TResponse : NotificationMessage, new()
 		{
 			var sr = new StreamReader(stream);
 			var jsonTextReader = new JsonTextReader(sr);
@@ -76,7 +77,7 @@ namespace DataBuffer.MessageExchangeSerializer
 		}
 
 		public MemoryStream SerializeRequest<TRequest>(TRequest obj)
-			where TRequest : new()
+			where TRequest : NotificationMessage, new()
 		{
 			var stream = new MemoryStream();
 			var wr = new StreamWriter(stream);
@@ -88,7 +89,7 @@ namespace DataBuffer.MessageExchangeSerializer
 		}
 
 		public MemoryStream SerializeResponse<TResponse>(TResponse obj)
-			where TResponse : new()
+			where TResponse : NotificationMessage, new()
 		{
 			var stream = new MemoryStream();
 			var wr = new StreamWriter(stream);

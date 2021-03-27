@@ -13,5 +13,7 @@ namespace OTUS.HomeWork.NotificationService.Domain
         public Guid UserId { get; init; }
 
         public string Message { get; init; }
+
+        public DateTime CreatedDateUtc { get; init; }
     }
 }

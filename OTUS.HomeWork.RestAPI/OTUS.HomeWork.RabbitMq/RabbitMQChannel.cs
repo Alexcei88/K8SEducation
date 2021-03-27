@@ -1,11 +1,8 @@
 using RabbitMQ.Client;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DataBuffer.BusClient.RabbitMq
 {
-	public readonly struct RabbitMQChannel
+    public readonly struct RabbitMQChannel
 	{
 		public IModel Channel { get; }
 

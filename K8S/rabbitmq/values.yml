@@ -1,0 +1,8 @@
+fullnameOverride: rabbitmq
+auth:
+  username: eshop
+  password: eshop
+
+service:
+    type: NodePort
+    managerNodePort: 32672 

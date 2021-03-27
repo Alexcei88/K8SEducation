@@ -1,4 +1,7 @@
 using AutoMapper;
+using DataBuffer.BusClient.RabbitMq;
+using DataBuffer.BusClient.RabbitMq.Pool;
+using DataBuffer.MessageExchangeSerializer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using OTUS.HomeWork.Clients;
 using OTUS.HomeWork.Common;
@@ -41,7 +45,9 @@ namespace OTUS.HomeWork.Eshop
         {
             services.AddDbContext<OrderContext>(options =>
                     options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")).UseSnakeCaseNamingConvention());
-            
+
+            services.Configure<RabbitMQOption>(Configuration.GetSection("RabbitMq"));
+
             services.AddSingleton(provider => {
                 return new MapperConfiguration(cfg =>
                 {
@@ -64,6 +70,15 @@ namespace OTUS.HomeWork.Eshop
                 return new BillingServiceClient(options.Url, client);
             });
 
+            services.AddSingleton<RabbitMQMessageSender>((sp) =>
+            {
+                var rabbitMQOption = sp.GetService<IOptions<RabbitMQOption>>()?.Value;
+                return new RabbitMQMessageSender(rabbitMQOption.ExchangeName
+                    , rabbitMQOption.QueueName
+                    , new RabbitMQChannelPool(new RabbitMqConnectionPool(rabbitMQOption.ConnectionString))
+                    , new JsonNetMessageExchangeSerializer());
+            });
+            
             services.AddAuthentication(g =>
             {
                 g.DefaultAuthenticateScheme = SimpleCustomAuthenticationHandler.AuthentificationScheme;

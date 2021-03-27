@@ -9,8 +9,8 @@ spec:
   selector:
     app: homeworkapp
   ports:
-  - port: 15000
-    targetPort: 80  
+  - port: 15020
+    targetPort: 5020  
     name: "homework-service"
   type: NodePort
   

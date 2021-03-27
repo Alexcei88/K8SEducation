@@ -17,11 +17,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OTUS.HomeWork.Common", "OTU
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OTUS.HomeWork.Clients", "OTUS.HomeWork.Clients\OTUS.HomeWork.Clients.csproj", "{6DC80A92-4E37-4758-B4EA-C4E9D93592C5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataBuffer.BusClient.RabbitMq", "OTUS.HomeWork.RabbitMq\DataBuffer.BusClient.RabbitMq.csproj", "{1E294A65-5DC7-45FC-9928-48A6E8497339}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OTUS.HomeWork.RabbitMq", "OTUS.HomeWork.RabbitMq\OTUS.HomeWork.RabbitMq.csproj", "{1E294A65-5DC7-45FC-9928-48A6E8497339}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OTUS.HomeWork.MessageExchangeSerializer", "OTUS.HomeWork.MessageExchangeSerializer\OTUS.HomeWork.MessageExchangeSerializer.csproj", "{C42370D8-B8AB-48CC-A1DD-D77777C67DFB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OTUS.HomeWork.NotificationService", "OTUS.HomeWork.NotificationService\OTUS.HomeWork.NotificationService.csproj", "{57E752C7-2D17-4036-A63A-52F48058392A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OTUS.HomeWork.NotificationService", "OTUS.HomeWork.NotificationService\OTUS.HomeWork.NotificationService.csproj", "{57E752C7-2D17-4036-A63A-52F48058392A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

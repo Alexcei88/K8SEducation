@@ -6,7 +6,7 @@ metadata:
 data:
   POSTGRES_HOST: "postgres"
   POSTGRES_PORT: "5432"
-  BILLING_SERVICE_URL: "http://billing-service.default.svc.cluster.local:15010"
+  BILLING_SERVICE_URL: "http://billing-service.default.svc.cluster.local:15010"  
   appsettings.json: |-
     {
       "Logging": {
@@ -15,7 +15,12 @@ data:
           "System": "Information",
           "Microsoft": "Information"
         }
-      }
+      },
+       "RabbitMq": {
+        "ConnectionString": "amqp://eshop:eshop@rabbitmq:5672/",
+        "QueueName": "EshopNotifications",
+        "ExchangeName": "EshopNotifications"
+      },
     }
 
 ---
@@ -26,3 +31,4 @@ metadata:
 data:
   ESHOP_DATABASE_URI: SG9zdD1wb3N0Z3JlcztEYXRhYmFzZT1vdHVzX2VzaG9wO1VzZXJuYW1lPXBvc3RncmVzO1Bhc3N3b3JkPXRjXzEyMzQ1Ng==
   BILLING_DATABASE_URI: SG9zdD1wb3N0Z3JlcztEYXRhYmFzZT1vdHVzX2JpbGxpbmc7VXNlcm5hbWU9cG9zdGdyZXM7UGFzc3dvcmQ9dGNfMTIzNDU2
+  NOTIFICATION_DATABASE_URI: SG9zdD1wb3N0Z3JlcztEYXRhYmFzZT1vdHVzX25vdGlmaWNhdGlvbjtVc2VybmFtZT1wb3N0Z3JlcztQYXNzd29yZD10Y18xMjM0NTY=  
