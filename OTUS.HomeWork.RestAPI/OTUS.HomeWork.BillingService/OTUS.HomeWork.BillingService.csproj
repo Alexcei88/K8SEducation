@@ -22,5 +22,9 @@
     <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\OTUS.HomeWork.RestAPI.User\OTUS.HomeWork.RestAPI.User.csproj" />
+  </ItemGroup>
+
 
 </Project>

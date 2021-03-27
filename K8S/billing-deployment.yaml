@@ -53,16 +53,9 @@ spec:
             mountPath: /app/config          
         livenessProbe:
           httpGet:
-            port: 80
-            path: /health
-          initialDelaySeconds: 2
-          periodSeconds: 5
-          timeoutSeconds: 1
-        readinessProbe:
-          httpGet:
-            port: 80
+            port: 5010
             path: /api/service/health
-          initialDelaySeconds: 1
+          initialDelaySeconds: 2
           periodSeconds: 5
           timeoutSeconds: 1
       volumes:

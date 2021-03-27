@@ -8,7 +8,7 @@ namespace OTUS.HomeWork.Eshop.Domain
         public Order Order { get; set; }
         
         [Key]
-        public string OrderNumberId { get; set; } 
+        public Guid OrderNumberId { get; set; } 
         
         [Key]
         public Guid ProductId { get; init; }

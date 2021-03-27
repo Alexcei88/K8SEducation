@@ -1,3 +1,5 @@
+using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -6,7 +8,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using OTUS.HomeWork.BillingService.Authentication;
 using OTUS.HomeWork.BillingService.DAL;
+using OTUS.HomeWork.RestAPI.Abstraction.Authentication;
+using OTUS.HomeWork.RestAPI.Abstraction.Authentication.Handlers;
+using OTUS.HomeWork.RestAPI.Abstraction.Authentication.Requirements;
 
 namespace OTUS.HomeWork.BillingService
 {
@@ -24,9 +30,34 @@ namespace OTUS.HomeWork.BillingService
         {
             services.AddDbContext<BillingContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")).UseSnakeCaseNamingConvention());
+
+            services.AddSingleton(provider => {
+                return new MapperConfiguration(cfg =>
+                {
+                    cfg.Advanced.AllowAdditiveTypeMapCreation = true;
+                    cfg.AddProfile(new AutoMapperProfile());
+                }).CreateMapper();
+            });
+
+            services.AddScoped<Services.IBillingService, Services.BillingService>();
             
             services.AddControllers();
-            
+            services.AddAuthentication(g =>
+            {
+                g.DefaultAuthenticateScheme = SimpleCustomAuthenticationHandler.AuthentificationScheme;
+                g.DefaultChallengeScheme = SimpleCustomAuthenticationHandler.AuthentificationScheme;
+                g.DefaultForbidScheme = SimpleCustomAuthenticationHandler.AuthentificationScheme;
+            }).AddScheme<RestAPIAuthOption, SimpleCustomAuthenticationHandler>(SimpleCustomAuthenticationHandler.AuthentificationScheme, o => { });
+
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("OnlyOwner", policy =>
+                policy.Requirements.Add(new OwnerPermission()));
+            });
+
+            services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
+
             services.AddHealthChecks();
             services.AddSwaggerGen(c =>
             {
@@ -35,9 +66,12 @@ namespace OTUS.HomeWork.BillingService
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IMapper mapper)
         {
             AutomaticallyApplyDBMigrations(app);
+
+            mapper.ConfigurationProvider.AssertConfigurationIsValid();
+            mapper.ConfigurationProvider.CompileMappings();
 
             if (env.IsDevelopment())
             {
@@ -59,6 +93,7 @@ namespace OTUS.HomeWork.BillingService
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

@@ -1,4 +1,3 @@
-using System;
 using System.Net.Http;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -65,14 +64,18 @@ namespace OTUS.HomeWork.AuthService
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IMapper mapper)
         {
-            AutomaticallyApplyDBMigrations(app);
+            mapper.ConfigurationProvider.AssertConfigurationIsValid();
+            mapper.ConfigurationProvider.CompileMappings();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+            AutomaticallyApplyDBMigrations(app);
 
+            app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "OTUS.HomeWork.AuthService v1"));
             
             app.UseHealthChecks("/api/service/health", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions()

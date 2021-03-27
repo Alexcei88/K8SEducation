@@ -18,10 +18,17 @@ spec:
     http:
       paths:
       - pathType: Prefix
-        path: /otus/(.*)
+        path: /eshop/(.*)
         backend:
           service:
             name: homework-service
             port:
               number: 15000
+      - pathType: Prefix
+        path: /billing/(.*)
+        backend:
+          service:
+            name: billing-service
+            port:
+              number: 15010
 

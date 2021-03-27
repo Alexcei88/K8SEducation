@@ -5,7 +5,7 @@ namespace OTUS.HomeWork.NotificationService.DAL
     public class NotificationRepository
     {
         private readonly NotificationDbContext _notificationDbContext;
-        
+
         public NotificationRepository(NotificationDbContext context)
         {
             _notificationDbContext = context;

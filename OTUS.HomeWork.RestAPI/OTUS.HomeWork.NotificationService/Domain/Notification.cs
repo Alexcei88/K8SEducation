@@ -11,7 +11,7 @@ namespace OTUS.HomeWork.NotificationService.Domain
         public Guid Id { get; init; }
 
         public Guid UserId { get; init; }
-        
+
         public string Message { get; init; }
     }
 }

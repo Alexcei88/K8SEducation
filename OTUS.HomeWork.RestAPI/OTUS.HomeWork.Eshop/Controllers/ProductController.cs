@@ -5,13 +5,14 @@ using OTUS.HomeWork.Eshop.Domain;
 using OTUS.HomeWork.EShop.DAL;
 using OTUS.HomeWork.EShop.Domain;
 using OTUS.HomeWork.EShop.Services;
+using System.ComponentModel;
 using System.Threading.Tasks;
 
 namespace OTUS.HomeWork.Eshop.Controllers
 {
     [ApiController]
     [Route("api/product")]
-    [Authorize(Policy = "OnlyOwner")]
+    //[Authorize(Policy = "OnlyOwner")]
     public class ProductController : ControllerBase
     {
         private readonly ProductRepository _productRepository;
@@ -20,13 +21,14 @@ namespace OTUS.HomeWork.Eshop.Controllers
         public ProductController(ProductRepository productRepository, IMapper mapper)
         {
             _productRepository = productRepository;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<ActionResult<ProductDTO>> GetProducts(int skip, int limit)
+        public async Task<ActionResult<ProductDTO[]>> GetProducts([DefaultValue(0)]int skip, [DefaultValue(20)] int limit)
         {
             var products = await _productRepository.GetProductsAsync(skip, limit);
-            return _mapper.Map<ProductDTO>(products);
+            return _mapper.Map<ProductDTO[]>(products);
         }
     }
 }

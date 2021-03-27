@@ -24,7 +24,7 @@ metadata:
     app: homeworkapp-authservice
 spec:
   selector:
-    app: homeworkapp-authservice
+    app: auth-service
   ports:
   - port: 16000
     targetPort: 80  

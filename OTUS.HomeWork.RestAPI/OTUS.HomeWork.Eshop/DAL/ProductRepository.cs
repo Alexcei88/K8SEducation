@@ -27,5 +27,10 @@ namespace OTUS.HomeWork.EShop.DAL
             await _orderContext.SaveChangesAsync();
             return product.Id;
         }
+
+        public async Task<decimal?> GetPriceOfProducsAsync(Guid productId)
+        {
+            return (await _orderContext.Products.FirstOrDefaultAsync(g => g.Id == productId))?.Price;
+        }
     }
 }

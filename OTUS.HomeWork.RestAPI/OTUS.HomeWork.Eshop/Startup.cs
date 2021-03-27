@@ -10,20 +10,20 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using OTUS.HomeWork.Clients;
+using OTUS.HomeWork.Common;
 using OTUS.HomeWork.Eshop.Authentication;
 using OTUS.HomeWork.Eshop.DAL;
 using OTUS.HomeWork.Eshop.Middlewares;
 using OTUS.HomeWork.Eshop.Monitoring;
 using OTUS.HomeWork.EShop.DAL;
 using OTUS.HomeWork.EShop.Services;
-using OTUS.HomeWork.RestAPI.Abstraction;
 using OTUS.HomeWork.RestAPI.Abstraction.Authentication;
 using OTUS.HomeWork.RestAPI.Abstraction.Authentication.Handlers;
 using OTUS.HomeWork.RestAPI.Abstraction.Authentication.Requirements;
-using OTUS.HomeWork.RestAPI.Abstraction.DAL;
 using OTUS.HomeWork.RestAPI.Abstraction.Domain;
-using OTUS.HomeWork.RestAPI.Abstraction.Services;
 using Prometheus;
+using System.Net.Http;
 
 namespace OTUS.HomeWork.Eshop
 {
@@ -50,10 +50,19 @@ namespace OTUS.HomeWork.Eshop
                 }).CreateMapper();
             });
 
+            services.AddHttpClient();
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddSingleton<MetricReporter>();
             services.AddScoped<OrderService>();
             services.AddScoped<ProductRepository>();
+
+            var billingSettingSection = Configuration.GetSection("BillingService");
+            services.AddScoped<BillingServiceClient>((sp) =>
+            {
+                var options = billingSettingSection.Get<ServiceAddressOption>();
+                var client = sp.GetService<IHttpClientFactory>()?.CreateClient("BillingClient");
+                return new BillingServiceClient(options.Url, client);
+            });
 
             services.AddAuthentication(g =>
             {

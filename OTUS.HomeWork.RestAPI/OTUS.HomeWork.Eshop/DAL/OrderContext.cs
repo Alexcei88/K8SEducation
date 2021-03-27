@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using OTUS.HomeWork.Eshop.Domain;
+using System;
 
 namespace OTUS.HomeWork.Eshop.DAL
 {
@@ -22,8 +23,43 @@ namespace OTUS.HomeWork.Eshop.DAL
             modelBuilder.Entity<Order>()
                 .HasMany<OrderItem>()
                 .WithOne(g => g.Order)
+                .HasForeignKey(g => g.OrderNumberId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
+
+
+
+            modelBuilder.Entity<Product>().HasData(new Product { 
+                Description = "",
+                Name = "‘утбольный ћ€ч",
+                Price = 100,
+                Id = Guid.NewGuid()
+            });
+
+            modelBuilder.Entity<Product>().HasData(new Product
+            {
+                Description = "",
+                Name = "‘утбольна€ сетка",
+                Price = 400,
+                Id = Guid.NewGuid()
+            });
+
+            modelBuilder.Entity<Product>().HasData(new Product
+            {
+                Description = "",
+                Name = "‘утболка",
+                Price = 20,
+                Id = Guid.NewGuid()
+            });
+
+            modelBuilder.Entity<Product>().HasData(new Product
+            {
+                Description = "",
+                Name = "Ўорты",
+                Price = 20,
+                Id = Guid.NewGuid()
+            });
+
         }
     }
 }

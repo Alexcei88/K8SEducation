@@ -1,5 +1,7 @@
 using System;
 using System.Threading.Tasks;
+using System.Transactions;
+using Microsoft.EntityFrameworkCore;
 using OTUS.HomeWork.BillingService.DAL;
 using OTUS.HomeWork.BillingService.Domain;
 
@@ -11,9 +13,11 @@ namespace OTUS.HomeWork.BillingService.Services
         
         Task<decimal> GetBalanceAsync(Guid userId);
 
-        Task<Payment> MakePaymentAsync(PaymentRequestDTO payment);
+        Task<decimal> AddBalanceAsync(Guid userId, BillingTransferRequestDTO billingTransferRequest);
 
-        Task<Payment> RollbackPaymentAsync(PaymentRequestDTO payment);
+        Task<Payment> MakePaymentAsync(Guid userId, PaymentRequestDTO paymentRequest);
+
+        Task<Payment> RollbackPaymentAsync(Guid userId, PaymentRequestDTO paymentRequest);
     }
 
     public class BillingService 
@@ -24,6 +28,19 @@ namespace OTUS.HomeWork.BillingService.Services
         public BillingService(BillingContext context)
         {
             _context = context;
+        }
+
+        public async Task<decimal> AddBalanceAsync(Guid userId, BillingTransferRequestDTO billingTransferRequest)
+        {            
+            var user = await _context.Users.FirstAsync(g => g.Id == userId);
+            if (user == null)
+                throw new Exception($"User with id {userId} is not found");
+
+            user.Balance += billingTransferRequest.Amount;
+            _context.Entry(user).State = EntityState.Modified;
+            var res = await _context.SaveChangesAsync();
+
+            return user.Balance;
         }
 
         public async Task<decimal> CreateBalanceAsync(Guid userId)
@@ -43,14 +60,50 @@ namespace OTUS.HomeWork.BillingService.Services
             return user?.Balance ?? 0.0m;
         }
 
-        public Task<Payment> MakePaymentAsync(PaymentRequestDTO payment)
-        {
-            throw new NotImplementedException();
+        public async Task<Payment> MakePaymentAsync(Guid userId, PaymentRequestDTO paymentRequest)
+        {            
+            var user = await _context.Users.FirstAsync(g => g.Id == userId);
+            if (user == null)
+                throw new Exception($"User with id {userId} is not found");
+
+            if (user.Balance < paymentRequest.Amount)
+                throw new Exception("Not enough balance to complete payment");
+
+            var payment = new Payment()
+            {
+                Amount = paymentRequest.Amount,
+                Date = DateTime.UtcNow,
+                UserId = userId
+            };
+
+            _context.Payments.Add(payment);
+
+            user.Balance -= paymentRequest.Amount;
+            _context.Entry(user).State = EntityState.Modified;
+            var res = await _context.SaveChangesAsync();
+            return payment;
         }
 
-        public Task<Payment> RollbackPaymentAsync(PaymentRequestDTO payment)
+        public async Task<Payment> RollbackPaymentAsync(Guid userId, PaymentRequestDTO paymentRequest)
         {
-            throw new NotImplementedException();
+            var user = await _context.Users.FirstAsync(g => g.Id == userId);
+            if (user == null)
+                throw new Exception($"User with id {userId} is not found");
+            
+            var payment = new Payment()
+            {
+                Amount = paymentRequest.Amount,
+                Date = DateTime.UtcNow,
+                UserId = userId
+            };
+
+            _context.Payments.Add(payment);
+
+            user.Balance += paymentRequest.Amount;
+            _context.Entry(user).State = EntityState.Modified;
+            var res = await _context.SaveChangesAsync();
+
+            return payment;
         }
     }
 }

@@ -16,6 +16,6 @@ namespace OTUS.HomeWork.NotificationService.DAL
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasPostgresExtension("uuid-ossp");
-        }   
+        }
     }
 }

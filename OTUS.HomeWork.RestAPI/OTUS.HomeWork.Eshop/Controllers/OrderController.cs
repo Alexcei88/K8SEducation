@@ -11,7 +11,7 @@ namespace OTUS.HomeWork.Eshop.Controllers
 {
     [ApiController]
     [Route("api/order")]
-    [Authorize(Policy = "OnlyOwner")]
+   // [Authorize(Policy = "OnlyOwner")]
     public class OrderController : ControllerBase
     {
         private readonly OrderService _orderService;
@@ -24,14 +24,16 @@ namespace OTUS.HomeWork.Eshop.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost("/{userId}")]
-        public async Task<ActionResult<string>> CreateOrder([FromRoute] Guid userId,  CreateOrderDTO orderDTO)
+        [HttpPost("{userId}")]
+        public async Task<ActionResult<CreatedOrderDTO>> CreateOrder([FromRoute] Guid userId, CreateOrderDTO orderDTO)
         {
             Order order = _mapper.Map<Order>(orderDTO);
             order.UserId = userId;
-            var newOrderId = await _orderService.CreateOrderAsync(order);
+            var newOrder = await _orderService.CreateOrderAsync(order);
+            // send notification
+            //if()
 
-            return Ok(newOrderId);
+            return Ok(_mapper.Map<CreatedOrderDTO>(newOrder));
         }
     }
 }

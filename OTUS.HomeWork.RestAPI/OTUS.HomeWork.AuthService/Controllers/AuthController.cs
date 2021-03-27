@@ -35,12 +35,12 @@ namespace OTUS.HomeWork.AuthService.Controllers
 
         [HttpPost]
         [Route("api/register")]
-        public async Task<ActionResult<UserDTO>> Register([FromBody]RegisterUserDTO user)
+        public async Task<ActionResult<Domain.UserDTO>> Register([FromBody]RegisterUserDTO user)
         {
             var newUser = await _userService.CreateUserAsync(_mapper.Map<User>(user));
             try
             {
-                var balance = await _billingServiceClient.CreateUserAsync(newUser.Id);
+                var _ = await _billingServiceClient.CreateUserAsync(newUser.Id);
             }
             catch (Exception e)
             {
@@ -48,7 +48,7 @@ namespace OTUS.HomeWork.AuthService.Controllers
                 await _userService.DeleteUserAsync(newUser.Id);
                 throw;
             }
-            return Ok(_mapper.Map<UserDTO>(newUser));
+            return Ok(_mapper.Map<Domain.UserDTO>(newUser));
         }
 
         [HttpGet]
@@ -86,5 +86,6 @@ namespace OTUS.HomeWork.AuthService.Controllers
 
             return Ok();
         }
+
     }
 }

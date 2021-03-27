@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OTUS.HomeWork.BillingService.Domain;
 using OTUS.HomeWork.BillingService.Services;
@@ -10,7 +9,7 @@ namespace OTUS.HomeWork.BillingService.Controllers
 {
     [ApiController]
     [Route("api/user")]
-    [Authorize(Policy = "OnlyOwner")]
+    //[Authorize(Policy = "OnlyOwner")]
     public class UserController : ControllerBase
     {
         private readonly IBillingService _billingService;
@@ -23,13 +22,13 @@ namespace OTUS.HomeWork.BillingService.Controllers
         }
 
         [HttpPost("{userId}")]
-        public async Task<ActionResult<decimal>> CreateUser(Guid userId)
+        public async Task<ActionResult<UserDTO>> CreateUser(Guid userId)
         {
             var balance = await _billingService.CreateBalanceAsync(userId);
             return Ok(new UserDTO
             {
                 Balance = balance,
-                Id = userId
+                UserId = userId
             });
         }
         
@@ -40,21 +39,33 @@ namespace OTUS.HomeWork.BillingService.Controllers
             return Ok(new UserDTO
             {
                 Balance = balance,
-                Id = userId
+                UserId = userId
             });
         }
+
+        [HttpPut("{userId}/balance")]
+        public async Task<ActionResult<UserDTO>> AddBalance(Guid userId, BillingTransferRequestDTO transfer)
+        {
+            var newBalance = await _billingService.AddBalanceAsync(userId, transfer);
+            return Ok(new UserDTO
+            {
+                Balance = newBalance,
+                UserId = userId
+            });
+        }
+
 
         [HttpPost("{userId}/payment")]
         public async Task<ActionResult<PaymentDTO>> MakePayment(Guid userId, PaymentRequestDTO paymentRequest)
         {
-            var payment = await _billingService.MakePaymentAsync(paymentRequest);
+            var payment = await _billingService.MakePaymentAsync(userId, paymentRequest);
             return Ok(_mapper.Map<PaymentDTO>(payment));
         }
 
-        [HttpPost("{userId}/payment/rollback")]
+        [HttpPost("{userId}/rollback")]
         public async Task<ActionResult<PaymentDTO>> RollbackPayment(Guid userId, PaymentRequestDTO paymentRequest)
         {
-            var payment = await _billingService.MakePaymentAsync(paymentRequest);
+            var payment = await _billingService.RollbackPaymentAsync(userId, paymentRequest);
             return Ok(_mapper.Map<PaymentDTO>(payment));
         }
 

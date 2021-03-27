@@ -1,13 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OTUS.HomeWork.Eshop.Domain
 {
     public record Order
     {
         [Key]
-        public string OrderNumber { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid OrderNumber { get; set; }
        
         public Guid UserId { get; set; }
 
@@ -21,6 +23,6 @@ namespace OTUS.HomeWork.Eshop.Domain
         
         public DateTime? PaidDateUtc { get; set; }
         
-        public SortedSet<OrderItem> Items { get; set; }
+        public List<OrderItem> Items { get; set; }
     }
 }

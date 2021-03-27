@@ -5,11 +5,7 @@ using System.Collections.Generic;
 namespace OTUS.HomeWork.EShop.Domain
 {
     public record CreateOrderDTO
-    {
-        public Guid UserId { get; set; }
-
-        public SortedSet<OrderItemDTO> Items { get; init; }
-
-        public OrderStatusDTO Status { get; init; }
+    {        
+        public List<OrderItemDTO> Items { get; init; }
     }
 }
