@@ -22,10 +22,11 @@ namespace OTUS.HomeWork.NotificationService.Migrations
 
             modelBuilder.Entity("OTUS.HomeWork.NotificationService.Domain.Notification", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
+                        .HasColumnType("integer")
+                        .HasColumnName("id")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<DateTime>("CreatedDateUtc")
                         .HasColumnType("timestamp without time zone")

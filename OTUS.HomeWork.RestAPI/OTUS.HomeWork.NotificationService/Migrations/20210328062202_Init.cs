@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace OTUS.HomeWork.NotificationService.Migrations
 {
@@ -14,7 +15,8 @@ namespace OTUS.HomeWork.NotificationService.Migrations
                 name: "notifications",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     user_id = table.Column<Guid>(type: "uuid", nullable: false),
                     message = table.Column<string>(type: "text", nullable: true),
                     created_date_utc = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)

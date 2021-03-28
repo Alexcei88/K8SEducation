@@ -10,7 +10,7 @@ using OTUS.HomeWork.NotificationService.DAL;
 namespace OTUS.HomeWork.NotificationService.Migrations
 {
     [DbContext(typeof(NotificationDbContext))]
-    [Migration("20210327181308_Init")]
+    [Migration("20210328062202_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,10 +24,11 @@ namespace OTUS.HomeWork.NotificationService.Migrations
 
             modelBuilder.Entity("OTUS.HomeWork.NotificationService.Domain.Notification", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
+                        .HasColumnType("integer")
+                        .HasColumnName("id")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<DateTime>("CreatedDateUtc")
                         .HasColumnType("timestamp without time zone")

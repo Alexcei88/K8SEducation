@@ -49,7 +49,7 @@ namespace OTUS.HomeWork.NotificationService.Extensions
                                     {
                                         UserId = orderCreatedError.UserId,
                                         CreatedDateUtc = DateTime.UtcNow,
-                                        Message = $"Заказ не был создан по причине {orderCreatedError.Message}. Попробуйте повторить еще раз."
+                                        Message = $"Заказ отменен по причине {orderCreatedError.Message}"
                                     });
                                 }
                                 break;

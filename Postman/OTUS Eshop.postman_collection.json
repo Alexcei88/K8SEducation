@@ -61,9 +61,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{authbaseUrlD}}/api/register",
+					"raw": "{{authbaseUrl}}/api/register",
 					"host": [
-						"{{authbaseUrlD}}"
+						"{{authbaseUrl}}"
 					],
 					"path": [
 						"api",
@@ -143,9 +143,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{billingBaseUrlD}}/api/user/{{userId1}}/balance",
+					"raw": "{{billingBaseUrl}}/api/user/{{userId1}}/balance",
 					"host": [
-						"{{billingBaseUrlD}}"
+						"{{billingBaseUrl}}"
 					],
 					"path": [
 						"api",
@@ -192,6 +192,21 @@
 				}
 			},
 			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{userId1}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "PUT",
 				"header": [
 					{
@@ -210,9 +225,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{billingBaseUrlD}}/api/user/{{userId1}}/balance",
+					"raw": "{{billingBaseUrl}}/api/user/{{userId1}}/balance",
 					"host": [
-						"{{billingBaseUrlD}}"
+						"{{billingBaseUrl}}"
 					],
 					"path": [
 						"api",
@@ -235,6 +250,7 @@
 							"pm.collectionVariables.set(\"product1\", jsonData[0][\"id\"]);\r",
 							"pm.collectionVariables.set(\"product2\", jsonData[1][\"id\"]);\r",
 							"pm.collectionVariables.set(\"product3\", jsonData[2][\"id\"]);\r",
+							"pm.collectionVariables.set(\"product4\", jsonData[3][\"id\"]);\r",
 							"\r",
 							"pm.test(\"get product list successfully\", function() {\r",
 							"    pm.response.to.have.status(200);\r",
@@ -251,7 +267,19 @@
 			},
 			"request": {
 				"auth": {
-					"type": "noauth"
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{userId1}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						}
+					]
 				},
 				"method": "GET",
 				"header": [
@@ -262,9 +290,9 @@
 					}
 				],
 				"url": {
-					"raw": "{{baseUrlD}}/api/product",
+					"raw": "{{baseUrl}}/api/product",
 					"host": [
-						"{{baseUrlD}}"
+						"{{baseUrl}}"
 					],
 					"path": [
 						"api",
@@ -295,7 +323,7 @@
 					"listen": "prerequest",
 					"script": {
 						"exec": [
-							"setTimeout(function(){}, 8000);"
+							""
 						],
 						"type": "text/javascript"
 					}
@@ -346,9 +374,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrlD}}/api/order/{{userId1}}",
+					"raw": "{{baseUrl}}/api/order/{{userId1}}",
 					"host": [
-						"{{baseUrlD}}"
+						"{{baseUrl}}"
 					],
 					"path": [
 						"api",
@@ -382,7 +410,6 @@
 					"listen": "prerequest",
 					"script": {
 						"exec": [
-							"\r",
 							""
 						],
 						"type": "text/javascript"
@@ -429,9 +456,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{billingBaseUrlD}}/api/user/{{userId1}}/balance",
+					"raw": "{{billingBaseUrl}}/api/user/{{userId1}}/balance",
 					"host": [
-						"{{billingBaseUrlD}}"
+						"{{billingBaseUrl}}"
 					],
 					"path": [
 						"api",
@@ -508,9 +535,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{notificationBaseUrlD}}/api/notification/{{userId1}}",
+					"raw": "{{notificationBaseUrl}}/api/notification/{{userId1}}",
 					"host": [
-						"{{notificationBaseUrlD}}"
+						"{{notificationBaseUrl}}"
 					],
 					"path": [
 						"api",
@@ -529,7 +556,7 @@
 					"script": {
 						"exec": [
 							"pm.test(\"order cannot be created. balance is not a enough\", function() {\r",
-							"    pm.response.to.have.status(500);\r",
+							"    pm.response.to.have.status(400);\r",
 							"})"
 						],
 						"type": "text/javascript"
@@ -573,7 +600,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"items\": [\r\n    {\r\n      \"productId\": \"{{product2}}\",\r\n      \"quantity\": 2\r\n    }\r\n  ]\r\n}",
+					"raw": "{\r\n  \"items\": [\r\n    {\r\n      \"productId\": \"{{product4}}\",\r\n      \"quantity\": 2\r\n    }\r\n  ]\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -581,9 +608,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseUrlD}}/api/order/{{userId1}}",
+					"raw": "{{baseUrl}}/api/order/{{userId1}}",
 					"host": [
-						"{{baseUrlD}}"
+						"{{baseUrl}}"
 					],
 					"path": [
 						"api",
@@ -605,6 +632,7 @@
 							"    pm.response.to.have.status(200);\r",
 							"    \r",
 							"    const responseJson = pm.response.json();    \r",
+							"    pm.expect(responseJson.message).to.eql('Заказ отменен по причине Not enough balance to complete payment');\r",
 							"})"
 						],
 						"type": "text/javascript"
@@ -614,7 +642,7 @@
 					"listen": "prerequest",
 					"script": {
 						"exec": [
-							"setTimeout(function(){}, 8000);"
+							"setTimeout(function(){}, 4000);"
 						],
 						"type": "text/javascript"
 					}
@@ -656,9 +684,9 @@
 					}
 				],
 				"url": {
-					"raw": "{{notificationBaseUrlD}}/api/notification/{{userId1}}?skip=1",
+					"raw": "{{notificationBaseUrl}}/api/notification/{{userId1}}?skip=1",
 					"host": [
-						"{{notificationBaseUrlD}}"
+						"{{notificationBaseUrl}}"
 					],
 					"path": [
 						"api",
@@ -745,9 +773,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{billingBaseUrlD}}/api/user/{{userId1}}/balance",
+					"raw": "{{billingBaseUrl}}/api/user/{{userId1}}/balance",
 					"host": [
-						"{{billingBaseUrlD}}"
+						"{{billingBaseUrl}}"
 					],
 					"path": [
 						"api",
@@ -783,7 +811,7 @@
 	"variable": [
 		{
 			"key": "baseUrl",
-			"value": "http://arch.homework:80/otus"
+			"value": "http://arch.homework:80/eshop"
 		},
 		{
 			"key": "baseUrlD",
@@ -863,6 +891,10 @@
 		},
 		{
 			"key": "product3",
+			"value": ""
+		},
+		{
+			"key": "product4",
 			"value": ""
 		}
 	]

@@ -30,11 +30,12 @@ namespace DataBuffer.BusClient.RabbitMq
 
 			_rabbitMQChannelPool = rabbitMQChannelPool;
 
-			CreateExchangeAndQueuIfNotExist();
+			CreateExchangeAndQueueIfNotExist();
 		}
 
-		private void CreateExchangeAndQueuIfNotExist()
+		private void CreateExchangeAndQueueIfNotExist()
         {
+			Console.WriteLine("CreateExchangeAndQueueIfNotExist was called");
 			// 1. проверяем exchange
 			RabbitMQChannel? channel = null;
 			try
@@ -46,19 +47,30 @@ namespace DataBuffer.BusClient.RabbitMq
 				{
 					channel.Value.Channel.ExchangeDeclare(_exchangeName, ExchangeType.Direct, true);
 				}
-				catch { }
+				catch(Exception ex) {
+					Console.WriteLine($"Не удалось создать Exchange: {ex}");
+					if (channel != null)
+						_rabbitMQChannelPool.Return(channel.Value);
+					channel = _rabbitMQChannelPool.Get();
+				}
 
 				try
 				{
 					channel.Value.Channel.QueueDeclare(_routeKey, true);
 				}
-				catch { }
+				catch {
+					if (channel != null)
+						_rabbitMQChannelPool.Return(channel.Value);
+					channel = _rabbitMQChannelPool.Get();
+				}
 				// binding
 				try
 				{
 					channel.Value.Channel.QueueBind(_routeKey, _exchangeName, _routeKey);
 				}
-                catch { }
+                catch(Exception ex) {
+					Console.WriteLine($"Не удалось создать привязку: {ex}");
+				}
 			}
 			finally
 			{

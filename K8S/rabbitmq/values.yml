@@ -1,4 +1,4 @@
-fullnameOverride: rabbitmq
+nameOverride: rabbitmq
 auth:
   username: eshop
   password: eshop

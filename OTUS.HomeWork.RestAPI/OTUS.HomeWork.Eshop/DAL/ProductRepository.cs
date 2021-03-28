@@ -18,7 +18,7 @@ namespace OTUS.HomeWork.EShop.DAL
 
         public Task<Product[]> GetProductsAsync(int skip, int limit)
         {
-            return _orderContext.Products.Skip(skip).Take(limit).ToArrayAsync();
+            return _orderContext.Products.OrderBy(s => s.Id).Skip(skip).Take(limit).ToArrayAsync();
         }
 
         public async Task<Guid> CreateProduct(Product product)

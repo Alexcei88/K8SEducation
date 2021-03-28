@@ -103,12 +103,14 @@ namespace OTUS.HomeWork.Eshop
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IMapper mapper, ILoggerFactory factory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IMapper mapper, ILoggerFactory factory, IOptions<RabbitMQOption> rabbitMQCoonection)
         {
             mapper.ConfigurationProvider.AssertConfigurationIsValid();
             mapper.ConfigurationProvider.CompileMappings();
 
             factory.CreateLogger("Startup").LogWarning($"ConnectionString: {Configuration.GetConnectionString("DefaultConnection")}");
+            factory.CreateLogger("Startup").LogWarning($"RabbitMQCoonection ConnectionString: {rabbitMQCoonection.Value.ConnectionString}");
+
             AutomaticallyApplyDBMigrations(app);
 
             if (env.IsDevelopment())

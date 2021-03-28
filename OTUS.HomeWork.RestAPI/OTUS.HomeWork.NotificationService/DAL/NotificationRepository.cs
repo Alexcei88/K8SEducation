@@ -23,7 +23,7 @@ namespace OTUS.HomeWork.NotificationService.DAL
 
         public Task<Notification[]> GetNotificationAsync(Guid userId, int offset, int limit)
         {
-            return _notificationDbContext.Notifications.Where(g => g.UserId == userId).Skip(offset).Take(limit).ToArrayAsync();
+            return _notificationDbContext.Notifications.Where(g => g.UserId == userId).OrderBy(s => s.Id).Skip(offset).Take(limit).ToArrayAsync();
         }
     }
 }
