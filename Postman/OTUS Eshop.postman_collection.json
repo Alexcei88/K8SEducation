@@ -630,9 +630,7 @@
 						"exec": [
 							"pm.test(\"user has received a notification with bad ordering\", function() {\r",
 							"    pm.response.to.have.status(200);\r",
-							"    \r",
-							"    const responseJson = pm.response.json();    \r",
-							"    pm.expect(responseJson.message).to.eql('Заказ отменен по причине Not enough balance to complete payment');\r",
+							"    pm.expect(pm.response.text()).to.include(\"Заказ отменен по причине\");\r",
 							"})"
 						],
 						"type": "text/javascript"
