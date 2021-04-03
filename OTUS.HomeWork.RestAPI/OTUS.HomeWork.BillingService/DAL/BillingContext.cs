@@ -28,6 +28,9 @@ namespace OTUS.HomeWork.BillingService.DAL
                 .HasForeignKey(s => s.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Payment>()
+                .HasIndex(c => c.IdempotanceKey)
+                .IsUnique();
         }
     }
 }

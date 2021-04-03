@@ -57,5 +57,35 @@ namespace OTUS.HomeWork.Eshop.Controllers
                 return BadRequest("Not enough balance to complete payment");
             }
         }
+
+        [HttpPut("{userId}/cancel")]
+        public async Task<ActionResult<CreatedOrderDTO>> CancelOrder([FromRoute] Guid userId, CreateOrderDTO orderDTO)
+        {
+            try
+            {
+                Order order = _mapper.Map<Order>(orderDTO);
+                order.UserId = userId;
+                var newOrder = await _orderService.CreateOrderAsync(order);
+                // send notification
+                await _mqSender.SendMessageAsync(new OrderCreated
+                {
+                    UserId = userId,
+                    BillingAddressId = newOrder.BillingId.ToString(),
+                    OrderNumber = newOrder.OrderNumber.ToString(),
+                    Price = newOrder.TotalPrice,
+                }); ;
+                return Ok(_mapper.Map<CreatedOrderDTO>(newOrder));
+            }
+            catch (Exception ex)
+            {
+                await _mqSender.SendMessageAsync(new OrderCreatedError
+                {
+                    UserId = userId,
+                    Message = "Not enough balance to complete payment",
+                });
+
+                return BadRequest("Not enough balance to complete payment");
+            }
+        }
     }
 }

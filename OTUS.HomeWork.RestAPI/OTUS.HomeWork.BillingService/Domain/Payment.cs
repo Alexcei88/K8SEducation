@@ -16,5 +16,7 @@ namespace OTUS.HomeWork.BillingService.Domain
 
         public decimal Amount { get; set; }
 
+        public string IdempotanceKey { get; set; }
+
     }
 }

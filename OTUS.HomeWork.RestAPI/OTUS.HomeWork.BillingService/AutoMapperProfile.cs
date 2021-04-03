@@ -13,6 +13,7 @@ namespace OTUS.HomeWork.BillingService
                 .ForMember(g => g.Date, m => m.Ignore())
                 .ForMember(g => g.Amount, m => m.Ignore())
                 .ForMember(g => g.UserId, m => m.Ignore())
+                .ForMember(g => g.IdempotanceKey, m => m.Ignore())
                 .ReverseMap();
 
             CreateMap<UserDTO, User>()

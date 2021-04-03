@@ -27,8 +27,11 @@ namespace OTUS.HomeWork.Eshop.DAL
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Order>()
+                .HasIndex(c => c.IdempotencyKey)
+                .IsUnique();
 
-
+#region SeedData
             modelBuilder.Entity<Product>().HasData(new Product { 
                 Description = "",
                 Name = "‘утбольный ћ€ч",
@@ -59,7 +62,7 @@ namespace OTUS.HomeWork.Eshop.DAL
                 Price = 20,
                 Id = Guid.NewGuid()
             });
-
+#endregion
         }
     }
 }

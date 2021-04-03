@@ -24,5 +24,7 @@ namespace OTUS.HomeWork.Eshop.Domain
         public DateTime? PaidDateUtc { get; set; }
         
         public List<OrderItem> Items { get; set; }
+
+        public string IdempotencyKey { get; set; }
     }
 }

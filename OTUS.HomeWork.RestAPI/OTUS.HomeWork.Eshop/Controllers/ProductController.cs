@@ -1,5 +1,4 @@
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OTUS.HomeWork.Eshop.Domain;
 using OTUS.HomeWork.EShop.DAL;

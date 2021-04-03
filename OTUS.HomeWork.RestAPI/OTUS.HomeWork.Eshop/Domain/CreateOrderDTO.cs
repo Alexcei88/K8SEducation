@@ -7,5 +7,7 @@ namespace OTUS.HomeWork.EShop.Domain
     public record CreateOrderDTO
     {        
         public List<OrderItemDTO> Items { get; init; }
+
+        public string IdempotencyKey { get; set; }
     }
 }

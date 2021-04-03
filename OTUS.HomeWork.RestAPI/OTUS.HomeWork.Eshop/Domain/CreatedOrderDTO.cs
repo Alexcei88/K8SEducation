@@ -8,5 +8,7 @@ namespace OTUS.HomeWork.EShop.Domain
         public Guid OrderNumber { get; set; }
 
         public OrderStatusDTO Status { get; set; }
+
+        public string IdempotencyKey { get; set; }
     }
 }

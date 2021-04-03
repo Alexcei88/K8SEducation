@@ -323,6 +323,7 @@
 					"listen": "prerequest",
 					"script": {
 						"exec": [
+							"pm.collectionVariables.set(\"idempotencyKey\", pm.variables.replaceIn('{{$randomUUID}}'))\r",
 							""
 						],
 						"type": "text/javascript"
@@ -366,7 +367,92 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"items\": [\r\n    {\r\n      \"productId\": \"{{product1}}\",\r\n      \"quantity\": 2\r\n    },\r\n    {\r\n      \"productId\": \"{{product3}}\",\r\n      \"quantity\": 1\r\n    }\r\n  ]\r\n}",
+					"raw": "{\r\n  \"items\": [\r\n    {\r\n      \"productId\": \"{{product2}}\",\r\n      \"quantity\": 2\r\n    },\r\n    {\r\n      \"productId\": \"{{product3}}\",\r\n      \"quantity\": 1\r\n    }\r\n  ],\r\n  \"idempotencyKey\": \"{{idempotencyKey}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/order/{{userId1}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"order",
+						"{{userId1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createOrderSuccessfully Copy",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"create order succesfully\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.status).to.eql(30);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"host": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{userId1}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "host",
+						"value": "arch.homework",
+						"type": "text"
+					},
+					{
+						"key": "X-Custom-Authentification",
+						"value": "eyJVc2VySWQiOiJjNjk0ZDQxMi1iMGQ3LTQxNTAtOWM1My04MTQxYzExZmNmNmYiLCJFeHBpcmVkVVRDRGF0ZVRpbWUiOiIyMDIxLTAyLTIyVDIwOjA0OjE5Ljc0MTg2MDNaIn0=",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"items\": [\r\n    {\r\n      \"productId\": \"{{product2}}\",\r\n      \"quantity\": 2\r\n    },\r\n    {\r\n      \"productId\": \"{{product3}}\",\r\n      \"quantity\": 1\r\n    }\r\n  ],\r\n  \"idempotencyKey\": \"{{idempotencyKey}}\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -561,6 +647,15 @@
 						],
 						"type": "text/javascript"
 					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"idempotencyKey\", pm.variables.replaceIn('{{$randomUUID}}'))"
+						],
+						"type": "text/javascript"
+					}
 				}
 			],
 			"protocolProfileBehavior": {
@@ -600,7 +695,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"items\": [\r\n    {\r\n      \"productId\": \"{{product4}}\",\r\n      \"quantity\": 2\r\n    }\r\n  ]\r\n}",
+					"raw": "{\r\n  \"items\": [\r\n    {\r\n      \"productId\": \"{{product1}}\",\r\n      \"quantity\": 2\r\n    }\r\n  ],\r\n  \"idempotencyKey\": \"{{idempotencyKey}}\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -829,7 +924,7 @@
 		},
 		{
 			"key": "billingBaseUrlD",
-			"value": "http://arch.homework:80/billing"
+			"value": "http://localhost:5010"
 		},
 		{
 			"key": "notificationBaseUrl",
@@ -893,6 +988,14 @@
 		},
 		{
 			"key": "product4",
+			"value": ""
+		},
+		{
+			"key": "IdempotencyKey",
+			"value": ""
+		},
+		{
+			"key": "idempotencyKey",
 			"value": ""
 		}
 	]

@@ -24,22 +24,28 @@ namespace OTUS.HomeWork.EShop.Services
 
         public async Task<Order> CreateOrderAsync(Order order)
         {
+            // проверяем, не пришел ли второй раз тот же самый запрос
+            var existOrder = _orderContext.Orders.FirstOrDefault(g => g.IdempotencyKey == order.IdempotencyKey);
+            if (existOrder != null)
+                return existOrder;
+
             var totalPrice = await CalculateTotalPriceAsync(order.Items);
             PaymentDTO payment;
             try
             {
                 payment = await _billingClient.PaymentAsync(order.UserId, new PaymentRequestDTO
                 {
-                    Amount = totalPrice
+                    Amount = totalPrice,
+                    IdempotanceKey = "MakePayment" + order.IdempotencyKey
                 });
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 // нужно исключение прокидывает специальное, упрощаем
                 throw new Exception("При оплате произошла ошибка", ex);
             }
-            foreach(var item in order.Items)
+            foreach (var item in order.Items)
             {
                 item.Order = order;
             }
@@ -48,20 +54,19 @@ namespace OTUS.HomeWork.EShop.Services
             order.PaidDateUtc = DateTime.UtcNow;
             order.CreatedOnUtc = DateTime.UtcNow;
             order.Status = OrderStatus.Complete;
-            
+
             _orderContext.Add(order);
             await _orderContext.SaveChangesAsync();
-
             return order;
         }
 
         private async Task<decimal> CalculateTotalPriceAsync(List<OrderItem> items)
         {
             decimal totalPrice = 0.0m;
-            foreach(var item in items)
+            foreach (var item in items)
             {
-                decimal? price = await _productRepository.GetPriceOfProducsAsync(item.ProductId);
-                if(price == null)
+                decimal? price = await _productRepository.GetPriceOfProductAsync(item.ProductId);
+                if (price == null)
                     throw new ArgumentException("Передан неизвестный товар");
 
                 totalPrice += price.Value * item.Quantity;
