@@ -16,7 +16,7 @@ namespace OTUS.HomeWork.BillingService
                 .ForMember(g => g.IdempotanceKey, m => m.Ignore())
                 .ReverseMap();
 
-            CreateMap<UserDTO, User>()
+            CreateMap<BillingUserDTO, User>()
                .ForMember(g => g.Payments, m => m.Ignore())
                .ForMember(g => g.Id, m => m.MapFrom(s => s.UserId))
                .ReverseMap();

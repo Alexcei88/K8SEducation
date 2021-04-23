@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using System.Transactions;
 using Microsoft.EntityFrameworkCore;
 using OTUS.HomeWork.BillingService.DAL;
 using OTUS.HomeWork.BillingService.Domain;
@@ -45,6 +44,9 @@ namespace OTUS.HomeWork.BillingService.Services
 
         public async Task<decimal> CreateBalanceAsync(Guid userId)
         {
+            var findUser = _context.Users.Find(userId);
+            if (findUser != null)
+                return findUser.Balance;
             await _context.Users.AddAsync(new User
             {
                 Id = userId,
@@ -66,7 +68,7 @@ namespace OTUS.HomeWork.BillingService.Services
             if (user == null)
                 throw new Exception($"User with id {userId} is not found");
 
-            var existPayment = await _context.Payments.FirstOrDefaultAsync(g => g.IdempotanceKey == paymentRequest.IdempotanceKey);
+            var existPayment = await _context.Payments.FirstOrDefaultAsync(g => g.IdempotanceKey == paymentRequest.IdempotenceKey);
             if (existPayment != null)
                 return existPayment;
 
@@ -78,7 +80,7 @@ namespace OTUS.HomeWork.BillingService.Services
                 Amount = paymentRequest.Amount,
                 Date = DateTime.UtcNow,
                 UserId = userId,
-                IdempotanceKey = paymentRequest.IdempotanceKey,
+                IdempotanceKey = paymentRequest.IdempotenceKey,
             };
 
             try
@@ -102,7 +104,7 @@ namespace OTUS.HomeWork.BillingService.Services
             if (user == null)
                 throw new Exception($"User with id {userId} is not found");
 
-            var existPayment = await _context.Payments.FirstOrDefaultAsync(g => g.IdempotanceKey == paymentRequest.IdempotanceKey);
+            var existPayment = await _context.Payments.FirstOrDefaultAsync(g => g.IdempotanceKey == paymentRequest.IdempotenceKey);
             if (existPayment != null)
                 return existPayment;
 
@@ -111,7 +113,7 @@ namespace OTUS.HomeWork.BillingService.Services
                 Amount = paymentRequest.Amount,
                 Date = DateTime.UtcNow,
                 UserId = userId,
-                IdempotanceKey = paymentRequest.IdempotanceKey,
+                IdempotanceKey = paymentRequest.IdempotenceKey,
             };
 
             try

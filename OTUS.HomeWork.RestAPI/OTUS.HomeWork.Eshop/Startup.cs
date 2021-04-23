@@ -22,10 +22,13 @@ using OTUS.HomeWork.Eshop.Middlewares;
 using OTUS.HomeWork.Eshop.Monitoring;
 using OTUS.HomeWork.EShop.DAL;
 using OTUS.HomeWork.EShop.Services;
+using OTUS.HomeWork.RestAPI.Abstraction;
 using OTUS.HomeWork.RestAPI.Abstraction.Authentication;
 using OTUS.HomeWork.RestAPI.Abstraction.Authentication.Handlers;
 using OTUS.HomeWork.RestAPI.Abstraction.Authentication.Requirements;
+using OTUS.HomeWork.RestAPI.Abstraction.DAL;
 using OTUS.HomeWork.RestAPI.Abstraction.Domain;
+using OTUS.HomeWork.RestAPI.Abstraction.Services;
 using Prometheus;
 using System.Net.Http;
 
@@ -45,6 +48,8 @@ namespace OTUS.HomeWork.Eshop
         {
             services.AddDbContext<OrderContext>(options =>
                     options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")).UseSnakeCaseNamingConvention());
+            services.AddDbContext<UserContext>(options =>
+                   options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")).UseSnakeCaseNamingConvention());
 
             services.Configure<RabbitMQOption>(Configuration.GetSection("RabbitMq"));
 
@@ -61,16 +66,18 @@ namespace OTUS.HomeWork.Eshop
             services.AddSingleton<MetricReporter>();
             services.AddScoped<OrderService>();
             services.AddScoped<ProductRepository>();
+            services.AddScoped<UserRepository>();
+            services.AddScoped<IUserService, UserService>();
 
             var billingSettingSection = Configuration.GetSection("BillingService");
-            services.AddScoped<BillingServiceClient>((sp) =>
+            services.AddScoped((sp) =>
             {
                 var options = billingSettingSection.Get<ServiceAddressOption>();
                 var client = sp.GetService<IHttpClientFactory>()?.CreateClient("BillingClient");
                 return new BillingServiceClient(options.Url, client);
             });
 
-            services.AddSingleton<RabbitMQMessageSender>((sp) =>
+            services.AddSingleton((sp) =>
             {
                 var rabbitMQOption = sp.GetService<IOptions<RabbitMQOption>>()?.Value;
                 return new RabbitMQMessageSender(rabbitMQOption.ExchangeName
@@ -78,7 +85,8 @@ namespace OTUS.HomeWork.Eshop
                     , new RabbitMQChannelPool(new RabbitMqConnectionPool(rabbitMQOption.ConnectionString))
                     , new JsonNetMessageExchangeSerializer());
             });
-            
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddAuthentication(g =>
             {
                 g.DefaultAuthenticateScheme = SimpleCustomAuthenticationHandler.AuthentificationScheme;

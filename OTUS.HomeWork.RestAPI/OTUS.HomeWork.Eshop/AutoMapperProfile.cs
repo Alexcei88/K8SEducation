@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using OTUS.HomeWork.AuthService.Domain;
 using OTUS.HomeWork.Eshop.Domain;
 using OTUS.HomeWork.EShop.Domain;
+using OTUS.HomeWork.RestAPI.Abstraction.Domain;
 
 namespace OTUS.HomeWork.Eshop
 {
@@ -28,6 +30,14 @@ namespace OTUS.HomeWork.Eshop
                 .ReverseMap();
 
             CreateMap<Order, CreatedOrderDTO>();
+
+            CreateMap<RegisterUserDTO, User>()
+               .ForMember(g => g.Id, m => m.Ignore());
+
+            CreateMap<User, UserDTO>()
+                .ForMember(g => g.UserId,
+                    m => m.MapFrom(s => s.Id))
+                .ReverseMap();
         }
     }
 }

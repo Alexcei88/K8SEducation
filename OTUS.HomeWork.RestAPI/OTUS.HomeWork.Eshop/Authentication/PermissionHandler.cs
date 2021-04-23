@@ -34,6 +34,7 @@ namespace OTUS.HomeWork.Eshop.Authentication
                 if (nameIdentifier == null)
                     return false;
 
+
                 string userIdFromPath = context.Request.Path.Value.Split('/').Last();
                 return userIdFromPath.Equals(nameIdentifier.Value, StringComparison.OrdinalIgnoreCase);
             }

@@ -36,7 +36,7 @@ namespace OTUS.HomeWork.EShop.Services
                 payment = await _billingClient.PaymentAsync(order.UserId, new PaymentRequestDTO
                 {
                     Amount = totalPrice,
-                    IdempotanceKey = "MakePayment" + order.IdempotencyKey
+                    IdempotenceKey = "MakePayment" + order.IdempotencyKey
                 });
 
             }

@@ -7,8 +7,9 @@ metadata:
       app: homeworkapp
   annotations:
     kubernetes.io/ingress.class: "nginx"
-    nginx.ingress.kubernetes.io/auth-url: http://homeworkapp-authservice.default.svc.cluster.local:16000/api/login
-    nginx.ingress.kubernetes.io/auth-response-headers: "X-Custom-Authentification"
+    nginx.ingress.kubernetes.io/auth-url: "https://$host/oauth2/auth"
+    nginx.ingress.kubernetes.io/auth-signin: "https://$host/oauth2/start?rd=$escaped_request_uri"
+    nginx.ingress.kubernetes.io/auth-response-headers: X-Forwarded-Access-Token, Authorization
     nginx.ingress.kubernetes.io/configuration-snippet: |
           proxy_set_header       Authorization "";
     nginx.ingress.kubernetes.io/rewrite-target: /$1
@@ -38,4 +39,67 @@ spec:
             name: notification-service
             port:
               number: 15030
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: oauth2-proxy
+spec:
+  rules:
+  - host: arch.homework
+    http:
+      paths:
+      - backend:
+          serviceName: oauth2-proxy
+          servicePort: 4180
+        path: /oauth2
+  tls:
+  - hosts:
+    - arch.homework
+    secretName: test-tls-secret
 
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: oauth2-proxy-signout
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: /oauth2/sign_out
+    nginx.ingress.kubernetes.io/server-snippet: |
+      proxy_intercept_errors on;
+      error_page 404 = @custom_404;
+
+      location @custom_404 {
+          return 200;
+      }
+spec:
+  rules:
+  - host: arch.homework
+    http:
+      paths:
+      - backend:
+          serviceName: oauth2-proxy
+          servicePort: 4180
+        path: /signout
+
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: oauth2-proxy-signin
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/auth-url: "https://$host/oauth2/auth"
+    nginx.ingress.kubernetes.io/auth-signin: "https://$host/oauth2/start?rd=$escaped_request_uri"    
+    nginx.ingress.kubernetes.io/rewrite-target: /api/user/signin
+    nginx.ingress.kubernetes.io/auth-response-headers: 'gap-auth'
+spec:
+  rules:  
+  - host: arch.homework
+    http:
+      paths:
+      - backend:
+          serviceName: homework-service
+          servicePort: 15020
+        path: /signin

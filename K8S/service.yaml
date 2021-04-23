@@ -13,20 +13,3 @@ spec:
     targetPort: 5020  
     name: "homework-service"
   type: NodePort
-  
---- 
-### auth service
-apiVersion: v1
-kind: Service
-metadata:
-  name: homeworkapp-authservice
-  labels:
-    app: homeworkapp-authservice
-spec:
-  selector:
-    app: auth-service
-  ports:
-  - port: 16000
-    targetPort: 80  
-    name: "homeworkapp-authservice"
-  type: NodePort

@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    k8s-app: oauth2-proxy
+  name: oauth2-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: oauth2-proxy
+  template:
+    metadata:
+      labels:
+        k8s-app: oauth2-proxy
+    spec:
+     containers:
+       - args:
+         - --provider=github
+         - --email-domain=*
+         - --upstream=file:///dev/null
+         - --http-address=0.0.0.0:4180
+         - --set-authorization-header=true
+         - --pass-authorization-header=true
+         - --pass-access-token=true
+         # Register a new application
+         # https://github.com/settings/applications/new
+         env:
+         - name: OAUTH2_PROXY_CLIENT_ID
+           value: 0aca3085355f4f14b247
+         - name: OAUTH2_PROXY_CLIENT_SECRET
+           value: ade7754f65a27b1e89bd848c91858e586c65229f
+         # docker run -ti --rm python:3-alpine python -c 'import secrets,base64; print(base64.b64encode(base64.b64encode(secrets.token_bytes(16))));'
+         - name: OAUTH2_PROXY_COOKIE_SECRET
+           value: cndHMDJlL2VPRUI5a3NJTEJDaEhmUT09
+         image: quay.io/oauth2-proxy/oauth2-proxy:latest
+         imagePullPolicy: Always
+         name: oauth2-proxy
+         ports:
+         - containerPort: 4180
+           protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    k8s-app: oauth2-proxy
+  name: oauth2-proxy
+spec:
+  ports:
+  - name: http
+    port: 4180
+    protocol: TCP
+    targetPort: 4180
+  selector:
+    k8s-app: oauth2-proxy
+  type: NodePort

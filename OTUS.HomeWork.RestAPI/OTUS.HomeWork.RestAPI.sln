@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OTUS.HomeWork.Eshop", "OTUS.HomeWork.Eshop\OTUS.HomeWork.Eshop.csproj", "{A8BEA2B2-016D-4176-90C8-4477C724CD7D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OTUS.HomeWork.AuthService", "OTUS.HomeWork.AuthService\OTUS.HomeWork.AuthService.csproj", "{3AABF0E0-03D1-47BB-89D7-8A89D35ED684}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OTUS.HomeWork.BillingService", "OTUS.HomeWork.BillingService\OTUS.HomeWork.BillingService.csproj", "{D27702AF-32A5-4C01-84E6-A2DBA6B3B9DC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OTUS.HomeWork.RestAPI.User", "OTUS.HomeWork.RestAPI.User\OTUS.HomeWork.RestAPI.User.csproj", "{D1D79633-8497-4CA9-BCEB-B2609B4C54CA}"
@@ -23,6 +21,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OTUS.HomeWork.MessageExchan
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OTUS.HomeWork.NotificationService", "OTUS.HomeWork.NotificationService\OTUS.HomeWork.NotificationService.csproj", "{57E752C7-2D17-4036-A63A-52F48058392A}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OTUS.HomeWork.PricingService", "OTUS.HomeWork.PricingService\OTUS.HomeWork.PricingService.csproj", "{ABC0678A-8962-4CC1-934B-F91633966B5F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OTUS.HomeWork.WarehouseService", "OTUS.HomeWork.WarehouseService\OTUS.HomeWork.WarehouseService.csproj", "{44881A68-28FD-4A9D-B5F2-4958AFAFEE4C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OTUS.HomeWork.DeliveryService", "OTUS.HomeWork.DeliveryService\OTUS.HomeWork.DeliveryService.csproj", "{50C95500-C9FE-404A-A3C1-BB357B1AD361}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,10 +37,6 @@ Global
 		{A8BEA2B2-016D-4176-90C8-4477C724CD7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8BEA2B2-016D-4176-90C8-4477C724CD7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8BEA2B2-016D-4176-90C8-4477C724CD7D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3AABF0E0-03D1-47BB-89D7-8A89D35ED684}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3AABF0E0-03D1-47BB-89D7-8A89D35ED684}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3AABF0E0-03D1-47BB-89D7-8A89D35ED684}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3AABF0E0-03D1-47BB-89D7-8A89D35ED684}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D27702AF-32A5-4C01-84E6-A2DBA6B3B9DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D27702AF-32A5-4C01-84E6-A2DBA6B3B9DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D27702AF-32A5-4C01-84E6-A2DBA6B3B9DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -69,6 +69,18 @@ Global
 		{57E752C7-2D17-4036-A63A-52F48058392A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57E752C7-2D17-4036-A63A-52F48058392A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57E752C7-2D17-4036-A63A-52F48058392A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABC0678A-8962-4CC1-934B-F91633966B5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABC0678A-8962-4CC1-934B-F91633966B5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABC0678A-8962-4CC1-934B-F91633966B5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABC0678A-8962-4CC1-934B-F91633966B5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44881A68-28FD-4A9D-B5F2-4958AFAFEE4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44881A68-28FD-4A9D-B5F2-4958AFAFEE4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44881A68-28FD-4A9D-B5F2-4958AFAFEE4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44881A68-28FD-4A9D-B5F2-4958AFAFEE4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50C95500-C9FE-404A-A3C1-BB357B1AD361}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50C95500-C9FE-404A-A3C1-BB357B1AD361}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50C95500-C9FE-404A-A3C1-BB357B1AD361}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50C95500-C9FE-404A-A3C1-BB357B1AD361}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

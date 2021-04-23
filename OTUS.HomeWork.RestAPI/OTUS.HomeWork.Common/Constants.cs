@@ -2,6 +2,6 @@
 {
     public static class Constants
     {
-        public const string X_AUTH_HEADER = "X-Custom-Authentification";
+        public const string USERNAME_HEADER = "gap-auth";
     }
 }

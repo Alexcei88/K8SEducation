@@ -22,10 +22,10 @@ namespace OTUS.HomeWork.BillingService.Controllers
         }
 
         [HttpPost("{userId}")]
-        public async Task<ActionResult<UserDTO>> CreateUser(Guid userId)
+        public async Task<ActionResult<BillingUserDTO>> CreateUser(Guid userId)
         {
             var balance = await _billingService.CreateBalanceAsync(userId);
-            return Ok(new UserDTO
+            return Ok(new BillingUserDTO
             {
                 Balance = balance,
                 UserId = userId
@@ -33,10 +33,10 @@ namespace OTUS.HomeWork.BillingService.Controllers
         }
         
         [HttpGet("{userId}/balance")]
-        public async Task<ActionResult<UserDTO>> GetBalance(Guid userId)
+        public async Task<ActionResult<BillingUserDTO>> GetBalance(Guid userId)
         {
             var balance = await _billingService.GetBalanceAsync(userId);
-            return Ok(new UserDTO
+            return Ok(new BillingUserDTO
             {
                 Balance = balance,
                 UserId = userId
@@ -44,10 +44,10 @@ namespace OTUS.HomeWork.BillingService.Controllers
         }
 
         [HttpPut("{userId}/balance")]
-        public async Task<ActionResult<UserDTO>> AddBalance(Guid userId, BillingTransferRequestDTO transfer)
+        public async Task<ActionResult<BillingUserDTO>> AddBalance(Guid userId, BillingTransferRequestDTO transfer)
         {
             var newBalance = await _billingService.AddBalanceAsync(userId, transfer);
-            return Ok(new UserDTO
+            return Ok(new BillingUserDTO
             {
                 Balance = newBalance,
                 UserId = userId

@@ -52,7 +52,7 @@ namespace OTUS.HomeWork.Clients
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public System.Threading.Tasks.Task<UserDTO> CreateUserAsync(System.Guid userId)
+        public System.Threading.Tasks.Task<BillingUserDTO> UserAsync(System.Guid userId)
         {
             return UserAsync(userId, System.Threading.CancellationToken.None);
         }
@@ -60,7 +60,7 @@ namespace OTUS.HomeWork.Clients
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public async System.Threading.Tasks.Task<UserDTO> UserAsync(System.Guid userId, System.Threading.CancellationToken cancellationToken)
+        public async System.Threading.Tasks.Task<BillingUserDTO> UserAsync(System.Guid userId, System.Threading.CancellationToken cancellationToken)
         {
             if (userId == null)
                 throw new System.ArgumentNullException("userId");
@@ -102,7 +102,7 @@ namespace OTUS.HomeWork.Clients
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<UserDTO>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<BillingUserDTO>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -131,7 +131,7 @@ namespace OTUS.HomeWork.Clients
 
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public System.Threading.Tasks.Task<UserDTO> AddUserBalanceAsync(System.Guid userId)
+        public System.Threading.Tasks.Task<BillingUserDTO> BalanceAsync(System.Guid userId)
         {
             return BalanceAsync(userId, System.Threading.CancellationToken.None);
         }
@@ -139,7 +139,7 @@ namespace OTUS.HomeWork.Clients
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public async System.Threading.Tasks.Task<UserDTO> BalanceAsync(System.Guid userId, System.Threading.CancellationToken cancellationToken)
+        public async System.Threading.Tasks.Task<BillingUserDTO> BalanceAsync(System.Guid userId, System.Threading.CancellationToken cancellationToken)
         {
             if (userId == null)
                 throw new System.ArgumentNullException("userId");
@@ -180,7 +180,7 @@ namespace OTUS.HomeWork.Clients
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<UserDTO>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<BillingUserDTO>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -209,7 +209,7 @@ namespace OTUS.HomeWork.Clients
 
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public System.Threading.Tasks.Task<UserDTO> Balance2Async(System.Guid userId, BillingTransferRequestDTO body)
+        public System.Threading.Tasks.Task<BillingUserDTO> Balance2Async(System.Guid userId, BillingTransferRequestDTO body)
         {
             return Balance2Async(userId, body, System.Threading.CancellationToken.None);
         }
@@ -217,7 +217,7 @@ namespace OTUS.HomeWork.Clients
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public async System.Threading.Tasks.Task<UserDTO> Balance2Async(System.Guid userId, BillingTransferRequestDTO body, System.Threading.CancellationToken cancellationToken)
+        public async System.Threading.Tasks.Task<BillingUserDTO> Balance2Async(System.Guid userId, BillingTransferRequestDTO body, System.Threading.CancellationToken cancellationToken)
         {
             if (userId == null)
                 throw new System.ArgumentNullException("userId");
@@ -264,7 +264,7 @@ namespace OTUS.HomeWork.Clients
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<UserDTO>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<BillingUserDTO>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -563,7 +563,7 @@ namespace OTUS.HomeWork.Clients
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.3.11.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class UserDTO
+    public partial class BillingUserDTO
     {
         [Newtonsoft.Json.JsonProperty("userId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Guid UserId { get; set; }
@@ -578,7 +578,7 @@ namespace OTUS.HomeWork.Clients
     public partial class BillingTransferRequestDTO
     {
         [Newtonsoft.Json.JsonProperty("amount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public decimal Amount { get; set; }
+        public double Amount { get; set; }
 
 
     }
@@ -589,8 +589,8 @@ namespace OTUS.HomeWork.Clients
         [Newtonsoft.Json.JsonProperty("amount", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public decimal Amount { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("idempotanceKey", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string IdempotanceKey { get; set; }
+        [Newtonsoft.Json.JsonProperty("idempotenceKey", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string IdempotenceKey { get; set; }
 
 
     }

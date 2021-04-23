@@ -26,9 +26,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OTUS.HomeWork.AuthService\OTUS.HomeWork.AuthService.csproj" />
+    <ProjectReference Include="..\OTUS.HomeWork.Clients\OTUS.HomeWork.Clients.csproj" />
     <ProjectReference Include="..\OTUS.HomeWork.NotificationService.Contract\OTUS.HomeWork.NotificationService.Contract.csproj" />
     <ProjectReference Include="..\OTUS.HomeWork.RabbitMq\OTUS.HomeWork.RabbitMq.csproj" />
+    <ProjectReference Include="..\OTUS.HomeWork.RestAPI.User\OTUS.HomeWork.RestAPI.User.csproj" />
   </ItemGroup>
 
 </Project>
