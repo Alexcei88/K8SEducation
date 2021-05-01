@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using OTUS.HomeWork.Eshop.Domain;
 using OTUS.HomeWork.EShop.DAL;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 
@@ -27,5 +28,12 @@ namespace OTUS.HomeWork.Eshop.Controllers
             var products = await _productRepository.GetProductsAsync(skip, limit);
             return Ok(_mapper.Map<ProductDTO[]>(products));
         }
+
+        [HttpGet]
+        public IEnumerable<ProductDTO> Get(List<Guid> productIds)
+        {
+            return null;
+        }
+
     }
 }

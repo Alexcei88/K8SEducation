@@ -4,21 +4,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OTUS.HomeWork.Eshop.Domain
 {
-    public record Product
+    public record ProductCounter
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; init; }
+       
+        public long RemainCount { get; set; }
 
-        public string Name { get; init; }
-
-        public decimal Price { get; init; }
-
-        public string Description { get; init; }
-
-        public double Weight {get; init;}
-
-        public double Space { get; init; }
-
+        public long SoldCount { get; set; }
+        
+        public long ReserveCount { get; init; }        
     }
 }

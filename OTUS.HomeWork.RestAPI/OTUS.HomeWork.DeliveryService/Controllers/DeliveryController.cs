@@ -19,6 +19,12 @@ namespace OTUS.HomeWork.DeliveryService.Controllers
             _logger = logger;
         }
 
+        [HttpPost]
+        public Task<ActionResult<DeliveryResponseDTO>> DeliveryProducts([FromBody]DeliveryRequestDTO deliveryRequestDTO)
+        {
+            return new Task<ActionResult<DeliveryResponseDTO>>
+        }
+
         [HttpGet("{trackingNumber}")]
         public Task<ActionResult<LocationDTO>> GetLocation([FromRoute] string trackingNumber)
         {

@@ -1,11 +1,15 @@
-﻿using System;
+using System;
 
-namespace OTUS.HomeWork.WarehouseService.Domain.DTO
+namespace OTUS.HomeWork.Eshop.Domain
 {
-    public class ProductDTO
+    public record ProductDTO
     {
-        public Guid Id { get; set; }
-
-        public int Count { get; set; }
+        public Guid Id { get; init; }
+        
+        public string Name { get; init; }
+        
+        public decimal Price { get; init; }
+        
+        public string Description { get; init; }
     }
 }

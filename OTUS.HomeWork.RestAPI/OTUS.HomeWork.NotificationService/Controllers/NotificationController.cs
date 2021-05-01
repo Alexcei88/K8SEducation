@@ -1,12 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using OTUS.HomeWork.NotificationService.DAL;
 using OTUS.HomeWork.NotificationService.Domain;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace OTUS.HomeWork.NotificationService.Controllers
