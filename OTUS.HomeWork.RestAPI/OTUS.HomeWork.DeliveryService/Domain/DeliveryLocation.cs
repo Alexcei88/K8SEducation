@@ -15,8 +15,12 @@ namespace OTUS.HomeWork.DeliveryService.Domain
         [ForeignKey("OrderNumber")]        
         public Delivery Delivery { get; init; }
 
-        public string CurrentAddress { get; init; }
+        public string CurrentAddress { get; set; }
 
-        public string EstimatedDate { get; init; }
+        public DateTime EstimatedDate { get; set; }
+
+        public DateTime ShipmentDate { get; set; }
+
+        public string DeliveryAddress { get; init; }
     }
 }

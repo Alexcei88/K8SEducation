@@ -57,6 +57,18 @@ namespace OTUS.HomeWork.EShop.Services
 
             _orderContext.Add(order);
             await _orderContext.SaveChangesAsync();
+
+
+            /*
+            // send notification
+            await _mqSender.SendMessageAsync(new OrderCreated
+            {
+                UserId = userId,
+                BillingAddressId = newOrder.BillingId.ToString(),
+                OrderNumber = newOrder.OrderNumber.ToString(),
+                Price = newOrder.TotalPrice,
+            });*/
+
             return order;
         }
 

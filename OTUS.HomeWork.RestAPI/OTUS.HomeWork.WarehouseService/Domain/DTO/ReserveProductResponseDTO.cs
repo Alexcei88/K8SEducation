@@ -7,7 +7,7 @@ namespace OTUS.HomeWork.WarehouseService.Domain
     {
         public Guid Id { get; set; }
 
-        public int RemainCount { get; set; } // если неуспешно
+        public long ReserveCount { get; set; } // если неуспешно
 
         public bool isSuccess { get; set; }
 
@@ -15,7 +15,7 @@ namespace OTUS.HomeWork.WarehouseService.Domain
 
     public record ReserveProductResponseDTO
     {
-        public Guid OrderNumber { get; set; }
+        public string OrderNumber { get; set; }
 
         public bool isSuccess { get; set; }
 

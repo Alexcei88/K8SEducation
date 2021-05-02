@@ -36,14 +36,6 @@ namespace OTUS.HomeWork.Eshop.Controllers
                 Order order = _mapper.Map<Order>(orderDTO);
                 order.UserId = userId;
                 var newOrder = await _orderService.CreateOrderAsync(order);
-                // send notification
-                await _mqSender.SendMessageAsync(new OrderCreated
-                {
-                    UserId = userId,
-                    BillingAddressId = newOrder.BillingId.ToString(),
-                    OrderNumber = newOrder.OrderNumber.ToString(),
-                    Price = newOrder.TotalPrice,
-                }); ;
                 return Ok(_mapper.Map<CreatedOrderDTO>(newOrder));
             }
             catch(Exception ex)

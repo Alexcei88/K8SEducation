@@ -1,9 +1,11 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using OTUS.HomeWork.Eshop.Domain;
-using OTUS.HomeWork.EShop.DAL;
+using OTUS.HomeWork.WarehouseService.DAL;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace OTUS.HomeWork.Eshop.Controllers
@@ -25,8 +27,17 @@ namespace OTUS.HomeWork.Eshop.Controllers
         [HttpGet]
         public async Task<ActionResult<ProductDTO[]>> GetProducts([DefaultValue(0)]int skip, [DefaultValue(20)] int limit)
         {
+            // TODO в отдельный сервис вероятно лучше запихнуть и создать какой-то агрегатный класс,соединяющий описание товара и их количество
             var products = await _productRepository.GetProductsAsync(skip, limit);
-            return Ok(_mapper.Map<ProductDTO[]>(products));
+            var counters = await _productRepository.GetProductCounter(products.Select(g => g.Id));
+            List<ProductDTO> result = new();
+            foreach(var product in products)
+            {
+                ProductDTO productDTO = _mapper.Map<ProductDTO>(product);
+                productDTO.RemainCount = counters.First(g => g.ProductId == product.Id).RemainCount;
+                result.Add(productDTO);
+            }
+            return Ok(result);
         }
 
         [HttpGet]

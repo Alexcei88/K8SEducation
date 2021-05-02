@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace OTUS.HomeWork.Eshop.Domain
+namespace OTUS.HomeWork.WarehouseService.Domain
 {
     public record Product
     {
@@ -12,7 +12,7 @@ namespace OTUS.HomeWork.Eshop.Domain
 
         public string Name { get; init; }
 
-        public decimal Price { get; init; }
+        public decimal BasePrice { get; init; }
 
         public string Description { get; init; }
 

@@ -6,9 +6,8 @@ namespace OTUS.HomeWork.DeliveryService.Domain
 {
     public record DeliveryProduct
     {
-        [Column(Order = 1)]        
         [Key]
-        public string OrderNumber { get; init; }
+        public string OrderNumber { get; set; }
 
         [ForeignKey("OrderNumber")]
         public Delivery Delivery { get; init; }
@@ -18,7 +17,6 @@ namespace OTUS.HomeWork.DeliveryService.Domain
         public double Space { get; init; }
 
         [Key]
-        [Column(Order = 2)]
         public Guid ProductId { get; init; }
 
         public string Name { get; init; }

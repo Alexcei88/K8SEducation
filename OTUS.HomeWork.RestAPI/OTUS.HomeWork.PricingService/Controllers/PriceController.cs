@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using OTUS.HomeWork.PricingService.Domain;
-using System.Threading.Tasks;
 
 namespace OTUS.HomeWork.PricingService.Controllers
 {
@@ -17,9 +16,12 @@ namespace OTUS.HomeWork.PricingService.Controllers
         }
 
         [HttpPost]
-        public Task<ActionResult<PriceResponseDTO>> GetPrice(PriceRequestDTO request)
+        public ActionResult<PriceResponseDTO> GetPrice(PriceRequestDTO request)
         {
-            return null;
+            return Ok(new PriceResponseDTO
+            {
+                SummaryPrice = 10.0m
+            });
         }
     }
 }

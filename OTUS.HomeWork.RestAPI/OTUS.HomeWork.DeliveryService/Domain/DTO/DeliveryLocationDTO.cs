@@ -2,7 +2,7 @@
 
 namespace OTUS.HomeWork.DeliveryService.Domain.DTO
 {
-    public class LocationDTO
+    public class DeliveryLocationDTO
     {
         public string OrderNumber { get; set; }
 

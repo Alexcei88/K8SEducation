@@ -4,14 +4,16 @@ using System;
 
 namespace OTUS.HomeWork.WarehouseService.DAL
 {
-    public class DeliveryRequestContext
+    public class DeliveryContext
         : DbContext
     {
-        public DeliveryRequestContext(DbContextOptions<DeliveryRequestContext> options)
+        public DeliveryContext(DbContextOptions<DeliveryContext> options)
             : base(options)
         { }
         
         public DbSet<Delivery> Delivery { get; set; }
+
+        public DbSet<DeliveryLocation> Location { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -28,6 +30,9 @@ namespace OTUS.HomeWork.WarehouseService.DAL
                 .WithOne(g => g.Delivery)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<DeliveryProduct>()
+                .HasKey(g => new { g.OrderNumber, g.ProductId });
         }
     }
 }

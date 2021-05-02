@@ -7,9 +7,7 @@ namespace OTUS.HomeWork.DeliveryService.Domain
     public record Delivery
     {
         [Key]
-        public Guid OrderNumber { get; set; }
-
-        public string DeliveryAddress { get; init; }
+        public string OrderNumber { get; set; }
 
         public List<DeliveryProduct> Products { get; init; }
 

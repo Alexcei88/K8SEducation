@@ -6,8 +6,8 @@ namespace OTUS.HomeWork.DeliveryService.Domain.DTO
     {
         public string OrderNumber { get; init; }
 
-        public DateTime DeliveryDate { get; init; }
+        public DateTime EstimatedDate { get; init; }
 
-        public DateTime DeliveryDateShipment { get; init; }
+        public DateTime ShipmentDate { get; init; }
     }
 }

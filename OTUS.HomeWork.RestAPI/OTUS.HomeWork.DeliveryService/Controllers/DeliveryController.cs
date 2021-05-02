@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using OTUS.HomeWork.DeliveryService.Domain;
 using OTUS.HomeWork.DeliveryService.Domain.DTO;
 using System;
 using System.Collections.Generic;
@@ -14,21 +16,44 @@ namespace OTUS.HomeWork.DeliveryService.Controllers
     {
         private readonly ILogger<DeliveryController> _logger;
 
-        public DeliveryController(ILogger<DeliveryController> logger)
+        private readonly Services.DeliveryService _deliveryService;
+
+        private readonly IMapper _mapper;
+
+        public DeliveryController(Services.DeliveryService deliveryService
+            , IMapper mapper
+            , ILogger<DeliveryController> logger)
         {
+            _deliveryService = deliveryService;
             _logger = logger;
+            _mapper = mapper;
         }
 
         [HttpPost]
-        public Task<ActionResult<DeliveryResponseDTO>> DeliveryProducts([FromBody]DeliveryRequestDTO deliveryRequestDTO)
+        public async Task<ActionResult<DeliveryResponseDTO>> DeliveryProducts([FromBody]DeliveryRequestDTO deliveryRequestDTO)
         {
-            return new Task<ActionResult<DeliveryResponseDTO>>
+            var delivery = _mapper.Map<Delivery>(deliveryRequestDTO);
+            delivery = await _deliveryService.CreateDeliveryAsync(delivery);
+            if (delivery == null)
+                return BadRequest(); // означает, что мы не можем доставить продукт в эту точку
+            return Ok(_mapper.Map<DeliveryResponseDTO>(delivery));
         }
 
-        [HttpGet("{trackingNumber}")]
-        public Task<ActionResult<LocationDTO>> GetLocation([FromRoute] string trackingNumber)
+        [HttpPost("/calculate")]
+        public ActionResult<DeliveryLocationDTO> TryDeliveryProducts([FromBody] DeliveryRequestDTO deliveryRequestDTO)
         {
-            return null;
+            var delivery = _mapper.Map<Delivery>(deliveryRequestDTO);
+            delivery = _deliveryService.CalculateDelivery(delivery);
+            if (delivery == null)
+                return BadRequest(); // означает, что мы не можем доставить продукт в эту точку
+            return Ok(_mapper.Map<DeliveryResponseDTO>(delivery));
+        }
+
+        [HttpGet("/{trackingNumber}")]
+        public async Task<ActionResult<DeliveryLocationDTO>> GetLocation([FromRoute] string trackingNumber)
+        {
+            var deliveryLocation = await _deliveryService.GetLocationOfOrderAsync(trackingNumber);
+            return Ok(_mapper.Map<DeliveryLocationDTO>(_mapper.Map<DeliveryLocationDTO>(deliveryLocation)));
         }
     }
 }

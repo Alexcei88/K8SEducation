@@ -11,8 +11,6 @@ namespace OTUS.HomeWork.Eshop
     {
         public AutoMapperProfile()
         {            
-            CreateMap<ProductDTO, Product>().ReverseMap();
-
             CreateMap<CreateOrderDTO, Order>()
                 .ForMember(g => g.PaidDateUtc, m => m.Ignore())
                 .ForMember(g => g.TotalPrice, m => m.Ignore())

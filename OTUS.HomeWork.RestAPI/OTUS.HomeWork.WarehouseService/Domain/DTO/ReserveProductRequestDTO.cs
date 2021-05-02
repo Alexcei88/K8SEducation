@@ -12,7 +12,7 @@ namespace OTUS.HomeWork.WarehouseService.Domain
 
     public record ReserveProductRequestDTO
     {
-        public Guid OrderNumber { get; set; }
+        public string OrderNumber { get; set; }
 
         public List<ReserveProductDTO> Products = new List<ReserveProductDTO>();
     }

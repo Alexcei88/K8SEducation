@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -28,6 +29,7 @@ namespace OTUS.HomeWork.PricingService
         {
 
             services.AddControllers();
+            services.AddHealthChecks();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "OTUS.HomeWork.PricingService", Version = "v1" });
@@ -45,6 +47,16 @@ namespace OTUS.HomeWork.PricingService
             }
 
             app.UseHttpsRedirection();
+
+            app.UseHealthChecks("/api/service/health", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions()
+            {
+                AllowCachingResponses = true,
+                ResponseWriter = async (c, r) =>
+                {
+                    c.Response.ContentType = "application/json";
+                    await c.Response.WriteAsync("{\"status\": \"OK\"}");
+                }
+            });
 
             app.UseRouting();
 
