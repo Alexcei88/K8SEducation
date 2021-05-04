@@ -1,9 +1,9 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using OTUS.HomeWork.Eshop.Monitoring;
+using OTUS.HomeWork.EShop.Monitoring;
 
-namespace OTUS.HomeWork.Eshop.Middlewares
+namespace OTUS.HomeWork.EShop.Middlewares
 {
 	/// <summary>
 	/// Промежуточный слой для измерения времени выполнения метода

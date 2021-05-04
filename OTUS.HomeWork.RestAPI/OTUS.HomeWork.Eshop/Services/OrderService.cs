@@ -1,25 +1,29 @@
 ﻿using OTUS.HomeWork.Clients;
-using OTUS.HomeWork.Eshop.DAL;
-using OTUS.HomeWork.Eshop.Domain;
 using OTUS.HomeWork.EShop.DAL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using OTUS.HomeWork.EShop.Domain;
 
 namespace OTUS.HomeWork.EShop.Services
 {
     public class OrderService
     {
         private readonly OrderContext _orderContext;
-        private readonly BillingServiceClient _billingClient;
-        private readonly ProductRepository _productRepository;
+        private readonly PaymentGatewayClient _paymentGatewayClient;
+        private readonly PriceServiceClient _pricingClient;
+        private readonly WarehouseServiceClient _warehouseServiceClient;
 
-        public OrderService(OrderContext orderContext, BillingServiceClient billingClient, ProductRepository productRepository)
+        public OrderService(OrderContext orderContext
+            , PaymentGatewayClient paymentGatewayClient
+            , PriceServiceClient pricingClient
+            , WarehouseServiceClient warehouseServiceClient)
         {
             _orderContext = orderContext;
-            _billingClient = billingClient;
-            _productRepository = productRepository;
+            _paymentGatewayClient = paymentGatewayClient;
+            _pricingClient = pricingClient;
+            _warehouseServiceClient = warehouseServiceClient;
         }
 
         public async Task<Order> CreateOrderAsync(Order order)
@@ -29,36 +33,91 @@ namespace OTUS.HomeWork.EShop.Services
             if (existOrder != null)
                 return existOrder;
 
-            var totalPrice = await CalculateTotalPriceAsync(order.Items);
-            PaymentDTO payment;
+            // TODO здесь реализация паттерна Сага, лучше реализовать на какойто либе stateMachine типа такой https://github.com/dotnet-state-machine/stateless
+
+            bool wasReserveProducts = false;
+            bool wasPayment = false;
+            
             try
             {
-                payment = await _billingClient.PaymentAsync(order.UserId, new PaymentRequestDTO
+
+                // 1. расчитываем стоимость
+                var totalPrice = await CalculateTotalPriceAsync(order.Items, order.UserId.ToString());
+
+                // 2. сохраняем заказ в БД
+                order.TotalPrice = totalPrice;
+                order.CreatedOnUtc = DateTime.UtcNow;
+                order.Status = OrderStatus.Pending;
+
+                foreach (var item in order.Items)
+                {
+                    item.Order = order;
+                }
+
+                _orderContext.Add(order);
+                await _orderContext.SaveChangesAsync();
+
+                // 2. резервируем товар на складе
+                var reserve = await _warehouseServiceClient.ReserveAsync(new ReserveProductRequestDTO
+                {
+                    OrderNumber = order.OrderNumber.ToString(),
+                    Products = order.Items.Select(g => new ReserveProductDTO
+                    {
+                        Id = g.ProductId,
+                        Count = g.Quantity
+                    }).ToList()
+                });
+                wasReserveProducts = true;
+
+                // 3. делаем оплату
+                PaymentDTO payment = await _paymentGatewayClient.PaymentAsync(order.UserId, new PaymentRequestDTO
                 {
                     Amount = totalPrice,
                     IdempotenceKey = "MakePayment" + order.IdempotencyKey
                 });
+                if(payment.IsSuccess == false)
+                {
+                    throw new Exception("Не удалось произвести оплату");
+                }
+
+                wasPayment = true;
+                existOrder = _orderContext.Orders.FirstOrDefault(g => g.OrderNumber == order.OrderNumber);
+                existOrder.BillingId = payment.BillingId.ToString();
+                existOrder.PaidDateUtc = DateTime.UtcNow;
+                await _orderContext.SaveChangesAsync();
+
+                // 4. отправляем заявку на отгрузку товара
+                await _warehouseServiceClient.ShipmentAsync(new ShipmentRequestDTO
+                {
+                    DeliveryAddress = order.DeliveryAddress,
+                    OrderNumber = order.OrderNumber.ToString()
+                });
+                // 5. отправляем уведомление пользователю
 
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
-                // нужно исключение прокидывает специальное, упрощаем
-                throw new Exception("При оплате произошла ошибка", ex);
+                if (wasPayment)
+                {
+                    try
+                    {
+                    }
+                    catch (Exception ex)
+                    {
+                        // логируем, что 
+                    }
+                }
+                if(wasReserveProducts)
+                {
+                    try
+                    {
+                    }
+                    catch (Exception ex)
+                    {
+                        // логируем, что 
+                    }
+                }
             }
-            foreach (var item in order.Items)
-            {
-                item.Order = order;
-            }
-            order.TotalPrice = totalPrice;
-            order.BillingId = payment.Id.ToString();
-            order.PaidDateUtc = DateTime.UtcNow;
-            order.CreatedOnUtc = DateTime.UtcNow;
-            order.Status = OrderStatus.Complete;
-
-            _orderContext.Add(order);
-            await _orderContext.SaveChangesAsync();
-
-
             /*
             // send notification
             await _mqSender.SendMessageAsync(new OrderCreated
@@ -72,18 +131,13 @@ namespace OTUS.HomeWork.EShop.Services
             return order;
         }
 
-        private async Task<decimal> CalculateTotalPriceAsync(List<OrderItem> items)
+        private async Task<decimal> CalculateTotalPriceAsync(List<OrderItem> items, string userId)
         {
-            decimal totalPrice = 0.0m;
-            foreach (var item in items)
+            var response = await _pricingClient.PriceAsync(new PriceRequestDTO
             {
-                decimal? price = await _productRepository.GetPriceOfProductAsync(item.ProductId);
-                if (price == null)
-                    throw new ArgumentException("Передан неизвестный товар");
-
-                totalPrice += price.Value * item.Quantity;
-            }
-            return totalPrice;
+                UserId = userId,
+            });
+            return response.SummaryPrice;
         }
     }
 }

@@ -1,6 +1,6 @@
 using RabbitMQ.Client;
 
-namespace DataBuffer.BusClient.RabbitMq
+namespace OTUS.HomeWork.RabbitMq
 {
     public readonly struct RabbitMQChannel
 	{

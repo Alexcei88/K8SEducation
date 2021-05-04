@@ -1,6 +1,6 @@
 using System;
 
-namespace OTUS.HomeWork.Eshop.Domain
+namespace OTUS.HomeWork.WarehouseService.Domain.DTO
 {
     public record ProductDTO
     {

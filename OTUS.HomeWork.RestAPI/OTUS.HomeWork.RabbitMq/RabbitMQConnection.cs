@@ -1,9 +1,9 @@
-using RabbitMQ.Client;
-using RabbitMQ.Client.Exceptions;
 using System.IO;
 using System.Threading;
+using RabbitMQ.Client;
+using RabbitMQ.Client.Exceptions;
 
-namespace DataBuffer.BusClient.RabbitMq
+namespace OTUS.HomeWork.RabbitMq
 {
 	public class RabbitMqConnection
 	{

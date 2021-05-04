@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace OTUS.HomeWork.PricingService.Domain
+namespace OTUS.HomeWork.PricingService.Domain.DTO
 {
-    public class ProductDTO
+    public class PProductDTO
     {
         public string ProductId { get; set; }
         public string Quantity { get; set; }
@@ -13,6 +12,6 @@ namespace OTUS.HomeWork.PricingService.Domain
     {
         public string UserId { get; set; }
 
-        public List<ProductDTO> Products { get; set; }
+        public List<PProductDTO> Products { get; set; }
     }
 }

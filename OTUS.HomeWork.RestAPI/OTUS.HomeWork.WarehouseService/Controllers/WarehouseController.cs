@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using OTUS.HomeWork.WarehouseService.Domain;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using OTUS.HomeWork.WarehouseService.Domain.DTO;
 
 namespace OTUS.HomeWork.WarehouseService.Controllers
 {
@@ -25,7 +26,7 @@ namespace OTUS.HomeWork.WarehouseService.Controllers
             _logger = logger;
         }
 
-        [HttpPut("/reserve")]
+        [HttpPost("/reserve")]
         public async Task<ActionResult<ReserveProductResponseDTO>> ReserveProducts(ReserveProductRequestDTO request)
         {
             var products = _mapper.Map<ReserveProduct[]>(request.Products);
@@ -42,7 +43,7 @@ namespace OTUS.HomeWork.WarehouseService.Controllers
                     isSuccess = reserveProducts[i].Count == product.Count,
                     ReserveCount = reserveProducts[i].Count,
                 });
-                isSuccess &= reserveProducts[i].Count == product.Count;
+                isSuccess &= reserveProducts[i].Count > 0;
             }
 
             var result = new ReserveProductResponseDTO
@@ -62,10 +63,11 @@ namespace OTUS.HomeWork.WarehouseService.Controllers
             return Ok();
         }
 
-        [HttpPut("/shipment")]
-        public Task ShipmentProducts(ShipmentRequestDTO request)
+        [HttpPost("/shipment")]
+        public async Task<OkResult> ShipmentProducts(ShipmentRequestDTO request)
         {
-            return null;
+            await _warehouseService.ShipmentProducts(request.OrderNumber, request.DeliveryAddress);
+            return Ok();
         }
     }
 }

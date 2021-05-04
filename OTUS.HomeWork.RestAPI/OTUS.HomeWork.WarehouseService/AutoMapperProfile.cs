@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using OTUS.HomeWork.Eshop.Domain;
 using OTUS.HomeWork.WarehouseService.Domain;
+using OTUS.HomeWork.WarehouseService.Domain.DTO;
 
 namespace OTUS.HomeWork.WarehouseService
 {

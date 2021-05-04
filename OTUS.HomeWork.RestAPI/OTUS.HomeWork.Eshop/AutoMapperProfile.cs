@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
-using OTUS.HomeWork.AuthService.Domain;
-using OTUS.HomeWork.Eshop.Domain;
 using OTUS.HomeWork.EShop.Domain;
+using OTUS.HomeWork.EShop.Domain.DTO;
 using OTUS.HomeWork.RestAPI.Abstraction.Domain;
 
-namespace OTUS.HomeWork.Eshop
+namespace OTUS.HomeWork.EShop
 {
     public class AutoMapperProfile
         : Profile
@@ -20,6 +19,7 @@ namespace OTUS.HomeWork.Eshop
                 .ForMember(g => g.OrderNumber, m => m.Ignore())
                 .ForMember(g => g.UserId, m => m.Ignore())
                 .ForMember(g => g.Status, m => m.Ignore())
+                .ForMember(g => g.ErrorDescription, m => m.Ignore())
                 .ReverseMap();
 
             CreateMap<OrderItemDTO, OrderItem>()

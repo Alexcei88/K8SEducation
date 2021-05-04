@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace OTUS.HomeWork.WarehouseService.Domain
+﻿namespace OTUS.HomeWork.WarehouseService.Domain.DTO
 {
     public class ShipmentRequestDTO
     {

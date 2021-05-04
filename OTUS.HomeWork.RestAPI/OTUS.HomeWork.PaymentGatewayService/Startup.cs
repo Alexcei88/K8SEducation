@@ -8,13 +8,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using OTUS.HomeWork.BillingService.Authentication;
-using OTUS.HomeWork.BillingService.DAL;
+using OTUS.HomeWork.PaymentGatewayService.DAL;
 using OTUS.HomeWork.RestAPI.Abstraction.Authentication;
 using OTUS.HomeWork.RestAPI.Abstraction.Authentication.Handlers;
 using OTUS.HomeWork.RestAPI.Abstraction.Authentication.Requirements;
 
-namespace OTUS.HomeWork.BillingService
+namespace OTUS.HomeWork.PaymentGatewayService
 {
     public class Startup
     {
@@ -28,7 +27,7 @@ namespace OTUS.HomeWork.BillingService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<BillingContext>(options =>
+            services.AddDbContext<PaymentContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")).UseSnakeCaseNamingConvention());
 
             services.AddSingleton(provider => {
@@ -39,7 +38,7 @@ namespace OTUS.HomeWork.BillingService
                 }).CreateMapper();
             });
 
-            services.AddScoped<Services.IBillingService, Services.BillingService>();
+            services.AddScoped<Services.IBillingService, Services.PaymentService>();
             
             services.AddControllers();
             services.AddAuthentication(g =>
@@ -56,22 +55,20 @@ namespace OTUS.HomeWork.BillingService
                 policy.Requirements.Add(new OwnerPermission()));
             });
 
-            services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
-
             services.AddHealthChecks();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "OTUS.HomeWork.BillingService", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "OTUS.HomeWork.PaymentGatewayService", Version = "v1" });
             });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IMapper mapper)
         {
-            AutomaticallyApplyDBMigrations(app);
-
             mapper.ConfigurationProvider.AssertConfigurationIsValid();
             mapper.ConfigurationProvider.CompileMappings();
+
+            AutomaticallyApplyDBMigrations(app);
 
             if (env.IsDevelopment())
             {
@@ -79,7 +76,7 @@ namespace OTUS.HomeWork.BillingService
             }
 
             app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "OTUS.HomeWork.BillingService v1"));
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "OTUS.HomeWork.PaymentGatewayService v1"));
             
             app.UseHealthChecks("/api/service/health", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions()
             {
@@ -105,7 +102,7 @@ namespace OTUS.HomeWork.BillingService
         private void AutomaticallyApplyDBMigrations(IApplicationBuilder app)
         {
             using var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
-            var context = serviceScope.ServiceProvider.GetService<BillingContext>();
+            var context = serviceScope.ServiceProvider.GetService<PaymentContext>();
             context?.Database.Migrate();
         }
     }

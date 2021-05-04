@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace OTUS.HomeWork.Eshop.Domain
+namespace OTUS.HomeWork.EShop.Domain
 {
     public record OrderItem
     {

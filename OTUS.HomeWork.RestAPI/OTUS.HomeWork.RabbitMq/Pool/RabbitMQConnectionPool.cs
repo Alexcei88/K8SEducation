@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using RabbitMQ.Client;
 
-namespace DataBuffer.BusClient.RabbitMq.Pool
+namespace OTUS.HomeWork.RabbitMq.Pool
 {
 	public class RabbitMqConnectionPool
 		: IDisposable

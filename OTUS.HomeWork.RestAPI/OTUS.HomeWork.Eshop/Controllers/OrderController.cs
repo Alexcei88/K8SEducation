@@ -1,14 +1,16 @@
+using System;
+using System.Net;
+using System.Threading.Tasks;
 using AutoMapper;
-using DataBuffer.BusClient.RabbitMq;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using OTUS.HomeWork.Eshop.Domain;
 using OTUS.HomeWork.EShop.Domain;
+using OTUS.HomeWork.EShop.Domain.DTO;
 using OTUS.HomeWork.EShop.Services;
 using OTUS.HomeWork.NotificationService.Contract.Messages;
-using System;
-using System.Threading.Tasks;
+using OTUS.HomeWork.RabbitMq;
 
-namespace OTUS.HomeWork.Eshop.Controllers
+namespace OTUS.HomeWork.EShop.Controllers
 {
     [ApiController]
     [Route("api/order")]
@@ -38,15 +40,9 @@ namespace OTUS.HomeWork.Eshop.Controllers
                 var newOrder = await _orderService.CreateOrderAsync(order);
                 return Ok(_mapper.Map<CreatedOrderDTO>(newOrder));
             }
-            catch(Exception ex)
+            catch
             {
-                await _mqSender.SendMessageAsync(new OrderCreatedError
-                {
-                    UserId = userId,
-                    Message = "Not enough balance to complete payment",
-                });
-
-                return BadRequest("Not enough balance to complete payment");
+                return StatusCode(StatusCodes.Status500InternalServerError); 
             }
         }
 

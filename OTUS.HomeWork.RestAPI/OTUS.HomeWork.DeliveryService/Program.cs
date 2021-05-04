@@ -18,6 +18,10 @@ namespace OTUS.HomeWork.DeliveryService
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration(c =>
+                {
+                    c.AddJsonFile("config/appsettings.json", optional: true, reloadOnChange: true);
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();

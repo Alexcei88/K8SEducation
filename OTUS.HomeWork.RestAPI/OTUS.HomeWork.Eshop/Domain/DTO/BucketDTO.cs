@@ -1,7 +1,6 @@
-﻿using OTUS.HomeWork.Eshop.Domain;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace OTUS.HomeWork.EShop.Domain
+namespace OTUS.HomeWork.EShop.Domain.DTO
 {
     public record BucketDTO
     {        

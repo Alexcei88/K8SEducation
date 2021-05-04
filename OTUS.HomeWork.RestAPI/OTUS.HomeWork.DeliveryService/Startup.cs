@@ -11,11 +11,11 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using OTUS.HomeWork.Common;
-using OTUS.HomeWork.WarehouseService.DAL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using OTUS.HomeWork.DeliveryService.DAL;
 
 namespace OTUS.HomeWork.DeliveryService
 {

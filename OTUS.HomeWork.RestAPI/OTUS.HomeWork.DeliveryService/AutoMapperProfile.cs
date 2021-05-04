@@ -17,7 +17,9 @@ namespace OTUS.HomeWork.DeliveryService
 
             CreateMap<Delivery, DeliveryResponseDTO>()
                 .ForMember(g => g.EstimatedDate, m => m.MapFrom(s => s.Location.EstimatedDate))
-                .ForMember(g => g.ShipmentDate, m => m.MapFrom(s => s.Location.ShipmentDate));
+                .ForMember(g => g.ShipmentDate, m => m.MapFrom(s => s.Location.ShipmentDate))
+                .ForMember(g => g.DeliveryAddress, m => m.MapFrom(s => s.Location.EstimatedDate));
+
 
             CreateMap<DeliveryLocation, DeliveryLocationDTO>()
                 .ForMember(g => g.Address, m => m.MapFrom(s => s.CurrentAddress))

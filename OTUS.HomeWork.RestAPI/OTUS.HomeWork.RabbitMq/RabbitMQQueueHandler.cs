@@ -1,13 +1,13 @@
-using DataBuffer.MessageExchangeSerializer;
-using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
-using DataBuffer.BusClient.RabbitMq.Pool;
-using System.Collections.Generic;
+using OTUS.HomeWork.MessageExchangeSerializer;
+using OTUS.HomeWork.RabbitMq.Pool;
+using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
 
-namespace DataBuffer.BusClient.RabbitMq
+namespace OTUS.HomeWork.RabbitMq
 {
 
     public class RabbitMQQueueConsumer

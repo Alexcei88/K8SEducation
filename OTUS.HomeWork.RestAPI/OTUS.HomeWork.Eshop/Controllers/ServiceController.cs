@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace OTUS.HomeWork.Eshop.Controllers
+namespace OTUS.HomeWork.EShop.Controllers
 {
 	[AllowAnonymous]
 	[Route("api/service")]

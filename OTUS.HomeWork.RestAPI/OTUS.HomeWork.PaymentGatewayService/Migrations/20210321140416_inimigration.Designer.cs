@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using OTUS.HomeWork.BillingService.DAL;
+using OTUS.HomeWork.PaymentGatewayService.DAL;
 
 namespace OTUS.HomeWork.BillingService.Migrations
 {
-    [DbContext(typeof(BillingContext))]
+    [DbContext(typeof(PaymentContext))]
     [Migration("20210321140416_inimigration")]
     partial class inimigration
     {
@@ -22,7 +22,7 @@ namespace OTUS.HomeWork.BillingService.Migrations
                 .HasAnnotation("ProductVersion", "5.0.3")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-            modelBuilder.Entity("OTUS.HomeWork.BillingService.Domain.User", b =>
+            modelBuilder.Entity("OTUS.HomeWork.PaymentGatewayService.Domain.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()

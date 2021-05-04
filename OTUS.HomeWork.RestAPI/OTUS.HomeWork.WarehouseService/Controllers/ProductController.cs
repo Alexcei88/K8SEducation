@@ -1,14 +1,14 @@
-using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using OTUS.HomeWork.Eshop.Domain;
-using OTUS.HomeWork.WarehouseService.DAL;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using OTUS.HomeWork.WarehouseService.DAL;
+using OTUS.HomeWork.WarehouseService.Domain.DTO;
 
-namespace OTUS.HomeWork.Eshop.Controllers
+namespace OTUS.HomeWork.WarehouseService.Controllers
 {
     [ApiController]
     [Route("api/product")]
@@ -27,7 +27,7 @@ namespace OTUS.HomeWork.Eshop.Controllers
         [HttpGet]
         public async Task<ActionResult<ProductDTO[]>> GetProducts([DefaultValue(0)]int skip, [DefaultValue(20)] int limit)
         {
-            // TODO â îòäåëüíûé ñåðâèñ âåðîÿòíî ëó÷øå çàïèõíóòü è ñîçäàòü êàêîé-òî àãðåãàòíûé êëàññ,ñîåäèíÿþùèé îïèñàíèå òîâàðà è èõ êîëè÷åñòâî
+            // TODO Ð² Ð¾Ñ‚Ð´ÐµÐ»ÑŒÐ½Ñ‹Ð¹ ÑÐµÑ€Ð²Ð¸Ñ Ð²ÐµÑ€Ð¾ÑÑ‚Ð½Ð¾ Ð»ÑƒÑ‡ÑˆÐµ Ð·Ð°Ð¿Ð¸Ñ…Ð½ÑƒÑ‚ÑŒ Ð¸ ÑÐ¾Ð·Ð´Ð°Ñ‚ÑŒ ÐºÐ°ÐºÐ¾Ð¹-Ñ‚Ð¾ Ð°Ð³Ñ€ÐµÐ³Ð°Ñ‚Ð½Ñ‹Ð¹ ÐºÐ»Ð°ÑÑ,ÑÐ¾ÐµÐ´Ð¸Ð½ÑÑŽÑ‰Ð¸Ð¹ Ð¾Ð¿Ð¸ÑÐ°Ð½Ð¸Ðµ Ñ‚Ð¾Ð²Ð°Ñ€Ð° Ð¸ Ð¸Ñ… ÐºÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾
             var products = await _productRepository.GetProductsAsync(skip, limit);
             var counters = await _productRepository.GetProductCounter(products.Select(g => g.Id));
             List<ProductDTO> result = new();
@@ -40,11 +40,11 @@ namespace OTUS.HomeWork.Eshop.Controllers
             return Ok(result);
         }
 
-        [HttpGet]
-        public IEnumerable<ProductDTO> Get(List<Guid> productIds)
-        {
-            return null;
-        }
+        //[HttpGet]
+        //public IEnumerable<ProductDTO> Get(List<Guid> productIds)
+        //{
+        //    return null;
+        //}
 
     }
 }

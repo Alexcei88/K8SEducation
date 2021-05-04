@@ -1,7 +1,5 @@
+using System.Net.Http;
 using AutoMapper;
-using DataBuffer.BusClient.RabbitMq;
-using DataBuffer.BusClient.RabbitMq.Pool;
-using DataBuffer.MessageExchangeSerializer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -16,12 +14,14 @@ using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using OTUS.HomeWork.Clients;
 using OTUS.HomeWork.Common;
-using OTUS.HomeWork.Eshop.Authentication;
-using OTUS.HomeWork.Eshop.DAL;
-using OTUS.HomeWork.Eshop.Middlewares;
-using OTUS.HomeWork.Eshop.Monitoring;
+using OTUS.HomeWork.EShop.Authentication;
 using OTUS.HomeWork.EShop.DAL;
+using OTUS.HomeWork.EShop.Middlewares;
+using OTUS.HomeWork.EShop.Monitoring;
 using OTUS.HomeWork.EShop.Services;
+using OTUS.HomeWork.MessageExchangeSerializer;
+using OTUS.HomeWork.RabbitMq;
+using OTUS.HomeWork.RabbitMq.Pool;
 using OTUS.HomeWork.RestAPI.Abstraction;
 using OTUS.HomeWork.RestAPI.Abstraction.Authentication;
 using OTUS.HomeWork.RestAPI.Abstraction.Authentication.Handlers;
@@ -30,9 +30,8 @@ using OTUS.HomeWork.RestAPI.Abstraction.DAL;
 using OTUS.HomeWork.RestAPI.Abstraction.Domain;
 using OTUS.HomeWork.RestAPI.Abstraction.Services;
 using Prometheus;
-using System.Net.Http;
 
-namespace OTUS.HomeWork.Eshop
+namespace OTUS.HomeWork.EShop
 {
     public class Startup
     {
@@ -65,16 +64,32 @@ namespace OTUS.HomeWork.Eshop
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddSingleton<MetricReporter>();
             services.AddScoped<OrderService>();
-            services.AddScoped<ProductRepository>();
             services.AddScoped<UserRepository>();
             services.AddScoped<IUserService, UserService>();
 
+            // TODO лучше вынести в функции расширения
             var billingSettingSection = Configuration.GetSection("BillingService");
             services.AddScoped((sp) =>
             {
                 var options = billingSettingSection.Get<ServiceAddressOption>();
                 var client = sp.GetService<IHttpClientFactory>()?.CreateClient("BillingClient");
-                return new BillingServiceClient(options.Url, client);
+                return new PaymentGatewayClient(options.Url, client);
+            });
+
+            var pricingSettingSection = Configuration.GetSection("PricingService");
+            services.AddScoped((sp) =>
+            {
+                var options = pricingSettingSection.Get<ServiceAddressOption>();
+                var client = sp.GetService<IHttpClientFactory>()?.CreateClient("PricingService");
+                return new PriceServiceClient(options.Url, client);
+            });
+
+            var warehouseSettingSection = Configuration.GetSection("WarehouseService");
+            services.AddScoped((sp) =>
+            {
+                var options = warehouseSettingSection.Get<ServiceAddressOption>();
+                var client = sp.GetService<IHttpClientFactory>()?.CreateClient("WarehouseService");
+                return new WarehouseServiceClient(options.Url, client);
             });
 
             services.AddSingleton((sp) =>

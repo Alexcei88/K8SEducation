@@ -35,6 +35,7 @@ namespace OTUS.HomeWork.WarehouseService
                     options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")).UseSnakeCaseNamingConvention());
 
             services.Configure<RabbitMQOption>(Configuration.GetSection("RabbitMq"));
+            services.AddScoped<ProductRepository>();
 
             services.AddSingleton(provider => {
                 return new MapperConfiguration(cfg =>
@@ -77,10 +78,9 @@ namespace OTUS.HomeWork.WarehouseService
                 }
             });
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
-
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

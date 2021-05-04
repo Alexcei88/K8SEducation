@@ -1,4 +1,4 @@
-namespace OTUS.HomeWork.Eshop.Domain
+namespace OTUS.HomeWork.EShop.Domain.DTO
 {
     public enum OrderStatusDTO
     {
@@ -20,6 +20,11 @@ namespace OTUS.HomeWork.Eshop.Domain
         /// <summary>
         /// Cancelled
         /// </summary>
-        Cancelled = 40
+        Cancelled = 40,
+
+        /// <summary>
+        /// Error
+        /// </summary>
+        Error = 50,
     }
 }

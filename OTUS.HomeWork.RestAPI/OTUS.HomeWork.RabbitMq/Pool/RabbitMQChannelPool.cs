@@ -1,9 +1,8 @@
-using RabbitMQ.Client;
 using System;
 using System.Collections.Concurrent;
-using DataBuffer.BusClient.RabbitMq.Pool;
+using RabbitMQ.Client;
 
-namespace DataBuffer.BusClient.RabbitMq
+namespace OTUS.HomeWork.RabbitMq.Pool
 {
 	// TODO надо механизм, который будет сжимать количество каналов, которые образовались при пиках
 	public class RabbitMQChannelPool

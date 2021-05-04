@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using OTUS.HomeWork.RestAPI.Abstraction.Authentication.Requirements;
 
-namespace OTUS.HomeWork.Eshop.Authentication
+namespace OTUS.HomeWork.EShop.Authentication
 {
     public class PermissionHandler
         : AuthorizationHandler<OwnerPermission>

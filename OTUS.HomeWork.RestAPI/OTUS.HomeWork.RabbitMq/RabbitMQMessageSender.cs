@@ -1,11 +1,12 @@
-using DataBuffer.MessageExchangeSerializer;
-using OTUS.HomeWork.NotificationService.Contract.Messages;
-using RabbitMQ.Client;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using OTUS.HomeWork.MessageExchangeSerializer;
+using OTUS.HomeWork.NotificationService.Contract.Messages;
+using OTUS.HomeWork.RabbitMq.Pool;
+using RabbitMQ.Client;
 
-namespace DataBuffer.BusClient.RabbitMq
+namespace OTUS.HomeWork.RabbitMq
 {
 	public class RabbitMQMessageSender
 	{	

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using OTUS.HomeWork.PricingService.Domain;
+using OTUS.HomeWork.PricingService.Domain.DTO;
 
 namespace OTUS.HomeWork.PricingService.Controllers
 {

@@ -1,11 +1,11 @@
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using OTUS.HomeWork.NotificationService.Contract.Messages;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using OTUS.HomeWork.NotificationService.Contract.Messages;
 
-namespace DataBuffer.MessageExchangeSerializer
+namespace OTUS.HomeWork.MessageExchangeSerializer
 {
 	public class JsonNetMessageExchangeSerializer
 		: IMessageExchangeSerializer

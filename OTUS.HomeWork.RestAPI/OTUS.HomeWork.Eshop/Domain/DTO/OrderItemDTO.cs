@@ -1,6 +1,6 @@
 using System;
 
-namespace OTUS.HomeWork.Eshop.Domain
+namespace OTUS.HomeWork.EShop.Domain.DTO
 {
     public record OrderItemDTO
     {       

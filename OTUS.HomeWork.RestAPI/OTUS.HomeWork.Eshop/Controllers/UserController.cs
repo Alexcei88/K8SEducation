@@ -6,12 +6,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using OTUS.HomeWork.AuthService.Domain;
 using OTUS.HomeWork.Clients;
+using OTUS.HomeWork.EShop.Domain.DTO;
 using OTUS.HomeWork.RestAPI.Abstraction;
 using OTUS.HomeWork.RestAPI.Abstraction.Domain;
 
-namespace OTUS.HomeWork.Eshop.Controllers
+namespace OTUS.HomeWork.EShop.Controllers
 {
     [ApiController]
     [Route("/api/user")]
@@ -19,13 +19,11 @@ namespace OTUS.HomeWork.Eshop.Controllers
     {
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
-        private readonly BillingServiceClient _billingServiceClient;
         private HttpContext _hcontext;
         private readonly ILogger<UserController> _logger;
 
         public UserController(IUserService userService
             , IMapper mapper
-            , BillingServiceClient billingServiceClient
             , IHttpContextAccessor haccess
             , ILogger<UserController> logger)
         {
@@ -33,7 +31,6 @@ namespace OTUS.HomeWork.Eshop.Controllers
             _mapper = mapper;
             _logger = logger;
             _hcontext = haccess.HttpContext;
-            _billingServiceClient = billingServiceClient;
         }
        
         [HttpPut("signin")]
@@ -44,15 +41,6 @@ namespace OTUS.HomeWork.Eshop.Controllers
             {
                 UserName = nameIdentifier,
             });
-            try
-            {
-                var _ = await _billingServiceClient.UserAsync(newUser.Id);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, "Не удалось создать пользователя в BillingService");
-                throw;
-            }
             return Ok(_mapper.Map<UserDTO>(newUser));            
         }
 

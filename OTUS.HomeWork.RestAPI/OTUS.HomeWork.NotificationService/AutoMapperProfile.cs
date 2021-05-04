@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using OTUS.HomeWork.NotificationService.Domain;
 
-namespace OTUS.HomeWork.Eshop
+namespace OTUS.HomeWork.NotificationService
 {
     public class AutoMapperProfile
         : Profile

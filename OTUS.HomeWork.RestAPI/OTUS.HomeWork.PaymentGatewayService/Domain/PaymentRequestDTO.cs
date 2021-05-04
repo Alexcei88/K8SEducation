@@ -1,6 +1,4 @@
-using System;
-
-namespace OTUS.HomeWork.BillingService.Domain
+namespace OTUS.HomeWork.PaymentGatewayService.Domain
 {
     public class PaymentRequestDTO
     {        

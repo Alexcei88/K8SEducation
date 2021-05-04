@@ -1,7 +1,7 @@
-using Newtonsoft.Json;
 using System;
+using Newtonsoft.Json;
 
-namespace DataBuffer.MessageExchangeSerializer
+namespace OTUS.HomeWork.MessageExchangeSerializer
 {
 	/// <summary>
 	/// Обрабатывает конверт строки в C# bool тип

@@ -1,7 +1,6 @@
-﻿using OTUS.HomeWork.Eshop.Domain;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace OTUS.HomeWork.EShop.Domain
+namespace OTUS.HomeWork.EShop.Domain.DTO
 {
     public record CreateOrderDTO
     {        
@@ -9,5 +8,6 @@ namespace OTUS.HomeWork.EShop.Domain
 
         public List<OrderItemDTO> Items { get; init; }
 
+        public string DeliveryAddress { get; set; }
     }
 }

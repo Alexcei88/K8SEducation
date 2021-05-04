@@ -35,7 +35,7 @@ namespace OTUS.HomeWork.DeliveryService.Controllers
             var delivery = _mapper.Map<Delivery>(deliveryRequestDTO);
             delivery = await _deliveryService.CreateDeliveryAsync(delivery);
             if (delivery == null)
-                return BadRequest(); // означает, что мы не можем доставить продукт в эту точку
+                return BadRequest(); // означает, что мы не можем доставить продукт по заданному адресу
             return Ok(_mapper.Map<DeliveryResponseDTO>(delivery));
         }
 
@@ -45,7 +45,7 @@ namespace OTUS.HomeWork.DeliveryService.Controllers
             var delivery = _mapper.Map<Delivery>(deliveryRequestDTO);
             delivery = _deliveryService.CalculateDelivery(delivery);
             if (delivery == null)
-                return BadRequest(); // означает, что мы не можем доставить продукт в эту точку
+                return BadRequest(); // означает, что мы не можем доставить по заданному адресу
             return Ok(_mapper.Map<DeliveryResponseDTO>(delivery));
         }
 

@@ -1,7 +1,7 @@
-using OTUS.HomeWork.NotificationService.Contract.Messages;
 using System.IO;
+using OTUS.HomeWork.NotificationService.Contract.Messages;
 
-namespace DataBuffer.MessageExchangeSerializer
+namespace OTUS.HomeWork.MessageExchangeSerializer
 {
 	/// <summary>
 	/// Сериализатор сообщений обмена

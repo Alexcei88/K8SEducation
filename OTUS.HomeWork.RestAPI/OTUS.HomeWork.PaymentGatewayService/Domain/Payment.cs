@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace OTUS.HomeWork.BillingService.Domain
+namespace OTUS.HomeWork.PaymentGatewayService.Domain
 {
     public class Payment
     {
@@ -9,8 +9,6 @@ namespace OTUS.HomeWork.BillingService.Domain
         public Guid Id { get; set; }
 
         public Guid UserId { get; set; }
-
-        public User User { get; set; }
 
         public DateTime Date { get; set; }
 

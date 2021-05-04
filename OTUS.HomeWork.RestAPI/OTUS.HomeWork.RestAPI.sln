@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OTUS.HomeWork.Eshop", "OTUS.HomeWork.Eshop\OTUS.HomeWork.Eshop.csproj", "{A8BEA2B2-016D-4176-90C8-4477C724CD7D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OTUS.HomeWork.BillingService", "OTUS.HomeWork.BillingService\OTUS.HomeWork.BillingService.csproj", "{D27702AF-32A5-4C01-84E6-A2DBA6B3B9DC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OTUS.HomeWork.PaymentGatewayService", "OTUS.HomeWork.PaymentGatewayService\OTUS.HomeWork.PaymentGatewayService.csproj", "{D27702AF-32A5-4C01-84E6-A2DBA6B3B9DC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OTUS.HomeWork.RestAPI.User", "OTUS.HomeWork.RestAPI.User\OTUS.HomeWork.RestAPI.User.csproj", "{D1D79633-8497-4CA9-BCEB-B2609B4C54CA}"
 EndProject

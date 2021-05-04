@@ -1,4 +1,4 @@
-﻿namespace OTUS.HomeWork.AuthService.Domain
+﻿namespace OTUS.HomeWork.EShop.Domain.DTO
 {
     public class RegisterUserDTO
     {

@@ -10,7 +10,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using OTUS.HomeWork.Common;
-using OTUS.HomeWork.Eshop;
 using OTUS.HomeWork.NotificationService.DAL;
 using OTUS.HomeWork.NotificationService.Extensions;
 using System;

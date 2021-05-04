@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Concurrent;
-using DataBuffer.BusClient.RabbitMq.Pool;
 
-namespace DataBuffer.BusClient.RabbitMq
+namespace OTUS.HomeWork.RabbitMq.Pool
 {
 	public class RabbitMQPoolStorage
 		: IDisposable

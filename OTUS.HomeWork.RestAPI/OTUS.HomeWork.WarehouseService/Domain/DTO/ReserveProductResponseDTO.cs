@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace OTUS.HomeWork.WarehouseService.Domain
+namespace OTUS.HomeWork.WarehouseService.Domain.DTO
 {
     public record ReserveProductResultDTO
     {

@@ -1,8 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OTUS.HomeWork.DeliveryService.Domain;
-using System;
 
-namespace OTUS.HomeWork.WarehouseService.DAL
+namespace OTUS.HomeWork.DeliveryService.DAL
 {
     public class DeliveryContext
         : DbContext

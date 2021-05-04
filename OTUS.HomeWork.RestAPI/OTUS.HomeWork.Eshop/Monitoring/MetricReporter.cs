@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Prometheus;
 
-namespace OTUS.HomeWork.Eshop.Monitoring
+namespace OTUS.HomeWork.EShop.Monitoring
 {
     public class MetricReporter
     {

@@ -1,9 +1,9 @@
 ﻿using EntityFramework.Exceptions.Common;
 using Microsoft.EntityFrameworkCore;
 using OTUS.HomeWork.DeliveryService.Domain;
-using OTUS.HomeWork.WarehouseService.DAL;
 using System;
 using System.Threading.Tasks;
+using OTUS.HomeWork.DeliveryService.DAL;
 
 namespace OTUS.HomeWork.DeliveryService.Services
 {
@@ -26,6 +26,10 @@ namespace OTUS.HomeWork.DeliveryService.Services
 
         public async Task<Delivery> CreateDeliveryAsync(Delivery delivery)
         {
+            var existDelivery = await _context.Delivery.FirstOrDefaultAsync(g => g.OrderNumber == delivery.OrderNumber);
+            if (existDelivery != null)
+                return existDelivery;
+
             foreach(var prod in delivery.Products)
             {
                 prod.OrderNumber = delivery.OrderNumber;

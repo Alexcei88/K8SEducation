@@ -1,11 +1,11 @@
-﻿using DataBuffer.BusClient.RabbitMq;
-using DataBuffer.BusClient.RabbitMq.Pool;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using OTUS.HomeWork.Common;
 using OTUS.HomeWork.NotificationService.Contract.Messages;
 using OTUS.HomeWork.NotificationService.DAL;
 using System;
+using OTUS.HomeWork.RabbitMq;
+using OTUS.HomeWork.RabbitMq.Pool;
 
 namespace OTUS.HomeWork.NotificationService.Extensions
 {

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using OTUS.HomeWork.Eshop.DAL;
+using OTUS.HomeWork.EShop.DAL;
 
 namespace OTUS.HomeWork.EShop.Migrations
 {
@@ -20,7 +20,7 @@ namespace OTUS.HomeWork.EShop.Migrations
                 .HasAnnotation("ProductVersion", "5.0.3")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-            modelBuilder.Entity("OTUS.HomeWork.Eshop.Domain.Order", b =>
+            modelBuilder.Entity("OTUS.HomeWork.EShop.Domain.Order", b =>
                 {
                     b.Property<Guid>("OrderNumber")
                         .ValueGeneratedOnAdd()
@@ -34,6 +34,10 @@ namespace OTUS.HomeWork.EShop.Migrations
                     b.Property<DateTime>("CreatedOnUtc")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("created_on_utc");
+
+                    b.Property<string>("ErrorDescription")
+                        .HasColumnType("text")
+                        .HasColumnName("error_description");
 
                     b.Property<string>("IdempotencyKey")
                         .HasColumnType("text")
@@ -65,7 +69,7 @@ namespace OTUS.HomeWork.EShop.Migrations
                     b.ToTable("orders");
                 });
 
-            modelBuilder.Entity("OTUS.HomeWork.Eshop.Domain.OrderItem", b =>
+            modelBuilder.Entity("OTUS.HomeWork.EShop.Domain.OrderItem", b =>
                 {
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uuid")
@@ -95,69 +99,14 @@ namespace OTUS.HomeWork.EShop.Migrations
                     b.ToTable("order_item");
                 });
 
-            modelBuilder.Entity("OTUS.HomeWork.Eshop.Domain.Product", b =>
+            modelBuilder.Entity("OTUS.HomeWork.EShop.Domain.OrderItem", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text")
-                        .HasColumnName("description");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("numeric")
-                        .HasColumnName("price");
-
-                    b.HasKey("Id")
-                        .HasName("pk_products");
-
-                    b.ToTable("products");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("46a607cd-4abd-49d1-bd74-9980b9c415d4"),
-                            Description = "",
-                            Name = "Футбольный Мяч",
-                            Price = 100m
-                        },
-                        new
-                        {
-                            Id = new Guid("0dbfd70b-03d9-4fec-a3bb-42aac257ac64"),
-                            Description = "",
-                            Name = "Футбольная сетка",
-                            Price = 400m
-                        },
-                        new
-                        {
-                            Id = new Guid("9e6cc9d1-87d2-4ba8-b330-84d8046d5281"),
-                            Description = "",
-                            Name = "Футболка",
-                            Price = 20m
-                        },
-                        new
-                        {
-                            Id = new Guid("ea5ea612-fc48-4b1e-ae8b-fc5c38abcfbe"),
-                            Description = "",
-                            Name = "Шорты",
-                            Price = 20m
-                        });
-                });
-
-            modelBuilder.Entity("OTUS.HomeWork.Eshop.Domain.OrderItem", b =>
-                {
-                    b.HasOne("OTUS.HomeWork.Eshop.Domain.Order", null)
+                    b.HasOne("OTUS.HomeWork.EShop.Domain.Order", null)
                         .WithMany("Items")
                         .HasForeignKey("OrderNumber1")
                         .HasConstraintName("fk_order_item_orders_order_number1");
 
-                    b.HasOne("OTUS.HomeWork.Eshop.Domain.Order", "Order")
+                    b.HasOne("OTUS.HomeWork.EShop.Domain.Order", "Order")
                         .WithMany()
                         .HasForeignKey("OrderNumberId")
                         .HasConstraintName("fk_order_item_orders_order_number")
@@ -167,7 +116,7 @@ namespace OTUS.HomeWork.EShop.Migrations
                     b.Navigation("Order");
                 });
 
-            modelBuilder.Entity("OTUS.HomeWork.Eshop.Domain.Order", b =>
+            modelBuilder.Entity("OTUS.HomeWork.EShop.Domain.Order", b =>
                 {
                     b.Navigation("Items");
                 });

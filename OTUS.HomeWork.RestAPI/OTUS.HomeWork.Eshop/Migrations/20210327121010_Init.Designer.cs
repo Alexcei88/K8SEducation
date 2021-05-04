@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using OTUS.HomeWork.Eshop.DAL;
+using OTUS.HomeWork.EShop.DAL;
 
 namespace OTUS.HomeWork.EShop.Migrations
 {

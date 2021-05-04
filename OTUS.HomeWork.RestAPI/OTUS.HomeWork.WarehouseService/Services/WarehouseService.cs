@@ -50,9 +50,14 @@ namespace OTUS.HomeWork.WarehouseService.Services
                     long newReserverCount = remainProductCounter.ReserveCount - existReserveCount + queryCount;
                     if (remainProductCounter.RemainCount < newReserverCount)
                     {
-                        long more = newReserverCount - remainProductCounter.RemainCount;
-                        newReserverCount -= more;
-                        queryCount -= more;
+                        reserveProducts.Add(new ReserveProduct
+                        {
+                            Count = -1,
+                            OrderNumber = orderNumber,
+                            ProductId = product.ProductId,
+                            ReserveDate = reserveDate,
+                        });
+                        continue;
                     }
                     var reserveProduct = new ReserveProduct
                     {
@@ -101,47 +106,55 @@ namespace OTUS.HomeWork.WarehouseService.Services
 
         public async Task<bool> ShipmentProducts(string orderNumber, string deliveryAddress)
         {
-            using (var scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions
+            try
             {
-                IsolationLevel = IsolationLevel.Serializable
-            }))
-            {
-                // 1. снимаем с резервирования
-                var reservers = await _warehouseContext.Reserves.Where(g => g.OrderNumber == orderNumber).ToArrayAsync();
-                if(reservers.Any())
-                    return false;
-
-                foreach (var reserve in reservers)
+                using (var scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions
                 {
-                    await UnReserveProduct(reserve);
-                }
-                // 2. формируем заявку на отгрузку
-                _warehouseContext.Shipments.Add(new ShipmentOrder
+                    IsolationLevel = IsolationLevel.Serializable
+                }))
                 {
-                    DeliveryAddress = deliveryAddress,
-                    OrderNumber = orderNumber,
-                    ProductIds = reservers.Select(g => g.ProductId).ToList(),
-                    Status = ShipmentOrderStatus.Created,
-                });
-
-                // 3. снимаем с остатков
-                foreach (var reserver in reservers)
-                {
-                    var remainProductCounter = await _warehouseContext.Counters.FirstOrDefaultAsync(g => g.ProductId == reserver.ProductId);
-                    if (remainProductCounter == null)
-                        // нет такого товара
+                    // 1. снимаем с резервирования
+                    var reservers = await _warehouseContext.Reserves.Where(g => g.OrderNumber == orderNumber).ToArrayAsync();
+                    if (reservers.Any())
                         return false;
-                    remainProductCounter.RemainCount -= reserver.Count;
-                    if (remainProductCounter.RemainCount < 0)
-                        // нет нужного количества на складе
-                        return false;
+
+                    foreach (var reserve in reservers)
+                    {
+                        await UnReserveProduct(reserve);
+                    }
+                    // 2. формируем заявку на отгрузку
+                    _warehouseContext.Shipments.Add(new ShipmentOrder
+                    {
+                        DeliveryAddress = deliveryAddress,
+                        OrderNumber = orderNumber,
+                        ProductIds = reservers.Select(g => g.ProductId).ToList(),
+                        Status = ShipmentOrderStatus.Created,
+                    });
+
+                    // 3. снимаем с остатков
+                    foreach (var reserver in reservers)
+                    {
+                        var remainProductCounter = await _warehouseContext.Counters.FirstOrDefaultAsync(g => g.ProductId == reserver.ProductId);
+                        if (remainProductCounter == null)
+                            // нет такого товара
+                            return false;
+                        remainProductCounter.RemainCount -= reserver.Count;
+                        if (remainProductCounter.RemainCount < 0)
+                            // нет нужного количества на складе
+                            return false;
+                    }
+
+                    // 4. нужна доставка сервисом доставки
+
+
+                    scope.Complete();
                 }
-                scope.Complete();
-
-                //4. нужна доставка сервисом доставки
-
+                return true;
             }
-            return true;
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
 

@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace OTUS.HomeWork.PricingService.Domain
+namespace OTUS.HomeWork.PricingService.Domain.DTO
 {
     public class ProductPriceDTO
     {

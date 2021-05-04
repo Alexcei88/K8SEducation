@@ -27,7 +27,6 @@ namespace OTUS.HomeWork.PricingService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
             services.AddHealthChecks();
             services.AddSwaggerGen(c =>
@@ -46,7 +45,7 @@ namespace OTUS.HomeWork.PricingService
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "OTUS.HomeWork.PricingService v1"));
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseHealthChecks("/api/service/health", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions()
             {
@@ -59,9 +58,7 @@ namespace OTUS.HomeWork.PricingService
             });
 
             app.UseRouting();
-
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace OTUS.HomeWork.WarehouseService.Domain
+namespace OTUS.HomeWork.WarehouseService.Domain.DTO
 {
     public record ReserveProductDTO
     {
@@ -14,6 +14,6 @@ namespace OTUS.HomeWork.WarehouseService.Domain
     {
         public string OrderNumber { get; set; }
 
-        public List<ReserveProductDTO> Products = new List<ReserveProductDTO>();
+        public List<ReserveProductDTO> Products { get; set; } = new List<ReserveProductDTO>();
     }
 }

@@ -2,16 +2,18 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using OTUS.HomeWork.BillingService.DAL;
+using OTUS.HomeWork.PaymentGatewayService.DAL;
 
 namespace OTUS.HomeWork.BillingService.Migrations
 {
-    [DbContext(typeof(BillingContext))]
-    partial class BillingContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(PaymentContext))]
+    [Migration("20210331202509_IdempotencyKeyToPayment")]
+    partial class IdempotencyKeyToPayment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -20,7 +22,7 @@ namespace OTUS.HomeWork.BillingService.Migrations
                 .HasAnnotation("ProductVersion", "5.0.3")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-            modelBuilder.Entity("OTUS.HomeWork.BillingService.Domain.Payment", b =>
+            modelBuilder.Entity("OTUS.HomeWork.PaymentGatewayService.Domain.Payment", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -56,7 +58,7 @@ namespace OTUS.HomeWork.BillingService.Migrations
                     b.ToTable("payments");
                 });
 
-            modelBuilder.Entity("OTUS.HomeWork.BillingService.Domain.User", b =>
+            modelBuilder.Entity("OTUS.HomeWork.PaymentGatewayService.Domain.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -75,9 +77,9 @@ namespace OTUS.HomeWork.BillingService.Migrations
                     b.ToTable("users");
                 });
 
-            modelBuilder.Entity("OTUS.HomeWork.BillingService.Domain.Payment", b =>
+            modelBuilder.Entity("OTUS.HomeWork.PaymentGatewayService.Domain.Payment", b =>
                 {
-                    b.HasOne("OTUS.HomeWork.BillingService.Domain.User", "User")
+                    b.HasOne("OTUS.HomeWork.PaymentGatewayService.Domain.User", "User")
                         .WithMany("Payments")
                         .HasForeignKey("UserId")
                         .HasConstraintName("fk_payments_users_user_id")
@@ -87,7 +89,7 @@ namespace OTUS.HomeWork.BillingService.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("OTUS.HomeWork.BillingService.Domain.User", b =>
+            modelBuilder.Entity("OTUS.HomeWork.PaymentGatewayService.Domain.User", b =>
                 {
                     b.Navigation("Payments");
                 });
