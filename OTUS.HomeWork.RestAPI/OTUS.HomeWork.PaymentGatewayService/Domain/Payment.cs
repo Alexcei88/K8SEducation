@@ -16,5 +16,7 @@ namespace OTUS.HomeWork.PaymentGatewayService.Domain
 
         public string IdempotanceKey { get; set; }
 
+        public Refund Refund {get; set;}
+
     }
 }

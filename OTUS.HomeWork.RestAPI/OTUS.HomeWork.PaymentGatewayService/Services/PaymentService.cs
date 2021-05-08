@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using EntityFramework.Exceptions.Common;
 using Microsoft.EntityFrameworkCore;
 using OTUS.HomeWork.PaymentGatewayService.DAL;
 using OTUS.HomeWork.PaymentGatewayService.Domain;
@@ -9,6 +10,8 @@ namespace OTUS.HomeWork.PaymentGatewayService.Services
     public interface IBillingService
     {
         Task<Payment> MakePaymentAsync(Guid userId, PaymentRequestDTO paymentRequest);
+
+        Task<Refund> RefundAsync(Guid userId, RefundRequestDTO refundPaymentRequest);
     }
 
     public class PaymentService 
@@ -40,11 +43,36 @@ namespace OTUS.HomeWork.PaymentGatewayService.Services
                 _context.Payments.Add(payment);
                 var res = await _context.SaveChangesAsync();
             }
-            catch(Exception ex)
+            catch (UniqueConstraintException)
             {
-                throw new Exception("Оплата уже была произведена", ex);
+                return await _context.Payments.FirstAsync(g => g.IdempotanceKey == paymentRequest.IdempotenceKey);
             }
             return payment;
-        }        
+        }
+
+        public async Task<Refund> RefundAsync(Guid userId, RefundRequestDTO refundRequest)
+        {
+            var existRefund = await _context.Refunds.FirstOrDefaultAsync(g => g.BillingId == refundRequest.BillingId);
+            if (existRefund != null)
+                return existRefund;
+
+            var refund = new Refund()
+            {
+                Date = DateTime.UtcNow,
+                UserId = userId,
+                BillingId = refundRequest.BillingId,
+            };
+
+            try
+            {
+                _context.Refunds.Add(refund);
+                var res = await _context.SaveChangesAsync();
+            }
+            catch (UniqueConstraintException)
+            {
+                return await _context.Refunds.FirstAsync(g => g.BillingId == refundRequest.BillingId);
+            }
+            return refund;
+        }
     }
 }

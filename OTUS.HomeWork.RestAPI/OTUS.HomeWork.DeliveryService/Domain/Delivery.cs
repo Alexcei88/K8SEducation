@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace OTUS.HomeWork.DeliveryService.Domain
@@ -12,5 +11,7 @@ namespace OTUS.HomeWork.DeliveryService.Domain
         public List<DeliveryProduct> Products { get; init; }
 
         public DeliveryLocation Location { get; init; }
+
+        public string CourierName { get; set; }
     }
 }

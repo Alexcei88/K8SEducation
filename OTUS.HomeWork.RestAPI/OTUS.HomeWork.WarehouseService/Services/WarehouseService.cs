@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using OTUS.HomeWork.Clients;
 using OTUS.HomeWork.WarehouseService.DAL;
 using OTUS.HomeWork.WarehouseService.Domain;
 using System;
@@ -12,10 +13,12 @@ namespace OTUS.HomeWork.WarehouseService.Services
     public class WarehouseService
     {
         private readonly WarehouseContext _warehouseContext;
+        private readonly DeliveryServiceClient _deliveryServiceClient;
 
-        public WarehouseService(WarehouseContext warehouseContext)
+        public WarehouseService(WarehouseContext warehouseContext, DeliveryServiceClient deliveryServiceClient)
         {
             _warehouseContext = warehouseContext;
+            _deliveryServiceClient = deliveryServiceClient;
         }
 
         // TODO выделить минифункци reserve, код станет чище
@@ -27,7 +30,7 @@ namespace OTUS.HomeWork.WarehouseService.Services
             using (var scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions
             {
                 IsolationLevel = IsolationLevel.Serializable
-            }))
+            }, TransactionScopeAsyncFlowOption.Enabled))
             {
                 DateTime reserveDate = DateTime.UtcNow;
                 foreach(var product in products)
@@ -78,8 +81,10 @@ namespace OTUS.HomeWork.WarehouseService.Services
                     {
                         _warehouseContext.Reserves.Add(reserveProduct);
                     }
+                    _warehouseContext.Update(remainProductCounter);
                 }
 
+                await _warehouseContext.SaveChangesAsync();
                 scope.Complete();
             }
             return reserveProducts.ToArray();
@@ -92,13 +97,14 @@ namespace OTUS.HomeWork.WarehouseService.Services
             using (var scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions
             {
                 IsolationLevel = IsolationLevel.Serializable
-            }))
+            }, TransactionScopeAsyncFlowOption.Enabled))
             {
                 var reservers = await _warehouseContext.Reserves.Where(g => g.OrderNumber == orderNumber).ToArrayAsync();
                 foreach (var reserve in reservers)
                 {
                     await UnReserveProduct(reserve);
                 }
+                await _warehouseContext.SaveChangesAsync();
                 scope.Complete();
             }
             return true;
@@ -111,13 +117,15 @@ namespace OTUS.HomeWork.WarehouseService.Services
                 using (var scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions
                 {
                     IsolationLevel = IsolationLevel.Serializable
-                }))
+                }, TransactionScopeAsyncFlowOption.Enabled))
                 {
                     // 1. снимаем с резервирования
                     var reservers = await _warehouseContext.Reserves.Where(g => g.OrderNumber == orderNumber).ToArrayAsync();
-                    if (reservers.Any())
+                    if (!reservers.Any())
                         return false;
 
+                    var allProductIds = reservers.Select(g => g.ProductId).ToArray();
+                    var products = _warehouseContext.Products.Where(g => allProductIds.Contains(g.Id));
                     foreach (var reserve in reservers)
                     {
                         await UnReserveProduct(reserve);
@@ -144,9 +152,21 @@ namespace OTUS.HomeWork.WarehouseService.Services
                             return false;
                     }
 
-                    // 4. нужна доставка сервисом доставки
+                    // 4. сообщаем сервису доставки о необходимости забирания товара
+                    var deliveryResponse = await _deliveryServiceClient.DeliveryAsync(new DeliveryRequestDTO
+                    {
+                        DeliveryAddress = deliveryAddress,
+                        OrderNumber = orderNumber,
+                        Products = products.Select(g => new DeliveryProductDTO
+                        {
+                            Name = g.Name,
+                            ProductId = g.Id,
+                            Space = g.Space,
+                            Weight = g.Weight
+                        }).ToArray()
+                    });
 
-
+                    await _warehouseContext.SaveChangesAsync();
                     scope.Complete();
                 }
                 return true;

@@ -3,9 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using OTUS.HomeWork.DeliveryService.Domain;
 using OTUS.HomeWork.DeliveryService.Domain.DTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace OTUS.HomeWork.DeliveryService.Controllers

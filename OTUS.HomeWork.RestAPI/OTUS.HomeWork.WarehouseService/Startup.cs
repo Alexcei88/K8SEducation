@@ -2,20 +2,15 @@ using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using OTUS.HomeWork.Clients;
 using OTUS.HomeWork.Common;
 using OTUS.HomeWork.WarehouseService.DAL;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Net.Http;
 
 namespace OTUS.HomeWork.WarehouseService
 {
@@ -36,6 +31,16 @@ namespace OTUS.HomeWork.WarehouseService
 
             services.Configure<RabbitMQOption>(Configuration.GetSection("RabbitMq"));
             services.AddScoped<ProductRepository>();
+            services.AddScoped<Services.WarehouseService>();
+            services.AddHttpClient();
+
+            var deliverySettingSection = Configuration.GetSection("DeliveryService");
+            services.AddScoped((sp) =>
+            {
+                var options = deliverySettingSection.Get<ServiceAddressOption>();
+                var client = sp.GetService<IHttpClientFactory>()?.CreateClient("DeliveryService");
+                return new DeliveryServiceClient(options.Url, client);
+            });
 
             services.AddSingleton(provider => {
                 return new MapperConfiguration(cfg =>

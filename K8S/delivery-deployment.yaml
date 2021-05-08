@@ -1,17 +1,16 @@
-### eshop api
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: homework
+  name: delivery-service
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: homeworkapp
+      app: delivery
   template:
     metadata:
       labels:
-        app: homeworkapp
+        app: delivery
     spec:
       initContainers:
         - name: check-db-ready
@@ -34,40 +33,28 @@ spec:
               until pg_isready -h $POSTGRES_HOST -p $POSTGRES_PORT;
               do echo waiting for database; sleep 2; done;
       containers:
-      - name: homeworkapp
-        image: alexcei88/otushomeworkeshop
+      - name: deliveryservice
+        image: alexcei88/otushomeworkdeliveryservice
         resources:
           limits:
             memory: "128Mi"
             cpu: "200m"          
         ports:
-          - containerPort: 5020
+          - containerPort: 5040
         env:
           - name: "ConnectionStrings__DefaultConnection"
             valueFrom:
               secretKeyRef:
                 name: homework-secret
-                key: ESHOP_DATABASE_URI
-          - name: "BillingService__Url"
-            valueFrom:
-               configMapKeyRef: 
-                  name: homework-config
-                  key: BILLING_SERVICE_URL
+                key: DELIVERY_DATABASE_URI
         volumeMounts:
           - name: config-volume
             mountPath: /app/config          
         livenessProbe:
           httpGet:
-            port: 5020
-            path: /health
-          initialDelaySeconds: 2
-          periodSeconds: 5
-          timeoutSeconds: 1
-        readinessProbe:
-          httpGet:
-            port: 5020
+            port: 5040
             path: /api/service/health
-          initialDelaySeconds: 1
+          initialDelaySeconds: 2
           periodSeconds: 5
           timeoutSeconds: 1
       volumes:

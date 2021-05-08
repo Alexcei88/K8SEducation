@@ -11,5 +11,7 @@ namespace OTUS.HomeWork.DeliveryService.Domain.DTO
         public DateTime EstimatedDate { get; init; }
 
         public DateTime ShipmentDate { get; init; }
+
+        public string CourierName { get; set; }
     }
 }

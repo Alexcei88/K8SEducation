@@ -6,7 +6,10 @@ metadata:
 data:
   POSTGRES_HOST: "postgres"
   POSTGRES_PORT: "5432"
-  BILLING_SERVICE_URL: "http://billing-service.default.svc.cluster.local:15010"  
+  PAYMENTGW_SERVICE_URL: "http://paymentgateway-service.default.svc.cluster.local:15010"
+  DELIVERY_SERVICE_URL: "http://delivery-service.default.svc.cluster.local:15040"
+  WAREHOUSE_SERVICE_URL: "http://warehouse-service.default.svc.cluster.local:15050"
+  PRICING_SERVICE_URL:  "http://pricing-service.default.svc.cluster.local:15070"
   appsettings.json: |-
     {
       "Logging": {
@@ -30,5 +33,9 @@ metadata:
   name: homework-secret
 data:
   ESHOP_DATABASE_URI: SG9zdD1wb3N0Z3JlcztEYXRhYmFzZT1vdHVzX2VzaG9wO1VzZXJuYW1lPXBvc3RncmVzO1Bhc3N3b3JkPXRjXzEyMzQ1Ng==
-  BILLING_DATABASE_URI: SG9zdD1wb3N0Z3JlcztEYXRhYmFzZT1vdHVzX2JpbGxpbmc7VXNlcm5hbWU9cG9zdGdyZXM7UGFzc3dvcmQ9dGNfMTIzNDU2
-  NOTIFICATION_DATABASE_URI: SG9zdD1wb3N0Z3JlcztEYXRhYmFzZT1vdHVzX25vdGlmaWNhdGlvbnM7VXNlcm5hbWU9cG9zdGdyZXM7UGFzc3dvcmQ9dGNfMTIzNDU2  
+  PAYMENTGW_DATABASE_URI: SG9zdD1wb3N0Z3JlcztEYXRhYmFzZT1vdHVzX2JpbGxpbmc7VXNlcm5hbWU9cG9zdGdyZXM7UGFzc3dvcmQ9dGNfMTIzNDU2
+  NOTIFICATION_DATABASE_URI: SG9zdD1wb3N0Z3JlcztEYXRhYmFzZT1vdHVzX25vdGlmaWNhdGlvbnM7VXNlcm5hbWU9cG9zdGdyZXM7UGFzc3dvcmQ9dGNfMTIzNDU2
+  WAREHOUSE_DATABASE_URI: SG9zdD1wb3N0Z3JlcztEYXRhYmFzZT1vdHVzX3dhcmVob3VzZTtVc2VybmFtZT1wb3N0Z3JlcztQYXNzd29yZD10Y18xMjM0NTY=
+  DELIVERY_DATABASE_URI: SG9zdD1wb3N0Z3JlcztEYXRhYmFzZT1vdHVzX2RlbGl2ZXJ5O1VzZXJuYW1lPXBvc3RncmVzO1Bhc3N3b3JkPXRjXzEyMzQ1Ng==
+  PRICING_DATABASE_URI: SG9zdD1wb3N0Z3JlcztEYXRhYmFzZT1vdHVzX3ByaWNpbmc7VXNlcm5hbWU9cG9zdGdyZXM7UGFzc3dvcmQ9dGNfMTIzNDU2
+    

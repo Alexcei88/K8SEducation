@@ -2,14 +2,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: billing-service
+  name: paymentgateway-service
   labels:
-    app: billing
+    app: paymentgateway
 spec:
   selector:
-    app: billing
+    app: paymentgateway
   ports:
   - port: 15010
     targetPort: 5010  
-    name: "billing-service"
+    name: "paymentgateway-service"
   type: NodePort

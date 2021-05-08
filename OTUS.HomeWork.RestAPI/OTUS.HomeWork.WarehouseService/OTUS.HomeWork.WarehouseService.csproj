@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\OTUS.HomeWork.Clients\OTUS.HomeWork.Clients.csproj" />
     <ProjectReference Include="..\OTUS.HomeWork.Common\OTUS.HomeWork.Common.csproj" />
   </ItemGroup>
 

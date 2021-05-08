@@ -34,7 +34,9 @@ namespace OTUS.HomeWork.WarehouseService.Controllers
             foreach(var product in products)
             {
                 ProductDTO productDTO = _mapper.Map<ProductDTO>(product);
-                productDTO.RemainCount = counters.First(g => g.ProductId == product.Id).RemainCount;
+                productDTO.RemainCount = counters.First(g => g.ProductId == product.Id).RemainCount - counters.First(g => g.ProductId == product.Id).ReserveCount;
+                if (productDTO.RemainCount < 0)
+                    productDTO.RemainCount = 0;
                 result.Add(productDTO);
             }
             return Ok(result);

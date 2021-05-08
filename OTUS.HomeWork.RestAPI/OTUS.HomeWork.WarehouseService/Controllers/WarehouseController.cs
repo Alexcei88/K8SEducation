@@ -57,17 +57,24 @@ namespace OTUS.HomeWork.WarehouseService.Controllers
         }
 
         [HttpPut("/reserve/cancel")]
-        public async Task<OkResult> ReserveProducts([FromQuery]string orderNumber)
+        public async Task<ActionResult> ReserveProducts([FromQuery]string orderNumber)
         {
-            await _warehouseService.ResetReserveProducts(orderNumber);
-            return Ok();
+            bool res = await _warehouseService.ResetReserveProducts(orderNumber);
+            if (res)
+                return Ok();
+            else
+                return BadRequest();
         }
 
         [HttpPost("/shipment")]
-        public async Task<OkResult> ShipmentProducts(ShipmentRequestDTO request)
+        public async Task<ActionResult> ShipmentProducts(ShipmentRequestDTO request)
         {
-            await _warehouseService.ShipmentProducts(request.OrderNumber, request.DeliveryAddress);
-            return Ok();
+            bool res = await _warehouseService.ShipmentProducts(request.OrderNumber, request.DeliveryAddress);
+            if (res)
+                return Ok();
+            else
+                return BadRequest();
+
         }
     }
 }

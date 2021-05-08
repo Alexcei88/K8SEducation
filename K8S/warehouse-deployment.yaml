@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: warehouse-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: warehouse
+  template:
+    metadata:
+      labels:
+        app: warehouse
+    spec:
+      initContainers:
+        - name: check-db-ready
+          image: postgres:latest
+          env:
+            - name: POSTGRES_HOST
+              valueFrom:  
+                configMapKeyRef: 
+                  name: homework-config
+                  key: POSTGRES_HOST
+            - name: POSTGRES_PORT
+              valueFrom:  
+                configMapKeyRef: 
+                  name: homework-config
+                  key: POSTGRES_PORT
+          command:
+            - sh
+            - "-c"
+            - |
+              until pg_isready -h $POSTGRES_HOST -p $POSTGRES_PORT;
+              do echo waiting for database; sleep 2; done;
+      containers:
+      - name: warehouseservice
+        image: alexcei88/otushomeworkwarehouseservice
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "200m"          
+        ports:
+          - containerPort: 5050
+        env:
+          - name: "ConnectionStrings__DefaultConnection"
+            valueFrom:
+              secretKeyRef:
+                name: homework-secret
+                key: WAREHOUSE_DATABASE_URI
+          - name: "DeliveryService__Url"
+            valueFrom:
+               configMapKeyRef: 
+                  name: homework-config
+                  key: DELIVERY_SERVICE_URL                
+        volumeMounts:
+          - name: config-volume
+            mountPath: /app/config          
+        livenessProbe:
+          httpGet:
+            port: 5050
+            path: /api/service/health
+          initialDelaySeconds: 2
+          periodSeconds: 5
+          timeoutSeconds: 1
+      volumes:
+      - name: config-volume
+        configMap:
+          name: homework-config
