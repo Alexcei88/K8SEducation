@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using OTUS.HomeWork.PricingService.Domain;
 using OTUS.HomeWork.PricingService.Domain.DTO;
+using System;
 
 namespace OTUS.HomeWork.PricingService.Controllers
 {
@@ -16,8 +16,8 @@ namespace OTUS.HomeWork.PricingService.Controllers
             _logger = logger;
         }
 
-        [HttpPost]
-        public ActionResult<PriceResponseDTO> GetPrice(PriceRequestDTO request)
+        [HttpPost("{userId}")]
+        public ActionResult<PriceResponseDTO> GetPrice([FromRoute]Guid userId, PriceRequestDTO request)
         {
             return Ok(new PriceResponseDTO
             {

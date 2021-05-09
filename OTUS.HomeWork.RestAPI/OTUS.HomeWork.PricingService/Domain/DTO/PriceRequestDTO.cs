@@ -10,8 +10,6 @@ namespace OTUS.HomeWork.PricingService.Domain.DTO
     
     public class PriceRequestDTO
     {
-        public string UserId { get; set; }
-
         public List<PProductDTO> Products { get; set; }
     }
 }

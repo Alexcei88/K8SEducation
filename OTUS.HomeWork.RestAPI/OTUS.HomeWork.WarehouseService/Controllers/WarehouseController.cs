@@ -5,11 +5,13 @@ using OTUS.HomeWork.WarehouseService.Domain;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using OTUS.HomeWork.WarehouseService.Domain.DTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace OTUS.HomeWork.WarehouseService.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class WarehouseController 
         : ControllerBase
     {        

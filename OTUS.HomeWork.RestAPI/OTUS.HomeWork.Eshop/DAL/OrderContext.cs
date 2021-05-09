@@ -13,11 +13,13 @@ namespace OTUS.HomeWork.EShop.DAL
 
         public DbSet<Order> Orders { get; set; }
 
+        public DbSet<Bucket> Buckets { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasPostgresExtension("uuid-ossp");
 
-            modelBuilder.Entity<OrderItem>().HasKey(g => new {g.ProductId, g.OrderNumberId});
+            modelBuilder.Entity<OrderItem>().HasKey(g => new { g.ProductId, g.OrderNumberId});
             modelBuilder.Entity<Order>()
                 .HasMany<OrderItem>()
                 .WithOne(g => g.Order)
@@ -28,6 +30,8 @@ namespace OTUS.HomeWork.EShop.DAL
             modelBuilder.Entity<Order>()
                 .HasIndex(c => c.IdempotencyKey)
                 .IsUnique();
+
+            modelBuilder.Entity<Bucket>().HasKey(g => new { g.UserId, g.ProductId });
         }
     }
 }

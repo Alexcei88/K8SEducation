@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using OTUS.HomeWork.Clients;
 using OTUS.HomeWork.EShop.Domain.DTO;
 using OTUS.HomeWork.RestAPI.Abstraction;
 using OTUS.HomeWork.RestAPI.Abstraction.Domain;
@@ -41,7 +40,7 @@ namespace OTUS.HomeWork.EShop.Controllers
             {
                 UserName = nameIdentifier,
             });
-            return Ok(_mapper.Map<UserDTO>(newUser));            
+            return Ok(_mapper.Map<UserDTO>(newUser));
         }
 
         [HttpGet("{userId}")]

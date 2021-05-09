@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -9,6 +10,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using OTUS.HomeWork.Clients;
 using OTUS.HomeWork.Common;
+using OTUS.HomeWork.RestAPI.Abstraction.Authentication;
+using OTUS.HomeWork.RestAPI.Abstraction.Authentication.Handlers;
 using OTUS.HomeWork.WarehouseService.DAL;
 using System.Net.Http;
 
@@ -50,6 +53,13 @@ namespace OTUS.HomeWork.WarehouseService
                 }).CreateMapper();
             });
 
+            services.AddAuthentication(g =>
+            {
+                g.DefaultAuthenticateScheme = SimpleCustomAuthenticationHandler.AuthentificationScheme;
+                g.DefaultChallengeScheme = SimpleCustomAuthenticationHandler.AuthentificationScheme;
+                g.DefaultForbidScheme = SimpleCustomAuthenticationHandler.AuthentificationScheme;
+            }).AddScheme<RestAPIAuthOption, SimpleCustomAuthenticationHandler>(SimpleCustomAuthenticationHandler.AuthentificationScheme, o => { });
+
             services.AddControllers();
             services.AddHealthChecks(); 
             services.AddSwaggerGen(c =>
@@ -83,9 +93,9 @@ namespace OTUS.HomeWork.WarehouseService
                 }
             });
 
-            //app.UseHttpsRedirection();
-
             app.UseRouting();
+
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

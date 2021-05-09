@@ -39,7 +39,7 @@ namespace OTUS.HomeWork.WarehouseService.DAL
             {
                 Id = Guid.NewGuid(),
                 ProductId = productId1,
-                RemainCount = 10,
+                RemainCount = 100,
                 ReserveCount = 0,
                 SoldCount = 0
             });
@@ -58,7 +58,7 @@ namespace OTUS.HomeWork.WarehouseService.DAL
             {
                 Id = Guid.NewGuid(),
                 ProductId = productId2,
-                RemainCount = 5,
+                RemainCount = 50,
                 ReserveCount = 0,
                 SoldCount = 0
             });
@@ -78,7 +78,7 @@ namespace OTUS.HomeWork.WarehouseService.DAL
             {
                 Id = Guid.NewGuid(),
                 ProductId = productId3,
-                RemainCount = 10,
+                RemainCount = 20,
                 ReserveCount = 4,
                 SoldCount = 0
             });
@@ -98,7 +98,7 @@ namespace OTUS.HomeWork.WarehouseService.DAL
             {
                 Id = Guid.NewGuid(),
                 ProductId = productId4,
-                RemainCount = 5,
+                RemainCount = 25,
                 ReserveCount = 1,
                 SoldCount = 3
             });

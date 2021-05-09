@@ -3,17 +3,17 @@ namespace OTUS.HomeWork.EShop.Domain
     public enum OrderStatus
     {
         /// <summary>
-        /// Pending
+        /// Pending(not payment)
         /// </summary>
         Pending = 10,
 
         /// <summary>
-        /// Processing
+        /// Processing(was payment)
         /// </summary>
         Processing = 20,
 
         /// <summary>
-        /// Complete
+        /// Complete(was shipment)
         /// </summary>
         Complete = 30,
 

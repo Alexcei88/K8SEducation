@@ -65,6 +65,7 @@ namespace OTUS.HomeWork.EShop
             services.AddSingleton<MetricReporter>();
             services.AddScoped<OrderService>();
             services.AddScoped<UserRepository>();
+            services.AddScoped<BucketRepository>();
             services.AddScoped<IUserService, UserService>();
 
             // TODO лучше вынести в функции расширения
@@ -126,13 +127,10 @@ namespace OTUS.HomeWork.EShop
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IMapper mapper, ILoggerFactory factory, IOptions<RabbitMQOption> rabbitMQCoonection)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IMapper mapper)
         {
             mapper.ConfigurationProvider.AssertConfigurationIsValid();
             mapper.ConfigurationProvider.CompileMappings();
-
-            factory.CreateLogger("Startup").LogWarning($"ConnectionString: {Configuration.GetConnectionString("DefaultConnection")}");
-            factory.CreateLogger("Startup").LogWarning($"RabbitMQCoonection ConnectionString: {rabbitMQCoonection.Value.ConnectionString}");
 
             AutomaticallyApplyDBMigrations(app);
 
@@ -155,7 +153,7 @@ namespace OTUS.HomeWork.EShop
             });
 
             app.UseMetricServer();
-            
+
             app.UseMiddleware<ResponseTimeMiddleware>();
             
             app.UseRouting();
@@ -172,8 +170,11 @@ namespace OTUS.HomeWork.EShop
         private void AutomaticallyApplyDBMigrations(IApplicationBuilder app)
         {
             using var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
-            var context = serviceScope.ServiceProvider.GetService<OrderContext>();
-            context?.Database.Migrate();
+            var orderContext = serviceScope.ServiceProvider.GetService<OrderContext>();
+            orderContext?.Database.Migrate();
+
+            var userContext = serviceScope.ServiceProvider.GetService<UserContext>();
+            userContext?.Database.Migrate();
         }
     }
 }

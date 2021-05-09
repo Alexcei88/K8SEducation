@@ -2,6 +2,7 @@
 using OTUS.HomeWork.EShop.Domain;
 using OTUS.HomeWork.EShop.Domain.DTO;
 using OTUS.HomeWork.RestAPI.Abstraction.Domain;
+using System.Linq;
 
 namespace OTUS.HomeWork.EShop
 {
@@ -36,6 +37,14 @@ namespace OTUS.HomeWork.EShop
                 .ForMember(g => g.UserId,
                     m => m.MapFrom(s => s.Id))
                 .ReverseMap();
+
+            CreateMap<Bucket[], BucketRequestDTO>()
+                .ForMember(g => g.Items, m => m.MapFrom(s => s.Select(g => new OrderItemDTO
+                {
+                    ProductId = g.ProductId,
+                    Quantity = g.Quantity
+                }).ToList()));
+
         }
     }
 }

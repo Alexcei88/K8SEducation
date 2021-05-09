@@ -152,7 +152,7 @@ namespace OTUS.HomeWork.WarehouseService.Services
                             return false;
                     }
 
-                    // 4. сообщаем сервису доставки о необходимости забирания товара
+                    // 4. сообщаем сервису доставки о необходимости забирания товара(в будуем это будет делаться через шину данных)
                     var deliveryResponse = await _deliveryServiceClient.DeliveryAsync(new DeliveryRequestDTO
                     {
                         DeliveryAddress = deliveryAddress,

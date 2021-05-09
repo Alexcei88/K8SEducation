@@ -2,7 +2,7 @@
 
 namespace OTUS.HomeWork.EShop.Domain.DTO
 {
-    public record BucketDTO
+    public record BucketRequestDTO
     {        
         public List<OrderItemDTO> Items { get; init; }
     }

@@ -1,13 +1,12 @@
-### rest api
 apiVersion: v1
 kind: Service
 metadata:
   name: eshop-service
   labels:
-    app: eshopservice
+    app: eshop
 spec:
   selector:
-    app: eshopservice
+    app: eshop
   ports:
   - port: 15020
     targetPort: 5020  

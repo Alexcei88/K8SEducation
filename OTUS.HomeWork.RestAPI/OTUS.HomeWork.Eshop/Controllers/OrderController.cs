@@ -1,7 +1,7 @@
 using System;
-using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OTUS.HomeWork.EShop.Domain;
@@ -14,7 +14,7 @@ namespace OTUS.HomeWork.EShop.Controllers
 {
     [ApiController]
     [Route("api/order")]
-   // [Authorize(Policy = "OnlyOwner")]
+    [Authorize(Policy = "OnlyOwner")]
     public class OrderController : ControllerBase
     {
         private readonly OrderService _orderService;
