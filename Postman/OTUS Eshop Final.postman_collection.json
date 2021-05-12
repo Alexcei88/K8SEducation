@@ -1,0 +1,973 @@
+{
+	"info": {
+		"_postman_id": "0f19173b-ed1b-4b63-be00-85922061583b",
+		"name": "OTUS Eshop Final",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "signin",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"userName\", pm.variables.replaceIn('{{$randomUserName}}'))"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);\r",
+							"pm.collectionVariables.set(\"userId1\", jsonData.userId);\r",
+							"\r",
+							"pm.test(\"user registered successfully\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"host": true
+				}
+			},
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "host",
+						"value": "arch.homework",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "gap-auth",
+						"value": "{{userName}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrlD}}/signin",
+					"host": [
+						"{{baseUrlD}}"
+					],
+					"path": [
+						"signin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getBucket",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"empty bucket\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.items).to.eql([]);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"host": true
+				},
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "host",
+						"value": "arch.homework",
+						"type": "text"
+					},
+					{
+						"key": "X-Custom-Authentification",
+						"value": "eyJVc2VySWQiOiJjNjk0ZDQxMi1iMGQ3LTQxNTAtOWM1My04MTQxYzExZmNmNmYiLCJFeHBpcmVkVVRDRGF0ZVRpbWUiOiIyMDIxLTAyLTIyVDIwOjA0OjE5Ljc0MTg2MDNaIn0=",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{eshopBaseUrlD}}/api/bucket/{{userId1}}",
+					"host": [
+						"{{eshopBaseUrlD}}"
+					],
+					"path": [
+						"api",
+						"bucket",
+						"{{userId1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getProducts",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);\r",
+							"pm.collectionVariables.set(\"product1\", jsonData[0][\"id\"]);\r",
+							"pm.collectionVariables.set(\"product2\", jsonData[1][\"id\"]);\r",
+							"pm.collectionVariables.set(\"product3\", jsonData[2][\"id\"]);\r",
+							"pm.collectionVariables.set(\"product4\", jsonData[3][\"id\"]);\r",
+							"\r",
+							"pm.collectionVariables.set(\"product1quantity\", jsonData[0][\"remainCount\"]);\r",
+							"pm.collectionVariables.set(\"product2quantity\", jsonData[1][\"remainCount\"]);\r",
+							"pm.collectionVariables.set(\"product3quantity\", jsonData[2][\"remainCount\"]);\r",
+							"pm.collectionVariables.set(\"product4quantity\", jsonData[3][\"remainCount\"]);\r",
+							"\r",
+							"pm.test(\"get product list successfully\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"\r",
+							"    var template=pm.response.text(); // save your html response in the template and then          \r",
+							"    pm.visualizer.set(template);     // set that template to pm.visualizer\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"host": true
+				},
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "host",
+						"value": "arch.homework",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "{{warehouseBaseUrlD}}/api/product",
+					"host": [
+						"{{warehouseBaseUrlD}}"
+					],
+					"path": [
+						"api",
+						"product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateBucket",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"empty bucket\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.items.length).to.eql(2);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"host": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "host",
+						"value": "arch.homework",
+						"type": "text"
+					},
+					{
+						"key": "X-Custom-Authentification",
+						"value": "eyJVc2VySWQiOiJjNjk0ZDQxMi1iMGQ3LTQxNTAtOWM1My04MTQxYzExZmNmNmYiLCJFeHBpcmVkVVRDRGF0ZVRpbWUiOiIyMDIxLTAyLTIyVDIwOjA0OjE5Ljc0MTg2MDNaIn0=",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"items\": \r\n    [\r\n        {\r\n            \"productId\": \"{{product2}}\",\r\n            \"quantity\": 2\r\n        },\r\n        {\r\n            \"productId\": \"{{product3}}\",\r\n            \"quantity\": 3\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{eshopBaseUrlD}}/api/bucket/{{userId1}}",
+					"host": [
+						"{{eshopBaseUrlD}}"
+					],
+					"path": [
+						"api",
+						"bucket",
+						"{{userId1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getBucket",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"filled bucket\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.items.length).to.eql(2);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"host": true
+				},
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "host",
+						"value": "arch.homework",
+						"type": "text"
+					},
+					{
+						"key": "X-Custom-Authentification",
+						"value": "eyJVc2VySWQiOiJjNjk0ZDQxMi1iMGQ3LTQxNTAtOWM1My04MTQxYzExZmNmNmYiLCJFeHBpcmVkVVRDRGF0ZVRpbWUiOiIyMDIxLTAyLTIyVDIwOjA0OjE5Ljc0MTg2MDNaIn0=",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{eshopBaseUrlD}}/api/bucket/{{userId1}}",
+					"host": [
+						"{{eshopBaseUrlD}}"
+					],
+					"path": [
+						"api",
+						"bucket",
+						"{{userId1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createOrder",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);\r",
+							"pm.collectionVariables.set(\"orderNumber\", jsonData[\"orderNumber\"]);\r",
+							"\r",
+							"pm.test(\"create order succesfully\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.status).to.eql(10);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"idempotencyKey\", pm.variables.replaceIn('{{$randomUUID}}'))\r",
+							"pm.collectionVariables.set(\"deliveryAddress\", pm.variables.replaceIn('{{$randomCity}}' + '{{$randomStreetName}}'))\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"host": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{userId1}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "host",
+						"value": "arch.homework",
+						"type": "text"
+					},
+					{
+						"key": "X-Custom-Authentification",
+						"value": "eyJVc2VySWQiOiJjNjk0ZDQxMi1iMGQ3LTQxNTAtOWM1My04MTQxYzExZmNmNmYiLCJFeHBpcmVkVVRDRGF0ZVRpbWUiOiIyMDIxLTAyLTIyVDIwOjA0OjE5Ljc0MTg2MDNaIn0=",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"idempotencyKey\": \"{{idempotencyKey}}\",\r\n  \"deliveryAddress\": \"{{deliveryAddress}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{eshopBaseUrlD}}/api/order/{{userId1}}",
+					"host": [
+						"{{eshopBaseUrlD}}"
+					],
+					"path": [
+						"api",
+						"order",
+						"{{userId1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "orderWasPayment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"create order succesfully\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.status).to.eql(30);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"billingId\", pm.variables.replaceIn('{{$randomUUID}}'))\r",
+							"pm.collectionVariables.set(\"paymentDateUtc\", pm.variables.replaceIn('{{$isoTimestamp}}'))\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"host": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{userId1}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "host",
+						"value": "arch.homework",
+						"type": "text"
+					},
+					{
+						"key": "X-Custom-Authentification",
+						"value": "eyJVc2VySWQiOiJjNjk0ZDQxMi1iMGQ3LTQxNTAtOWM1My04MTQxYzExZmNmNmYiLCJFeHBpcmVkVVRDRGF0ZVRpbWUiOiIyMDIxLTAyLTIyVDIwOjA0OjE5Ljc0MTg2MDNaIn0=",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"userId\": \"{{userId1}}\",\r\n  \"billingId\": \"{{billingId}}\",\r\n  \"paymentDateUtc\": \"{{paymentDateUtc}}\",\r\n  \"isSuccessfully\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{eshopBaseUrlD}}/api/payment/{{orderNumber}}",
+					"host": [
+						"{{eshopBaseUrlD}}"
+					],
+					"path": [
+						"api",
+						"payment",
+						"{{orderNumber}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getProducts",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"get product list remain count decreased\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"    \r",
+							"    var jsonData = JSON.parse(responseBody);\r",
+							"    pm.expect(jsonData[1][\"remainCount\"]).to.eql(pm.variables.get(\"product2quantity\") - pm.variables.get(\"quantity2\"));\r",
+							"    pm.expect(jsonData[2][\"remainCount\"]).to.eql(pm.variables.get(\"product3quantity\") - pm.variables.get(\"quantity3\"));\r",
+							"})\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"host": true
+				},
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "host",
+						"value": "arch.homework",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "{{warehouseBaseUrl}}/api/product",
+					"host": [
+						"{{warehouseBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createOrderUnSuccessfully",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set(\"idempotencyKey\", pm.variables.replaceIn('{{$randomUUID}}'))"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"create order unsuccesfully. Remain count is not enough\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.status).to.eql(50);\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"host": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{userId1}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "host",
+						"value": "arch.homework",
+						"type": "text"
+					},
+					{
+						"key": "X-Custom-Authentification",
+						"value": "eyJVc2VySWQiOiJjNjk0ZDQxMi1iMGQ3LTQxNTAtOWM1My04MTQxYzExZmNmNmYiLCJFeHBpcmVkVVRDRGF0ZVRpbWUiOiIyMDIxLTAyLTIyVDIwOjA0OjE5Ljc0MTg2MDNaIn0=",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"items\": [\r\n    {\r\n      \"productId\": \"{{product2}}\",\r\n      \"quantity\": {{quantity2}}\r\n    },\r\n    {\r\n      \"productId\": \"{{product3}}\",\r\n      \"quantity\": {{quantity3}}\r\n    }\r\n  ],\r\n  \"idempotencyKey\": \"{{idempotencyKey}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{eshopBaseUrl}}/api/order/{{userId1}}",
+					"host": [
+						"{{eshopBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"order",
+						"{{userId1}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "signout",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"set  html\",function(){\r",
+							"    var template=pm.response.text(); // save your html response in the template and then          \r",
+							"    pm.visualizer.set(template);     // set that template to pm.visualizer\r",
+							"})\r",
+							"\r",
+							"var jsonData = JSON.parse(responseBody);\r",
+							"pm.collectionVariables.set(\"product1\", jsonData[0][\"id\"]);\r",
+							"pm.collectionVariables.set(\"product2\", jsonData[1][\"id\"]);\r",
+							"pm.collectionVariables.set(\"product3\", jsonData[2][\"id\"]);\r",
+							"pm.collectionVariables.set(\"product4\", jsonData[3][\"id\"]);\r",
+							"\r",
+							"pm.test(\"get product list successfully\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"\r",
+							"    var template=pm.response.text(); // save your html response in the template and then          \r",
+							"    pm.visualizer.set(template);     // set that template to pm.visualizer\r",
+							"})\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"host": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{userId1}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "host",
+						"value": "arch.homework",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/signout",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"signout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getProducts Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);\r",
+							"pm.collectionVariables.set(\"product1\", jsonData[0][\"id\"]);\r",
+							"pm.collectionVariables.set(\"product2\", jsonData[1][\"id\"]);\r",
+							"pm.collectionVariables.set(\"product3\", jsonData[2][\"id\"]);\r",
+							"pm.collectionVariables.set(\"product4\", jsonData[3][\"id\"]);\r",
+							"\r",
+							"pm.collectionVariables.set(\"product1quantity\", jsonData[0][\"remainCount\"]);\r",
+							"pm.collectionVariables.set(\"product2quantity\", jsonData[1][\"remainCount\"]);\r",
+							"pm.collectionVariables.set(\"product3quantity\", jsonData[2][\"remainCount\"]);\r",
+							"pm.collectionVariables.set(\"product4quantity\", jsonData[3][\"remainCount\"]);\r",
+							"\r",
+							"pm.test(\"get product list successfully\", function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"\r",
+							"    var template=pm.response.text(); // save your html response in the template and then          \r",
+							"    pm.visualizer.set(template);     // set that template to pm.visualizer\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"host": true
+				},
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "host",
+						"value": "arch.homework",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": []
+				},
+				"url": {
+					"raw": "{{warehouseBaseUrl}}/api/product",
+					"host": [
+						"{{warehouseBaseUrl}}"
+					],
+					"path": [
+						"api",
+						"product"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://arch.homework:80"
+		},
+		{
+			"key": "baseUrlD",
+			"value": "http://localhost:5020"
+		},
+		{
+			"key": "eshopBaseUrl",
+			"value": "http://arch.homework:80/eshop"
+		},
+		{
+			"key": "eshopBaseUrlD",
+			"value": "http://localhost:5020"
+		},
+		{
+			"key": "billingBaseUrl",
+			"value": "http://arch.homework:80/billing"
+		},
+		{
+			"key": "billingBaseUrlD",
+			"value": "http://localhost:5010"
+		},
+		{
+			"key": "notificationBaseUrl",
+			"value": "http://arch.homework:80/notification"
+		},
+		{
+			"key": "notificationBaseUrlD",
+			"value": "http://localhost:5030"
+		},
+		{
+			"key": "warehouseBaseUrl",
+			"value": "http://arch.homework:80/warehouse"
+		},
+		{
+			"key": "warehouseBaseUrlD",
+			"value": "http://localhost:5050"
+		},
+		{
+			"key": "passwordUser1",
+			"value": ""
+		},
+		{
+			"key": "email",
+			"value": ""
+		},
+		{
+			"key": "login",
+			"value": ""
+		},
+		{
+			"key": "phone",
+			"value": ""
+		},
+		{
+			"key": "password",
+			"value": ""
+		},
+		{
+			"key": "userName",
+			"value": ""
+		},
+		{
+			"key": "userId1",
+			"value": ""
+		},
+		{
+			"key": "balance",
+			"value": ""
+		},
+		{
+			"key": "product1",
+			"value": ""
+		},
+		{
+			"key": "product2",
+			"value": ""
+		},
+		{
+			"key": "product3",
+			"value": ""
+		},
+		{
+			"key": "product4",
+			"value": ""
+		},
+		{
+			"key": "idempotencyKey",
+			"value": ""
+		},
+		{
+			"key": "product1quantity",
+			"value": ""
+		},
+		{
+			"key": "product2quantity",
+			"value": ""
+		},
+		{
+			"key": "product3quantity",
+			"value": ""
+		},
+		{
+			"key": "product4quantity",
+			"value": ""
+		},
+		{
+			"key": "quantity2",
+			"value": ""
+		},
+		{
+			"key": "quantity3",
+			"value": ""
+		},
+		{
+			"key": "deliveryAddress",
+			"value": ""
+		},
+		{
+			"key": "orderNumber",
+			"value": ""
+		},
+		{
+			"key": "billingId",
+			"value": ""
+		},
+		{
+			"key": "paymentDateUtc",
+			"value": ""
+		}
+	]
+}

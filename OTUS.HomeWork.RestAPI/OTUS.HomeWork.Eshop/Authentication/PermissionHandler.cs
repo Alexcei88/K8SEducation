@@ -4,7 +4,6 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using OTUS.HomeWork.RestAPI.Abstraction.Authentication.Requirements;
 using OTUS.HomeWork.RestAPI.Abstraction.DAL;
 

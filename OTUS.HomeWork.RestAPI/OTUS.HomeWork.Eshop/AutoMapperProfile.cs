@@ -10,7 +10,7 @@ namespace OTUS.HomeWork.EShop
         : Profile
     {
         public AutoMapperProfile()
-        {            
+        {
             CreateMap<CreateOrderDTO, Order>()
                 .ForMember(g => g.PaidDateUtc, m => m.Ignore())
                 .ForMember(g => g.TotalPrice, m => m.Ignore())
@@ -21,6 +21,7 @@ namespace OTUS.HomeWork.EShop
                 .ForMember(g => g.UserId, m => m.Ignore())
                 .ForMember(g => g.Status, m => m.Ignore())
                 .ForMember(g => g.ErrorDescription, m => m.Ignore())
+                .ForMember(g => g.Items, m => m.Ignore())
                 .ReverseMap();
 
             CreateMap<OrderItemDTO, OrderItem>()
@@ -28,7 +29,7 @@ namespace OTUS.HomeWork.EShop
                 .ForMember(g => g.OrderNumberId, m => m.Ignore())
                 .ReverseMap();
 
-            CreateMap<Order, CreatedOrderDTO>();
+            CreateMap<Order, OrderDTO>();
 
             CreateMap<RegisterUserDTO, User>()
                .ForMember(g => g.Id, m => m.Ignore());

@@ -7,7 +7,8 @@ using OTUS.HomeWork.RabbitMq;
 namespace OTUS.HomeWork.NotificationService
 {
     public class RabbitMQHostedConsumer
-        : IHostedService, IDisposable
+        : IHostedService
+        , IDisposable
     {
         private RabbitMQQueueConsumer _consumer;
 

@@ -24,15 +24,13 @@ namespace OTUS.HomeWork.PaymentGatewayService.Controllers
         [HttpPost("{userId}/payment")]
         public async Task<ActionResult<PaymentDTO>> MakePayment(Guid userId, PaymentRequestDTO paymentRequest)
         {
-            var payment = await _billingService.MakePaymentAsync(userId, paymentRequest);
-            return Ok(_mapper.Map<PaymentDTO>(payment));
+            return Ok();
         }
 
         [HttpPost("{userId}/refund")]
         public async Task<ActionResult<RefundDTO>> RefundPayment(Guid userId, RefundRequestDTO refundRequest)
         {
-            var refund = await _billingService.RefundAsync(userId, refundRequest);
-            return Ok(_mapper.Map<RefundDTO>(refund));
+            return Ok();
         }
 
     }

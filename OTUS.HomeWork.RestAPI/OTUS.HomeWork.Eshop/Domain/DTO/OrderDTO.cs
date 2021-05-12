@@ -2,7 +2,7 @@
 
 namespace OTUS.HomeWork.EShop.Domain.DTO
 {
-    public record CreatedOrderDTO
+    public record OrderDTO
     {        
         public Guid OrderNumber { get; set; }
 

@@ -116,7 +116,7 @@ namespace OTUS.HomeWork.EShop
                 policy.Requirements.Add(new OwnerPermission()));
             });
 
-            services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
+            //services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
 
             services.AddControllers();
             services.AddHealthChecks();

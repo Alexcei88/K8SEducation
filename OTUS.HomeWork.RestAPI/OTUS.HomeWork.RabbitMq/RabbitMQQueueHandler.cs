@@ -33,7 +33,7 @@ namespace OTUS.HomeWork.RabbitMq
 
         private Action<MemoryStream, IMessageExchangeSerializer> _handler;
 
-        public RabbitMQQueueConsumer(string connectionString, string queueName, RabbitMqConnectionPool connectionPool,
+        public RabbitMQQueueConsumer(string queueName, RabbitMqConnectionPool connectionPool,
             Action<MemoryStream, IMessageExchangeSerializer> handler)
         {
             _rabbitMqConnectionPool = connectionPool;

@@ -11,7 +11,7 @@ namespace OTUS.HomeWork.WarehouseService.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    //[Authorize]
     public class WarehouseController 
         : ControllerBase
     {        

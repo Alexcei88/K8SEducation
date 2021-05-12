@@ -13,7 +13,7 @@ using OTUS.HomeWork.RestAPI.Abstraction.Domain;
 namespace OTUS.HomeWork.EShop.Controllers
 {
     [ApiController]
-    [Route("/api/user")]
+    [Route("/api/[controller]")]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;

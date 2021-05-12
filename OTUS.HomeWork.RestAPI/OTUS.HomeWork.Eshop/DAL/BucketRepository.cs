@@ -37,5 +37,14 @@ namespace OTUS.HomeWork.EShop.DAL
         {
             return await _orderContext.Buckets.Where(g => g.UserId == userId).ToArrayAsync();
         }
+
+        public async Task ClearBucketAsync(Guid userId)
+        {
+            var buckets = await GetBucketForUserAsync(userId);
+            foreach (var bucket in buckets)
+                _orderContext.Buckets.Remove(bucket);
+
+            await _orderContext.SaveChangesAsync();
+        }
     }
 }

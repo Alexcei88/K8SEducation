@@ -11,18 +11,13 @@ namespace OTUS.HomeWork.DeliveryService.Controllers
     [Route("api/[controller]")]
     public class DeliveryController : ControllerBase
     {
-        private readonly ILogger<DeliveryController> _logger;
-
         private readonly Services.DeliveryService _deliveryService;
-
         private readonly IMapper _mapper;
 
         public DeliveryController(Services.DeliveryService deliveryService
-            , IMapper mapper
-            , ILogger<DeliveryController> logger)
+            , IMapper mapper)
         {
             _deliveryService = deliveryService;
-            _logger = logger;
             _mapper = mapper;
         }
 

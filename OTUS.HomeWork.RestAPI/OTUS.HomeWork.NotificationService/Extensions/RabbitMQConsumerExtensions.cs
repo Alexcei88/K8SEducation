@@ -19,8 +19,7 @@ namespace OTUS.HomeWork.NotificationService.Extensions
                 if (rabbitMQOption == null)
                     throw new ArgumentNullException("RedisMQ Options is not being initialized");
 
-                return new RabbitMQQueueConsumer(rabbitMQOption.ConnectionString
-                    , rabbitMQOption.QueueName
+                return new RabbitMQQueueConsumer(rabbitMQOption.QueueName
                     , new RabbitMqConnectionPool(rabbitMQOption.ConnectionString)
                     , async (body, serializer) =>
                     {
@@ -50,6 +49,28 @@ namespace OTUS.HomeWork.NotificationService.Extensions
                                         UserId = orderCreatedError.UserId,
                                         CreatedDateUtc = DateTime.UtcNow,
                                         Message = $"Заказ отменен по причине {orderCreatedError.Message}"
+                                    });
+                                }
+                                break;
+                            case OrderWasPayment.TYPE:
+                                {
+                                    var orderWasPayment = serializer.DeserializeRequest<OrderWasPayment>(body);
+                                    await repository.AddNotificationAsync(new Domain.Notification
+                                    {
+                                        CreatedDateUtc = DateTime.UtcNow,
+                                        Message = $"Заказ №{orderWasPayment.OrderNumber} на сумму {orderWasPayment.Price} успешно оплачен",
+                                        UserId = orderWasPayment.UserId
+                                    });
+                                }
+                                break;
+                            case OrderRefundPayment.TYPE:
+                                {
+                                    var orderRefundPayment = serializer.DeserializeRequest<OrderRefundPayment>(body);
+                                    await repository.AddNotificationAsync(new Domain.Notification
+                                    {
+                                        CreatedDateUtc = DateTime.UtcNow,
+                                        Message = $"Возврат оплаты заказа №{orderRefundPayment.OrderNumber} на сумму {orderRefundPayment.Price}",
+                                        UserId = orderRefundPayment.UserId
                                     });
                                 }
                                 break;
