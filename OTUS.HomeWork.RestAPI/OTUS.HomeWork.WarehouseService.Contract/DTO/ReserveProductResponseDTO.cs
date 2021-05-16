@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace OTUS.HomeWork.WarehouseService.Domain.DTO
+namespace OTUS.HomeWork.WarehouseService.Contract.DTO
 {
-    public record ReserveProductResultDTO
+    public class ReserveProductResultDTO
     {
         public Guid Id { get; set; }
 
@@ -13,7 +13,7 @@ namespace OTUS.HomeWork.WarehouseService.Domain.DTO
 
     }
 
-    public record ReserveProductResponseDTO
+    public class ReserveProductResponseDTO
     {
         public string OrderNumber { get; set; }
 

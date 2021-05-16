@@ -14,9 +14,6 @@ namespace OTUS.HomeWork.RabbitMq
     {
         private RabbitMqConnection _rabbitMqConnection;
 
-        /// <summary>
-        /// Канал для подключения к главной очереди
-        /// </summary>
         private IModel _queueChannel;
 
         private string _consumerTag;

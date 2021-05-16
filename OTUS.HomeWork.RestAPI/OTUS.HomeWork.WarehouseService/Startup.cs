@@ -7,12 +7,17 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using OTUS.HomeWork.Clients;
 using OTUS.HomeWork.Common;
+using OTUS.HomeWork.MessageExchangeSerializer;
+using OTUS.HomeWork.RabbitMq;
+using OTUS.HomeWork.RabbitMq.Pool;
 using OTUS.HomeWork.RestAPI.Abstraction.Authentication;
 using OTUS.HomeWork.RestAPI.Abstraction.Authentication.Handlers;
 using OTUS.HomeWork.WarehouseService.DAL;
+using OTUS.HomeWork.WarehouseService.Options;
 using System.Net.Http;
 
 namespace OTUS.HomeWork.WarehouseService
@@ -32,7 +37,7 @@ namespace OTUS.HomeWork.WarehouseService
             services.AddDbContext<WarehouseContext>(options =>
                     options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")).UseSnakeCaseNamingConvention());
 
-            services.Configure<RabbitMQOption>(Configuration.GetSection("RabbitMq"));
+            services.Configure<WarehouseRabbitMQOption>(Configuration.GetSection("RabbitMq"));
             services.AddScoped<ProductRepository>();
             services.AddScoped<Services.WarehouseService>();
             services.AddHttpClient();
@@ -51,6 +56,21 @@ namespace OTUS.HomeWork.WarehouseService
                     cfg.Advanced.AllowAdditiveTypeMapCreation = true;
                     cfg.AddProfile(new AutoMapperProfile());
                 }).CreateMapper();
+            });
+
+            services.AddSingleton((sp) =>
+            {
+                var rabbitMQOption = sp.GetService<IOptions<WarehouseRabbitMQOption>>()?.Value;
+                var chPool = new RabbitMQChannelPool(new RabbitMqConnectionPool(rabbitMQOption.ConnectionString));
+                new RabbitMQMessageSender(rabbitMQOption.ExchangeName
+                    , rabbitMQOption.DeliveryQueueName
+                    , chPool
+                    , new JsonNetMessageExchangeSerializer());
+
+                return new RabbitMQMessageSender(rabbitMQOption.ExchangeName
+                    , rabbitMQOption.QueueName
+                    , chPool
+                    , new JsonNetMessageExchangeSerializer());
             });
 
             services.AddAuthentication(g =>

@@ -1,7 +1,9 @@
+using OTUS.HomeWork.Common;
+
 namespace OTUS.HomeWork.NotificationService.Contract.Messages
 {
     public class OrderCancelled
-        : NotificationMessage
+        : IBrokerMessage
     {
         public const string TYPE = "OrderCancelled";
 

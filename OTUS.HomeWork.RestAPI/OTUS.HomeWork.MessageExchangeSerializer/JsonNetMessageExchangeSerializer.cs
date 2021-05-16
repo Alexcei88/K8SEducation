@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using OTUS.HomeWork.Common;
 using OTUS.HomeWork.NotificationService.Contract.Messages;
 
 namespace OTUS.HomeWork.MessageExchangeSerializer
@@ -42,7 +43,7 @@ namespace OTUS.HomeWork.MessageExchangeSerializer
 		}
 
 		public TRequest DeserializeRequest<TRequest>(Stream stream)
-			where TRequest : NotificationMessage, new()
+			where TRequest : IBrokerMessage, new()
 		{
 			var sr = new StreamReader(stream);
 			var jsonTextReader = new JsonTextReader(sr);
@@ -57,7 +58,7 @@ namespace OTUS.HomeWork.MessageExchangeSerializer
 		}
 
 		public TResponse DeserializeResponse<TResponse>(Stream stream)
-			where TResponse : NotificationMessage, new()
+			where TResponse : IBrokerMessage, new()
 		{
 			var sr = new StreamReader(stream);
 			var jsonTextReader = new JsonTextReader(sr);
@@ -77,7 +78,7 @@ namespace OTUS.HomeWork.MessageExchangeSerializer
 		}
 
 		public MemoryStream SerializeRequest<TRequest>(TRequest obj)
-			where TRequest : NotificationMessage, new()
+			where TRequest : IBrokerMessage, new()
 		{
 			var stream = new MemoryStream();
 			var wr = new StreamWriter(stream);
@@ -89,7 +90,7 @@ namespace OTUS.HomeWork.MessageExchangeSerializer
 		}
 
 		public MemoryStream SerializeResponse<TResponse>(TResponse obj)
-			where TResponse : NotificationMessage, new()
+			where TResponse : IBrokerMessage, new()
 		{
 			var stream = new MemoryStream();
 			var wr = new StreamWriter(stream);

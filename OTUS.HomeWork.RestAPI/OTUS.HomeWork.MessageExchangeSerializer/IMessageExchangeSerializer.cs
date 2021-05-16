@@ -1,4 +1,5 @@
 using System.IO;
+using OTUS.HomeWork.Common;
 using OTUS.HomeWork.NotificationService.Contract.Messages;
 
 namespace OTUS.HomeWork.MessageExchangeSerializer
@@ -10,13 +11,13 @@ namespace OTUS.HomeWork.MessageExchangeSerializer
 	{
 		string Serialize<T>(T obj);
 
-		MemoryStream SerializeRequest<TRequest>(TRequest obj) where TRequest : NotificationMessage, new();
+		MemoryStream SerializeRequest<TRequest>(TRequest obj) where TRequest : IBrokerMessage, new();
 
-		MemoryStream SerializeResponse<TResponse>(TResponse obj) where TResponse : NotificationMessage, new();
+		MemoryStream SerializeResponse<TResponse>(TResponse obj) where TResponse : IBrokerMessage, new();
 
-		TRequest DeserializeRequest<TRequest>(Stream stream) where TRequest : NotificationMessage, new();
+		TRequest DeserializeRequest<TRequest>(Stream stream) where TRequest : IBrokerMessage, new();
 
-		TResponse DeserializeResponse<TResponse>(Stream stream) where TResponse : NotificationMessage, new();
+		TResponse DeserializeResponse<TResponse>(Stream stream) where TResponse : IBrokerMessage, new();
 
 		string MimeTypeName { get; }
 	}

@@ -16,6 +16,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using OTUS.HomeWork.DeliveryService.DAL;
+using OTUS.HomeWork.DeliveryService.Extensions;
+using Microsoft.Extensions.Options;
+using OTUS.HomeWork.RabbitMq.Pool;
+using OTUS.HomeWork.RabbitMq;
+using OTUS.HomeWork.MessageExchangeSerializer;
 
 namespace OTUS.HomeWork.DeliveryService
 {
@@ -45,6 +50,17 @@ namespace OTUS.HomeWork.DeliveryService
             });
 
             services.AddScoped<Services.DeliveryService>();
+            services.AddSingleton((sp) =>
+            {
+                var rabbitMQOption = sp.GetService<IOptions<RabbitMQOption>>()?.Value;
+                var chPool = new RabbitMQChannelPool(new RabbitMqConnectionPool(rabbitMQOption.ConnectionString));
+                return new RabbitMQMessageSender(rabbitMQOption.ExchangeName
+                    , rabbitMQOption.QueueName
+                    , chPool
+                    , new JsonNetMessageExchangeSerializer());
+            });
+
+            services.AddRabbitMQConsumer();
 
             services.AddControllers();
             services.AddHealthChecks();

@@ -27,7 +27,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OTUS.HomeWork.WarehouseServ
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OTUS.HomeWork.DeliveryService", "OTUS.HomeWork.DeliveryService\OTUS.HomeWork.DeliveryService.csproj", "{50C95500-C9FE-404A-A3C1-BB357B1AD361}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OTUS.HomeWork.DeliveryService.Contract", "OTUS.HomeWork.DeliveryService.Contract\OTUS.HomeWork.DeliveryService.Contract.csproj", "{A3692094-E9A5-45DC-BFE5-DA5D3A919A26}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OTUS.HomeWork.DeliveryService.Contract", "OTUS.HomeWork.DeliveryService.Contract\OTUS.HomeWork.DeliveryService.Contract.csproj", "{A3692094-E9A5-45DC-BFE5-DA5D3A919A26}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OTUS.HomeWork.WarehouseService.Contract", "OTUS.HomeWork.WarehouseService.Contract\OTUS.HomeWork.WarehouseService.Contract.csproj", "{275CBE10-746F-4151-9E68-0A11A25ED547}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -87,6 +89,10 @@ Global
 		{A3692094-E9A5-45DC-BFE5-DA5D3A919A26}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A3692094-E9A5-45DC-BFE5-DA5D3A919A26}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A3692094-E9A5-45DC-BFE5-DA5D3A919A26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{275CBE10-746F-4151-9E68-0A11A25ED547}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{275CBE10-746F-4151-9E68-0A11A25ED547}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{275CBE10-746F-4151-9E68-0A11A25ED547}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{275CBE10-746F-4151-9E68-0A11A25ED547}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

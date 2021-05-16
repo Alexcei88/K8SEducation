@@ -13,11 +13,12 @@ namespace OTUS.HomeWork.NotificationService.Extensions
     {
         public static void AddRabbitMQConsumer(this IServiceCollection services)
         {
+            services.AddHostedService<RabbitMQHostedConsumer>();
             services.AddSingleton(sp =>
             {
                 var rabbitMQOption = sp.GetService<IOptions<RabbitMQOption>>()?.Value;
                 if (rabbitMQOption == null)
-                    throw new ArgumentNullException("RedisMQ Options is not being initialized");
+                    throw new ArgumentNullException("RabbitMQ Options is not being initialized");
 
                 return new RabbitMQQueueConsumer(rabbitMQOption.QueueName
                     , new RabbitMqConnectionPool(rabbitMQOption.ConnectionString)
@@ -26,7 +27,7 @@ namespace OTUS.HomeWork.NotificationService.Extensions
                         using var serviceScope = sp.GetRequiredService<IServiceScopeFactory>().CreateScope();                        
                         var repository = serviceScope.ServiceProvider.GetService<NotificationRepository>();
 
-                        NotificationMessage message = serializer.DeserializeRequest<NotificationMessage>(body);
+                        IBrokerMessage message = serializer.DeserializeRequest<IBrokerMessage>(body);
                         body.Position = 0;
                         switch(message.MessageType)
                         {

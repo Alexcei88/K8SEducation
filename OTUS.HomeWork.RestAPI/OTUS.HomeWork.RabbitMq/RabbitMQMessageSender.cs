@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using OTUS.HomeWork.Common;
 using OTUS.HomeWork.MessageExchangeSerializer;
 using OTUS.HomeWork.NotificationService.Contract.Messages;
 using OTUS.HomeWork.RabbitMq.Pool;
@@ -87,7 +88,7 @@ namespace OTUS.HomeWork.RabbitMq
 		}
 
 
-		public bool SendMessage<T>(T request, string destination) where T : NotificationMessage, new()
+		public bool SendMessage<T>(T request, string destination) where T : IBrokerMessage, new()
 		{
 			RabbitMQChannel? channel = null;
 			try
@@ -115,7 +116,7 @@ namespace OTUS.HomeWork.RabbitMq
 			}
 		}
 
-		public Task<bool> SendMessageAsync<T>(T requests, string destination = null) where T : NotificationMessage, new()
+		public Task<bool> SendMessageAsync<T>(T requests, string destination = null) where T : IBrokerMessage, new()
 		{
 			return Task.FromResult(SendMessage(requests, destination));
 		}

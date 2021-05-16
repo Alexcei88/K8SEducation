@@ -1,10 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using OTUS.HomeWork.Common;
 
 namespace OTUS.HomeWork.DeliveryService.Contract.Messages
 {
-    class DeliveryOrderRequest
+    public class DeliveryOrderRequest
+        : IBrokerMessage
     {
+        public class DeliveryProduct
+        {
+            public double Weight { get; set; }
+
+            public double Space { get; set; }
+
+            public Guid ProductId { get; set; }
+        }
+
+        public const string TYPE = "DeliveryOrderRequest";
+
+        public string OrderNumber { get; set; }
+
+        public string DeliveryAddress { get; set; }
+
+        public DateTime ReadyToShipmentDate { get; set; }
+
+        public List<DeliveryProduct> Products { get; set; }
+
+        public override string MessageType => TYPE;
+
     }
 }

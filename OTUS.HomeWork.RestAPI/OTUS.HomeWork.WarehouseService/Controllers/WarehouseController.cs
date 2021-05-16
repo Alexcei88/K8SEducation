@@ -4,8 +4,8 @@ using Microsoft.Extensions.Logging;
 using OTUS.HomeWork.WarehouseService.Domain;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using OTUS.HomeWork.WarehouseService.Domain.DTO;
 using Microsoft.AspNetCore.Authorization;
+using OTUS.HomeWork.WarehouseService.Contract.DTO;
 
 namespace OTUS.HomeWork.WarehouseService.Controllers
 {
@@ -32,7 +32,7 @@ namespace OTUS.HomeWork.WarehouseService.Controllers
         public async Task<ActionResult<ReserveProductResponseDTO>> ReserveProducts(ReserveProductRequestDTO request)
         {
             var products = _mapper.Map<ReserveProduct[]>(request.Products);
-            var reserveProducts = await _warehouseService.ReserveProducts(products, request.OrderNumber);
+            var reserveProducts = await _warehouseService.ReserveProductsAsync(products, request.OrderNumber);
 
             bool isSuccess = true;
             List<ReserveProductResultDTO> productsResult = new();
@@ -61,7 +61,7 @@ namespace OTUS.HomeWork.WarehouseService.Controllers
         [HttpPut("/reserve/cancel")]
         public async Task<ActionResult> ReserveProducts([FromQuery]string orderNumber)
         {
-            bool res = await _warehouseService.ResetReserveProducts(orderNumber);
+            bool res = await _warehouseService.ResetReserveProductsAsync(orderNumber);
             if (res)
                 return Ok();
             else
@@ -71,7 +71,7 @@ namespace OTUS.HomeWork.WarehouseService.Controllers
         [HttpPost("/shipment")]
         public async Task<ActionResult> ShipmentProducts(ShipmentRequestDTO request)
         {
-            bool res = await _warehouseService.ShipmentProducts(request.OrderNumber, request.DeliveryAddress);
+            bool res = await _warehouseService.ShipmentProductsAsync(request.OrderNumber, request.DeliveryAddress);
             if (res)
                 return Ok();
             else

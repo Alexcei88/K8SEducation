@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OTUS.HomeWork.DeliveryService.Domain.DTO
+namespace OTUS.HomeWork.DeliveryService.Contract.DTO
 {
     public class DeliveryLocationDTO
     {

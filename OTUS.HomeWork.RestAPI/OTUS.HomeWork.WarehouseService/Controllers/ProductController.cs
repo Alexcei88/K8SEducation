@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OTUS.HomeWork.WarehouseService.Contract.DTO;
 using OTUS.HomeWork.WarehouseService.DAL;
-using OTUS.HomeWork.WarehouseService.Domain.DTO;
 
 namespace OTUS.HomeWork.WarehouseService.Controllers
 {

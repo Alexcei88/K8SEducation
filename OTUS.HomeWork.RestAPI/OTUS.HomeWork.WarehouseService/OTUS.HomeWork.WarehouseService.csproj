@@ -22,7 +22,11 @@
   <ItemGroup>
     <ProjectReference Include="..\OTUS.HomeWork.Clients\OTUS.HomeWork.Clients.csproj" />
     <ProjectReference Include="..\OTUS.HomeWork.Common\OTUS.HomeWork.Common.csproj" />
+    <ProjectReference Include="..\OTUS.HomeWork.DeliveryService.Contract\OTUS.HomeWork.DeliveryService.Contract.csproj" />
+    <ProjectReference Include="..\OTUS.HomeWork.MessageExchangeSerializer\OTUS.HomeWork.MessageExchangeSerializer.csproj" />
+    <ProjectReference Include="..\OTUS.HomeWork.RabbitMq\OTUS.HomeWork.RabbitMq.csproj" />
     <ProjectReference Include="..\OTUS.HomeWork.RestAPI.User\OTUS.HomeWork.RestAPI.User.csproj" />
+    <ProjectReference Include="..\OTUS.HomeWork.WarehouseService.Contract\OTUS.HomeWork.WarehouseService.Contract.csproj" />
   </ItemGroup>
 
 </Project>

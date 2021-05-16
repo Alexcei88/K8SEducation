@@ -1,7 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using OTUS.HomeWork.Clients;
+using OTUS.HomeWork.DeliveryService.Contract.Messages;
+using OTUS.HomeWork.RabbitMq;
+using OTUS.HomeWork.WarehouseService.Contract.Messages;
 using OTUS.HomeWork.WarehouseService.DAL;
 using OTUS.HomeWork.WarehouseService.Domain;
+using OTUS.HomeWork.WarehouseService.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,15 +19,19 @@ namespace OTUS.HomeWork.WarehouseService.Services
     {
         private readonly WarehouseContext _warehouseContext;
         private readonly DeliveryServiceClient _deliveryServiceClient;
+        private readonly RabbitMQMessageSender _mqSender;
+        private IOptions<WarehouseRabbitMQOption> _mqOptions;
 
-        public WarehouseService(WarehouseContext warehouseContext, DeliveryServiceClient deliveryServiceClient)
+        public WarehouseService(WarehouseContext warehouseContext, DeliveryServiceClient deliveryServiceClient, RabbitMQMessageSender mqSender, IOptions<WarehouseRabbitMQOption> mqOptions)
         {
             _warehouseContext = warehouseContext;
             _deliveryServiceClient = deliveryServiceClient;
+            _mqSender = mqSender;
+            _mqOptions = mqOptions;
         }
 
         // TODO выделить минифункци reserve, код станет чище
-        public async Task<ReserveProduct[]> ReserveProducts(ReserveProduct[] products, string orderNumber)
+        public async Task<ReserveProduct[]> ReserveProductsAsync(ReserveProduct[] products, string orderNumber)
         {
             var reserveProducts = new List<ReserveProduct>();
             // TODO выставляю Serializable, чтобы однопоточно менять значения счетчиков, но на самом деле схема по изменению счетчика и количества должна быть на очередях,
@@ -90,7 +99,7 @@ namespace OTUS.HomeWork.WarehouseService.Services
             return reserveProducts.ToArray();
         }
         
-        public async Task<bool> ResetReserveProducts(string orderNumber)
+        public async Task<bool> ResetReserveProductsAsync(string orderNumber)
         {
             // TODO выставляю Serializable, чтобы однопоточно менять значения счетчиков, но на самом деле схема по изменению счетчика и количества должна быть на очередях,
             // а здесь мы просто должны регать завяку и просто проверять, что нужное количество на данный момент имеется
@@ -110,7 +119,7 @@ namespace OTUS.HomeWork.WarehouseService.Services
             return true;
         }
 
-        public async Task<bool> ShipmentProducts(string orderNumber, string deliveryAddress)
+        public async Task<bool> ShipmentProductsAsync(string orderNumber, string deliveryAddress)
         {
             try
             {
@@ -120,7 +129,7 @@ namespace OTUS.HomeWork.WarehouseService.Services
                 }, TransactionScopeAsyncFlowOption.Enabled))
                 {
                     // 1. снимаем с резервирования
-                    var reservers = await _warehouseContext.Reserves.Where(g => g.OrderNumber == orderNumber).ToArrayAsync();
+                    var reservers = await _warehouseContext.Reserves.Include(g => g.Product).Where(g => g.OrderNumber == orderNumber).ToArrayAsync();
                     if (!reservers.Any())
                         return false;
 
@@ -130,6 +139,7 @@ namespace OTUS.HomeWork.WarehouseService.Services
                     {
                         await UnReserveProduct(reserve);
                     }
+                    var readyToShipment = DateTime.UtcNow.AddHours(4);
                     // 2. формируем заявку на отгрузку
                     _warehouseContext.Shipments.Add(new ShipmentOrder
                     {
@@ -137,6 +147,8 @@ namespace OTUS.HomeWork.WarehouseService.Services
                         OrderNumber = orderNumber,
                         ProductIds = reservers.Select(g => g.ProductId).ToList(),
                         Status = ShipmentOrderStatus.Created,
+                        WasCancelled = false,
+                        ReadyToShipmentDate = readyToShipment,
                     });
 
                     // 3. снимаем с остатков
@@ -153,19 +165,19 @@ namespace OTUS.HomeWork.WarehouseService.Services
                     }
 
                     // 4. сообщаем сервису доставки о необходимости забирания товара(в будуем это будет делаться через шину данных)
-                    var deliveryResponse = await _deliveryServiceClient.DeliveryAsync(new DeliveryRequestDTO
+                    await _mqSender.SendMessageAsync(new DeliveryOrderRequest
                     {
                         DeliveryAddress = deliveryAddress,
                         OrderNumber = orderNumber,
-                        Products = products.Select(g => new DeliveryProductDTO
+                        Products  = reservers.Select(g => new DeliveryOrderRequest.DeliveryProduct
                         {
-                            Name = g.Name,
-                            ProductId = g.Id,
-                            Space = g.Space,
-                            Weight = g.Weight
-                        }).ToArray()
-                    });
-
+                            ProductId = g.ProductId,
+                            Space = g.Product.Weight,
+                            Weight = g.Product.Weight,                            
+                        }).ToList(),
+                        ReadyToShipmentDate = readyToShipment
+                    }, _mqOptions.Value.DeliveryQueueName);
+                    
                     await _warehouseContext.SaveChangesAsync();
                     scope.Complete();
                 }
@@ -177,6 +189,26 @@ namespace OTUS.HomeWork.WarehouseService.Services
             }
         }
 
+        public async Task ConfirmDeliveryOrderAsync(DeliveryOrderResponse response)
+        {
+            var shipment = await _warehouseContext.Shipments.FirstOrDefaultAsync(g => g.OrderNumber == response.OrderNumber);
+            if (shipment == null)
+                throw new Exception($"Order with number={response.OrderNumber} is not exist");
+
+            if(response.IsCanDelivery)
+            {
+                shipment.Status = ShipmentOrderStatus.DeliveryConfirmed;
+                shipment.ShipmentDate = response.ShipmentDate;
+            }
+            else
+            {
+                shipment.WasCancelled = false;
+                shipment.Status = ShipmentOrderStatus.ErrorShipment;
+                shipment.ErrorDescription = response.ErrorDescription;
+            }
+            _warehouseContext.Shipments.Update(shipment);
+            await _warehouseContext.SaveChangesAsync();
+        }
 
         private async Task<ReserveProduct> ReserveProduct(Guid productId)
         {

@@ -1,9 +1,10 @@
 using System;
+using OTUS.HomeWork.Common;
 
 namespace OTUS.HomeWork.NotificationService.Contract.Messages
 {
     public class OrderWasPayment
-        : NotificationMessage
+        : IBrokerMessage
     {
         public const string TYPE = "OrderWasPayment";
 
