@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using OTUS.HomeWork.Clients;
 using OTUS.HomeWork.EShop.Domain;
 using OTUS.HomeWork.EShop.Domain.DTO;
 using OTUS.HomeWork.RestAPI.Abstraction.Domain;
@@ -46,6 +47,8 @@ namespace OTUS.HomeWork.EShop
                     Quantity = g.Quantity
                 }).ToList()));
 
+            CreateMap<DeliveryLocationDTO, OrderLocationDTO>()
+                .ForMember(g => g.DeliveryDate, m => m.MapFrom(s => s.DeliveryDate.UtcDateTime));
         }
     }
 }

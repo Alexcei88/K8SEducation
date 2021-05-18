@@ -7,6 +7,7 @@ using OTUS.HomeWork.Common;
 using OTUS.HomeWork.RabbitMq;
 using OTUS.HomeWork.RabbitMq.Pool;
 using OTUS.HomeWork.WarehouseService.MessageHandlers;
+using OTUS.HomeWork.WarehouseService.Options;
 using OTUS.HomeWork.WarehouseService.Services;
 
 namespace OTUS.HomeWork.WarehouseService.Extensions
@@ -18,7 +19,7 @@ namespace OTUS.HomeWork.WarehouseService.Extensions
             services.AddHostedService<RabbitMQHostedConsumer>();
             services.AddSingleton(sp =>
             {
-                var rabbitMQOption = sp.GetService<IOptions<RabbitMQOption>>()?.Value;
+                var rabbitMQOption = sp.GetService<IOptions<WarehouseRabbitMQOption>>()?.Value;
                 if (rabbitMQOption == null)
                     throw new ArgumentNullException("RabbitMQ Options is not being initialized");
 

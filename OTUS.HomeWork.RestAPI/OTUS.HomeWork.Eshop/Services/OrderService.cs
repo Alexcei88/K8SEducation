@@ -144,15 +144,21 @@ namespace OTUS.HomeWork.EShop.Services
 
         public async Task<Order> OrderWasPaid(PaymentResultDTO paymentResultDTO, Guid orderId)
         {
-            await PaymentWasCompleted(paymentResultDTO, orderId);
-            return await SendRequestOnShipment(orderId);
-        }
-
-        private async Task PaymentWasCompleted(PaymentResultDTO paymentResultDTO, Guid orderId)
-        {
             var order = await _orderContext.Orders.FirstOrDefaultAsync(g => g.OrderNumber == orderId);
             if (order == null)
                 throw new Exception($"Заказ c id={orderId} не существует");
+            if (await PaymentWasCompleted(paymentResultDTO, order))
+                return await SendRequestOnShipment(order);
+            return order;
+        }
+
+        private async Task<bool> PaymentWasCompleted(PaymentResultDTO paymentResultDTO, Order order)
+        {
+            if (order.BillingId == paymentResultDTO.BillingId.ToString())
+                return false;
+
+            if (order.BillingId != null)
+                throw new Exception("Заказ с id={orderId} уже оплачен");
 
             if (paymentResultDTO.IsSuccessfully)
             {
@@ -174,7 +180,7 @@ namespace OTUS.HomeWork.EShop.Services
             {
                 order.Status = OrderStatus.Error;
                 // 1. снимаем с резервирования
-                await _warehouseServiceClient.CancelAsync(orderId.ToString());
+                await _warehouseServiceClient.CancelAsync(order.OrderNumber.ToString());
                 // 2. отправляем уведомление о плохой оплате
                 await _mqSender.SendMessageAsync(new OrderCreatedError
                 {
@@ -185,13 +191,11 @@ namespace OTUS.HomeWork.EShop.Services
 
             _orderContext.Update(order);
             await _orderContext.SaveChangesAsync();
+            return true;
         }
 
-        private async Task<Order> SendRequestOnShipment(Guid orderId)
+        private async Task<Order> SendRequestOnShipment(Order order)
         {
-            var order = await _orderContext.Orders.FirstOrDefaultAsync(g => g.OrderNumber == orderId);
-            if (order == null)
-                throw new Exception($"Заказ c id={orderId} не существует");
             if (order.Status == OrderStatus.Processing)
             {
                 try
@@ -200,7 +204,8 @@ namespace OTUS.HomeWork.EShop.Services
                     await _warehouseServiceClient.ShipmentAsync(new ShipmentRequestDTO
                     {
                         DeliveryAddress = order.DeliveryAddress,
-                        OrderNumber = order.OrderNumber.ToString()
+                        OrderNumber = order.OrderNumber.ToString(),
+                        UserId = order.UserId
                     });
                     order.Status = OrderStatus.Complete;
 

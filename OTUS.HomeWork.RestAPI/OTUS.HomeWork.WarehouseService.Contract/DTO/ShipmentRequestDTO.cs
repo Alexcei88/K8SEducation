@@ -1,4 +1,6 @@
-﻿namespace OTUS.HomeWork.WarehouseService.Contract.DTO
+﻿using System;
+
+namespace OTUS.HomeWork.WarehouseService.Contract.DTO
 {
     public class ShipmentRequestDTO
     {
@@ -6,5 +8,6 @@
 
         public string DeliveryAddress { get; set; }
 
+        public Guid UserId { get; set; }
     }
 }

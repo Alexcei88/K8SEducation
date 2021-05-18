@@ -16,10 +16,13 @@ namespace OTUS.HomeWork.DeliveryService.MessageHandlers
 
         private readonly IServiceScope _serviceScope;
         private readonly IMessageExchangeSerializer _serializer;
-        public DeliveryRequestMessageHandler(IServiceScope serviceScope, IMessageExchangeSerializer serializer)
+        private readonly string _warehouseRouteKey;
+
+        public DeliveryRequestMessageHandler(IServiceScope serviceScope, IMessageExchangeSerializer serializer, string warehouseRouteKey)
         {
             _serviceScope = serviceScope;
             _serializer = serializer;
+            _warehouseRouteKey = warehouseRouteKey;
         }
 
         public async Task HandleAsync(MemoryStream body)
@@ -37,7 +40,7 @@ namespace OTUS.HomeWork.DeliveryService.MessageHandlers
                     IsCanDelivery = false,
                     ErrorDescription = "Нефига не доставлю!!!",
                     OrderNumber = request.OrderNumber,
-                });
+                }, _warehouseRouteKey);
             }
             else
             {
@@ -45,11 +48,9 @@ namespace OTUS.HomeWork.DeliveryService.MessageHandlers
                 {
                     IsCanDelivery = true,
                     OrderNumber = request.OrderNumber,
-                    ShipmentDate = delivery.Location.ShipmentDate
-                });
+                    ShipmentDate = delivery.Location.ShipmentDate,
+                }, _warehouseRouteKey);
             }
-            //return Ok(_mapper.Map<DeliveryResponseDTO>(delivery));
-
         }
     }
 }

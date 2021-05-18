@@ -93,6 +93,14 @@ namespace OTUS.HomeWork.EShop
                 return new WarehouseServiceClient(options.Url, client);
             });
 
+            var deliverySettingSection = Configuration.GetSection("DeliveryService");
+            services.AddScoped((sp) =>
+            {
+                var options = deliverySettingSection.Get<ServiceAddressOption>();
+                var client = sp.GetService<IHttpClientFactory>()?.CreateClient("DeliveryService");
+                return new DeliveryServiceClient(options.Url, client);
+            });
+
             services.AddSingleton((sp) =>
             {
                 var rabbitMQOption = sp.GetService<IOptions<RabbitMQOption>>()?.Value;

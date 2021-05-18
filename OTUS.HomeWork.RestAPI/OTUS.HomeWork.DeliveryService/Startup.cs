@@ -21,6 +21,7 @@ using Microsoft.Extensions.Options;
 using OTUS.HomeWork.RabbitMq.Pool;
 using OTUS.HomeWork.RabbitMq;
 using OTUS.HomeWork.MessageExchangeSerializer;
+using OTUS.HomeWork.DeliveryService.Options;
 
 namespace OTUS.HomeWork.DeliveryService
 {
@@ -39,7 +40,7 @@ namespace OTUS.HomeWork.DeliveryService
             services.AddDbContext<DeliveryContext>(options =>
                     options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")).UseSnakeCaseNamingConvention());
 
-            services.Configure<RabbitMQOption>(Configuration.GetSection("RabbitMq"));
+            services.Configure<WarehouseRabbitMQOption>(Configuration.GetSection("RabbitMq"));
 
             services.AddSingleton(provider => {
                 return new MapperConfiguration(cfg =>
@@ -52,8 +53,13 @@ namespace OTUS.HomeWork.DeliveryService
             services.AddScoped<Services.DeliveryService>();
             services.AddSingleton((sp) =>
             {
-                var rabbitMQOption = sp.GetService<IOptions<RabbitMQOption>>()?.Value;
+                var rabbitMQOption = sp.GetService<IOptions<WarehouseRabbitMQOption>>()?.Value;
                 var chPool = new RabbitMQChannelPool(new RabbitMqConnectionPool(rabbitMQOption.ConnectionString));
+                new RabbitMQMessageSender(rabbitMQOption.ExchangeName
+                , rabbitMQOption.WarehouseQueueName
+                , chPool
+                , new JsonNetMessageExchangeSerializer());
+
                 return new RabbitMQMessageSender(rabbitMQOption.ExchangeName
                     , rabbitMQOption.QueueName
                     , chPool

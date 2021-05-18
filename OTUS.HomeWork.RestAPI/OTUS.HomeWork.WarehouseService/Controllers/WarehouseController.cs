@@ -71,12 +71,11 @@ namespace OTUS.HomeWork.WarehouseService.Controllers
         [HttpPost("/shipment")]
         public async Task<ActionResult> ShipmentProducts(ShipmentRequestDTO request)
         {
-            bool res = await _warehouseService.ShipmentProductsAsync(request.OrderNumber, request.DeliveryAddress);
+            bool res = await _warehouseService.ShipmentProductsAsync(request.OrderNumber, request.DeliveryAddress, request.UserId);
             if (res)
                 return Ok();
             else
                 return BadRequest();
-
         }
     }
 }

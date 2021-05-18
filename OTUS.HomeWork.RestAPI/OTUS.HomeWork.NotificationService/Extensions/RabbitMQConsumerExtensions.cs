@@ -75,6 +75,17 @@ namespace OTUS.HomeWork.NotificationService.Extensions
                                     });
                                 }
                                 break;
+                            case OrderReadyToDelivery.TYPE:
+                                {
+                                    var orderToDelivery = serializer.DeserializeRequest<OrderReadyToDelivery>(body);
+                                    await repository.AddNotificationAsync(new Domain.Notification
+                                    {
+                                        CreatedDateUtc = DateTime.UtcNow,
+                                        Message = $"Заказ ${orderToDelivery.OrderNumber} готов к отгрузке. Вы можете отслеживать заказ на сайте гдемойтовар",
+                                        UserId = orderToDelivery.UserId
+                                    });
+                                }
+                                break;
                             default:
                                 throw new Exception($"Malformed message type {message.MessageType}");
                         }

@@ -25,6 +25,7 @@ namespace OTUS.HomeWork.WarehouseService.Domain
 
         public bool WasCancelled { get; set; }
 
+        public Guid UserId { get; set; }
         public DateTime ReadyToShipmentDate { get; set; }
 
         public DateTime ShipmentDate { get; set; }

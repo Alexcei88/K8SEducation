@@ -17,6 +17,7 @@ using OTUS.HomeWork.RabbitMq.Pool;
 using OTUS.HomeWork.RestAPI.Abstraction.Authentication;
 using OTUS.HomeWork.RestAPI.Abstraction.Authentication.Handlers;
 using OTUS.HomeWork.WarehouseService.DAL;
+using OTUS.HomeWork.WarehouseService.Extensions;
 using OTUS.HomeWork.WarehouseService.Options;
 using System.Net.Http;
 
@@ -63,16 +64,17 @@ namespace OTUS.HomeWork.WarehouseService
                 var rabbitMQOption = sp.GetService<IOptions<WarehouseRabbitMQOption>>()?.Value;
                 var chPool = new RabbitMQChannelPool(new RabbitMqConnectionPool(rabbitMQOption.ConnectionString));
                 new RabbitMQMessageSender(rabbitMQOption.ExchangeName
-                    , rabbitMQOption.DeliveryQueueName
+                    , rabbitMQOption.DeliveryRouteKey
                     , chPool
                     , new JsonNetMessageExchangeSerializer());
 
                 return new RabbitMQMessageSender(rabbitMQOption.ExchangeName
-                    , rabbitMQOption.QueueName
+                    , rabbitMQOption.EshopNotificationRouteKey
                     , chPool
                     , new JsonNetMessageExchangeSerializer());
             });
 
+            services.AddRabbitMQConsumer();
             services.AddAuthentication(g =>
             {
                 g.DefaultAuthenticateScheme = SimpleCustomAuthenticationHandler.AuthentificationScheme;

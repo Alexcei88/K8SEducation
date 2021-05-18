@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Options;
 using OTUS.HomeWork.Clients;
 using OTUS.HomeWork.DeliveryService.Contract.Messages;
+using OTUS.HomeWork.NotificationService.Contract.Messages;
 using OTUS.HomeWork.RabbitMq;
 using OTUS.HomeWork.WarehouseService.Contract.Messages;
 using OTUS.HomeWork.WarehouseService.DAL;
@@ -119,7 +120,7 @@ namespace OTUS.HomeWork.WarehouseService.Services
             return true;
         }
 
-        public async Task<bool> ShipmentProductsAsync(string orderNumber, string deliveryAddress)
+        public async Task<bool> ShipmentProductsAsync(string orderNumber, string deliveryAddress, Guid userId)
         {
             try
             {
@@ -149,6 +150,7 @@ namespace OTUS.HomeWork.WarehouseService.Services
                         Status = ShipmentOrderStatus.Created,
                         WasCancelled = false,
                         ReadyToShipmentDate = readyToShipment,
+                        UserId = userId,
                     });
 
                     // 3. снимаем с остатков
@@ -176,7 +178,7 @@ namespace OTUS.HomeWork.WarehouseService.Services
                             Weight = g.Product.Weight,                            
                         }).ToList(),
                         ReadyToShipmentDate = readyToShipment
-                    }, _mqOptions.Value.DeliveryQueueName);
+                    }, _mqOptions.Value.DeliveryRouteKey);
                     
                     await _warehouseContext.SaveChangesAsync();
                     scope.Complete();
@@ -199,12 +201,20 @@ namespace OTUS.HomeWork.WarehouseService.Services
             {
                 shipment.Status = ShipmentOrderStatus.DeliveryConfirmed;
                 shipment.ShipmentDate = response.ShipmentDate;
+
+                await _mqSender.SendMessageAsync(new OrderReadyToDelivery
+                {
+                    UserId = shipment.UserId,
+                    OrderNumber = shipment.OrderNumber
+                });
             }
             else
             {
                 shipment.WasCancelled = false;
                 shipment.Status = ShipmentOrderStatus.ErrorShipment;
                 shipment.ErrorDescription = response.ErrorDescription;
+
+                // здесь нужна логика по возврату заказа пользователю
             }
             _warehouseContext.Shipments.Update(shipment);
             await _warehouseContext.SaveChangesAsync();
