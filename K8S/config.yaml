@@ -20,9 +20,7 @@ data:
         }
       },
       "RabbitMq": {
-        "ConnectionString": "amqp://eshop:eshop@rabbitmq.rabbitmq.svc.cluster.local:5672/",
-        "QueueName": "EshopNotifications",
-        "ExchangeName": "EshopNotifications"
+        "ConnectionString": "amqp://eshop:eshop@rabbitmq.rabbitmq.svc.cluster.local:5672/"
       }
     }
 

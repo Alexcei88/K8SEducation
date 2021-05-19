@@ -62,6 +62,11 @@ spec:
                configMapKeyRef: 
                   name: homework-config
                   key: WAREHOUSE_SERVICE_URL
+          - name: "DeliveryService__Url"
+            valueFrom:
+               configMapKeyRef: 
+                  name: homework-config
+                  key: DELIVERY_SERVICE_URL
         volumeMounts:
           - name: config-volume
             mountPath: /app/config          
