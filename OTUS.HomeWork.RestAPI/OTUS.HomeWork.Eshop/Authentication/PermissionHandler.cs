@@ -38,16 +38,21 @@ namespace OTUS.HomeWork.EShop.Authentication
                 || context.Request.Path.StartsWithSegments("/api/bucket")
                 || context.Request.Path.StartsWithSegments("/api/order"))
             {
+                var name = user.FindFirst(ClaimTypes.Name);
                 var nameIdentifier = user.FindFirst(ClaimTypes.NameIdentifier);
-                if (nameIdentifier == null)
+                if (nameIdentifier == null && name == null)
                     return false;
 
-                var dbUser = await _repository.GetUserAsync(nameIdentifier.Value);
-                if (dbUser == null)
-                    return false;
-
+                var userId = nameIdentifier?.Value;
+                if (userId == null)
+                {
+                    var dbUser = await _repository.GetUserAsync(name.Value);
+                    if (dbUser == null)
+                        return false;
+                    userId = dbUser.Id.ToString();
+                }
                 string userIdFromPath = context.Request.Path.Value.Split('/')[3];
-                return userIdFromPath.Equals(dbUser.Id.ToString(), StringComparison.OrdinalIgnoreCase);
+                return userIdFromPath.Equals(userId.ToString(), StringComparison.OrdinalIgnoreCase);
             }
 
             return true;

@@ -12,7 +12,7 @@ namespace OTUS.HomeWork.EShop.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    //[Authorize(Policy = "OnlyOwner")]
+    [Authorize(Policy = "OnlyOwner")]
     public class BucketController : Controller
     {
         private readonly BucketRepository _bucketRepository;

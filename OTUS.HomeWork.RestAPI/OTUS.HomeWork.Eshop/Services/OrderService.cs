@@ -10,6 +10,8 @@ using System.Transactions;
 using Microsoft.EntityFrameworkCore;
 using OTUS.HomeWork.RabbitMq;
 using OTUS.HomeWork.NotificationService.Contract.Messages;
+using OTUS.HomeWork.EShop.Monitoring;
+using OTUS.HomeWork.Common;
 
 namespace OTUS.HomeWork.EShop.Services
 {
@@ -21,13 +23,15 @@ namespace OTUS.HomeWork.EShop.Services
         private readonly WarehouseServiceClient _warehouseServiceClient;
         private readonly BucketRepository _bucketRepository;
         private readonly RabbitMQMessageSender _mqSender;
+        private readonly MetricReporter _metricReporter;
 
         public OrderService(OrderContext orderContext
             , BucketRepository bucketRepository
             , PaymentGatewayClient paymentGatewayClient
             , PriceServiceClient pricingClient
             , WarehouseServiceClient warehouseServiceClient
-            , RabbitMQMessageSender mqSender)
+            , RabbitMQMessageSender mqSender
+            , MetricReporter metricReporter)
         {
             _orderContext = orderContext;
             _paymentGatewayClient = paymentGatewayClient;
@@ -35,6 +39,7 @@ namespace OTUS.HomeWork.EShop.Services
             _warehouseServiceClient = warehouseServiceClient;
             _bucketRepository = bucketRepository;
             _mqSender = mqSender;
+            _metricReporter = metricReporter;
         }
 
         public async Task<Order> CreateOrderAsync(Guid userId, CreateOrderDTO orderRequest)
@@ -88,6 +93,7 @@ namespace OTUS.HomeWork.EShop.Services
                     scope.Complete();
                 }
                 // 3. резервируем на складе
+                _warehouseServiceClient.AddHeader(Constants.USERID_HEADER, userId.ToString());
                 var reserve = await _warehouseServiceClient.ReserveAsync(new ReserveProductRequestDTO
                 {
                     OrderNumber = order.OrderNumber.ToString(),
@@ -123,6 +129,7 @@ namespace OTUS.HomeWork.EShop.Services
                     {
                         existOrder = _orderContext.Orders.FirstOrDefault(g => g.OrderNumber == order.OrderNumber);
                         existOrder.Status = OrderStatus.Error;
+                        existOrder.ErrorDescription = ex.Message;
                         await _orderContext.SaveChangesAsync();
                     }
                 }
@@ -130,6 +137,7 @@ namespace OTUS.HomeWork.EShop.Services
                 {
                     // логируем, что не удалось изменить статус
                 }
+                _metricReporter.RegisterFailedOrder();
             }
             return order;
         }
@@ -146,9 +154,19 @@ namespace OTUS.HomeWork.EShop.Services
         {
             var order = await _orderContext.Orders.FirstOrDefaultAsync(g => g.OrderNumber == orderId);
             if (order == null)
+            {
+                _metricReporter.RegisterFailedOrder();
                 throw new Exception($"Заказ c id={orderId} не существует");
+            }
             if (await PaymentWasCompleted(paymentResultDTO, order))
-                return await SendRequestOnShipment(order);
+            {
+                order = await SendRequestOnShipment(order);
+                _metricReporter.RegisterCreateOrder();
+            }
+            else
+            {
+                _metricReporter.RegisterFailedOrder();
+            }
             return order;
         }
 
@@ -201,6 +219,7 @@ namespace OTUS.HomeWork.EShop.Services
                 try
                 {
                     // отправляем заявку на отгрузку товара
+                    _warehouseServiceClient.AddHeader(Constants.USERID_HEADER, order.UserId.ToString());
                     await _warehouseServiceClient.ShipmentAsync(new ShipmentRequestDTO
                     {
                         DeliveryAddress = order.DeliveryAddress,
@@ -211,36 +230,10 @@ namespace OTUS.HomeWork.EShop.Services
 
                     _orderContext.Orders.Update(order);
                     await _orderContext.SaveChangesAsync();
-
                 }
                 catch (Exception ex)
                 {
-                    order.Status = OrderStatus.Error;
-                    // что-то пошло не так
-                    // возвращаем деньги пользователю
-                    await _paymentGatewayClient.RefundAsync(order.UserId, new RefundRequestDTO
-                    {
-                        BillingId = Guid.Parse(order.BillingId)
-                    });
-
-                    // отправляем уведомление пользователю об отмене денег
-                    await _mqSender.SendMessageAsync(new OrderRefundPayment
-                    {
-                         BillingId = order.BillingId,
-                         OrderNumber = order.OrderNumber.ToString(),
-                         Price = order.TotalPrice,
-                         UserId = order.UserId
-                    });
-
-                    // отправляем уведомление пользователю об отмене заказа
-                    await _mqSender.SendMessageAsync(new OrderCreatedError
-                    {
-                        Message = "Заказ отменен. Попробуйте повторить заказ позже",
-                        UserId = order.UserId
-                    });
-
-                    _orderContext.Orders.Update(order);
-                    await _orderContext.SaveChangesAsync();
+                    // будет некая джоба, которая допинает и отправит заказ на отгрузку, если сейчас не получилась, поэтому мы ничего делаем
                 }
             }
             else

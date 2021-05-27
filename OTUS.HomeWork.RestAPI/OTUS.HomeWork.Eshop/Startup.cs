@@ -1,5 +1,6 @@
 using System.Net.Http;
 using AutoMapper;
+using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -124,7 +125,7 @@ namespace OTUS.HomeWork.EShop
                 policy.Requirements.Add(new OwnerPermission()));
             });
 
-            //services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
+            services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
 
             services.AddControllers();
             services.AddHealthChecks();
@@ -132,6 +133,9 @@ namespace OTUS.HomeWork.EShop
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "OTUS.HomeWork.Eshop", Version = "v1" });
             });
+
+            services.AddProblemDetails();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -162,11 +166,11 @@ namespace OTUS.HomeWork.EShop
 
             app.UseMetricServer();
 
+            app.UseProblemDetails();
             app.UseMiddleware<ResponseTimeMiddleware>();
-            
+            app.UseAuthentication();
             app.UseRouting();
 
-            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

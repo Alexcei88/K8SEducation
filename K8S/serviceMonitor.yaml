@@ -1,17 +1,17 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: homework-servicemonitor
+  name: eshop-servicemonitor
   labels:
-    app: homeworkapp
+    app: eshop
     release: prometheus
 spec:
   namespaceSelector:
     any: true
   endpoints:
-  - port: "homework-service"
+  - port: "eshop-service"
     path: /metrics
-    interval: 10s    
+    interval: 7s
   selector:
     matchLabels:
-      app: homeworkapp
+      app: eshop

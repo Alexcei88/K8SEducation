@@ -9,22 +9,12 @@
 			"name": "signin",
 			"event": [
 				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [
-							"pm.collectionVariables.set(\"userName\", pm.variables.replaceIn('{{$randomUserName}}'))"
-						],
-						"type": "text/javascript"
-					}
-				},
-				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"var jsonData = JSON.parse(responseBody);\r",
-							"pm.collectionVariables.set(\"userId1\", jsonData.userId);\r",
-							"\r",
 							"pm.test(\"user registered successfully\", function() {\r",
+							"    var jsonData = JSON.parse(responseBody);\r",
+							"    pm.collectionVariables.set(\"userId1\", jsonData.userId),\r",
 							"    pm.response.to.have.status(200);\r",
 							"})"
 						],
@@ -32,35 +22,9 @@
 					}
 				}
 			],
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"host": true
-				}
-			},
 			"request": {
 				"method": "PUT",
-				"header": [
-					{
-						"key": "host",
-						"value": "arch.homework",
-						"type": "text",
-						"disabled": true
-					},
-					{
-						"key": "gap-auth",
-						"value": "{{userName}}",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
+				"header": [],
 				"url": {
 					"raw": "{{baseUrl}}/signin",
 					"host": [

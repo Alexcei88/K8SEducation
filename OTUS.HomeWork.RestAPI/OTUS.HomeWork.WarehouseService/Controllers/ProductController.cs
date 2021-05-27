@@ -13,7 +13,7 @@ namespace OTUS.HomeWork.WarehouseService.Controllers
 {
     [ApiController]
     [Route("api/product")]
-    //[Authorize]
+    [Authorize]
     public class ProductController : ControllerBase
     {
         private readonly ProductRepository _productRepository;

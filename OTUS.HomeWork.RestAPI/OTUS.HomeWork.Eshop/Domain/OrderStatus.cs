@@ -25,6 +25,6 @@ namespace OTUS.HomeWork.EShop.Domain
         /// <summary>
         /// Error
         /// </summary>
-        Error = 50
+        Error = 50,
     }
 }

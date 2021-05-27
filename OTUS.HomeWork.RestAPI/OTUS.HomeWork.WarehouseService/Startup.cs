@@ -1,4 +1,7 @@
 using AutoMapper;
+using Hangfire;
+using Hangfire.MemoryStorage;
+using Hellang.Middleware.ProblemDetails;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -18,7 +21,9 @@ using OTUS.HomeWork.RestAPI.Abstraction.Authentication;
 using OTUS.HomeWork.RestAPI.Abstraction.Authentication.Handlers;
 using OTUS.HomeWork.WarehouseService.DAL;
 using OTUS.HomeWork.WarehouseService.Extensions;
+using OTUS.HomeWork.WarehouseService.HangfireJobs;
 using OTUS.HomeWork.WarehouseService.Options;
+using OTUS.HomeWork.WarehouseService.Services;
 using System.Net.Http;
 
 namespace OTUS.HomeWork.WarehouseService
@@ -74,6 +79,13 @@ namespace OTUS.HomeWork.WarehouseService
                     , new JsonNetMessageExchangeSerializer());
             });
 
+            services.AddHangfire(config =>
+                config.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                    .UseSimpleAssemblyNameTypeSerializer()
+                    .UseDefaultTypeSerializer()
+                    .UseMemoryStorage());
+            services.AddHangfireServer();
+
             services.AddRabbitMQConsumer();
             services.AddAuthentication(g =>
             {
@@ -82,12 +94,18 @@ namespace OTUS.HomeWork.WarehouseService
                 g.DefaultForbidScheme = SimpleCustomAuthenticationHandler.AuthentificationScheme;
             }).AddScheme<RestAPIAuthOption, SimpleCustomAuthenticationHandler>(SimpleCustomAuthenticationHandler.AuthentificationScheme, o => { });
 
+            services.Configure<ScheduleJobsOption>(Configuration.GetSection("ScheduleJobs"));
+            services.AddTransient<ReserveProductTrackerJob>();
+            services.AddHostedService<HangfireJobScheduler>();
+
             services.AddControllers();
             services.AddHealthChecks(); 
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "OTUS.HomeWork.WarehouseService", Version = "v1" });
             });
+
+            services.AddProblemDetails();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -120,10 +138,15 @@ namespace OTUS.HomeWork.WarehouseService
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseHangfireDashboard();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHangfireDashboard();
             });
+
+            app.UseProblemDetails();
         }
 
         private void AutomaticallyApplyDBMigrations(IApplicationBuilder app)

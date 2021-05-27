@@ -27,6 +27,134 @@
         "x": 0,
         "y": 0
       },
+      "id": 18,
+      "panels": [],
+      "title": "Orders",
+      "type": "row"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 1
+      },
+      "id": 20,
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "text": {}
+      },
+      "pluginVersion": "7.5.5",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "created_order",
+          "format": "table",
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "title": "Create orders",
+      "type": "gauge"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 1
+      },
+      "id": 22,
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true,
+        "text": {}
+      },
+      "pluginVersion": "7.5.5",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "failed_order",
+          "format": "table",
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "title": "Failed orders",
+      "type": "gauge"
+    },
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
       "id": 6,
       "panels": [],
       "title": "Ingress",
@@ -39,7 +167,7 @@
           {
             "evaluator": {
               "params": [
-                200
+                800
               ],
               "type": "gt"
             },
@@ -79,9 +207,7 @@
       "dashes": false,
       "datasource": null,
       "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
+        "defaults": {},
         "overrides": []
       },
       "fill": 1,
@@ -90,7 +216,7 @@
         "h": 6,
         "w": 12,
         "x": 0,
-        "y": 1
+        "y": 10
       },
       "hiddenSeries": false,
       "id": 16,
@@ -107,10 +233,10 @@
       "linewidth": 1,
       "nullPointMode": "null",
       "options": {
-        "alertThreshold": true
+        "alertThreshold": false
       },
       "percentage": false,
-      "pluginVersion": "7.3.5",
+      "pluginVersion": "7.5.5",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -121,6 +247,7 @@
       "targets": [
         {
           "expr": "histogram_quantile(0.5, sum by (le)(rate(nginx_ingress_controller_request_duration_seconds_bucket[1m])))*1000",
+          "hide": false,
           "interval": "",
           "legendFormat": "0.5",
           "refId": "A"
@@ -147,10 +274,11 @@
       "thresholds": [
         {
           "colorMode": "critical",
-          "fill": true,
-          "line": true,
+          "fill": false,
+          "line": false,
           "op": "gt",
-          "value": 200
+          "value": 800,
+          "visible": true
         }
       ],
       "timeFrom": null,
@@ -200,9 +328,7 @@
       "dashes": false,
       "datasource": null,
       "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
+        "defaults": {},
         "overrides": []
       },
       "fill": 1,
@@ -211,7 +337,7 @@
         "h": 6,
         "w": 12,
         "x": 12,
-        "y": 1
+        "y": 10
       },
       "hiddenSeries": false,
       "id": 14,
@@ -231,7 +357,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.3.5",
+      "pluginVersion": "7.5.5",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -241,6 +367,7 @@
       "steppedLine": false,
       "targets": [
         {
+          "exemplar": true,
           "expr": "rate(nginx_ingress_controller_nginx_process_requests_total[1m])",
           "interval": "",
           "legendFormat": "RPS",
@@ -290,51 +417,13 @@
       }
     },
     {
-      "alert": {
-        "alertRuleTags": {},
-        "conditions": [
-          {
-            "evaluator": {
-              "params": [
-                20
-              ],
-              "type": "gt"
-            },
-            "operator": {
-              "type": "and"
-            },
-            "query": {
-              "params": [
-                "A",
-                "5m",
-                "now"
-              ]
-            },
-            "reducer": {
-              "params": [],
-              "type": "max"
-            },
-            "type": "query"
-          }
-        ],
-        "executionErrorState": "alerting",
-        "for": "1m",
-        "frequency": "30s",
-        "handler": 1,
-        "message": "Many errors",
-        "name": "500 Error alert",
-        "noDataState": "no_data",
-        "notifications": []
-      },
       "aliasColors": {},
       "bars": false,
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
       "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
+        "defaults": {},
         "overrides": []
       },
       "fill": 1,
@@ -343,7 +432,7 @@
         "h": 6,
         "w": 12,
         "x": 0,
-        "y": 7
+        "y": 16
       },
       "hiddenSeries": false,
       "id": 12,
@@ -363,7 +452,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.3.5",
+      "pluginVersion": "7.5.5",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -379,15 +468,7 @@
           "refId": "A"
         }
       ],
-      "thresholds": [
-        {
-          "colorMode": "critical",
-          "fill": true,
-          "line": true,
-          "op": "gt",
-          "value": 20
-        }
-      ],
+      "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
@@ -435,11 +516,11 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 13
+        "y": 22
       },
       "id": 4,
       "panels": [],
-      "title": "Methods",
+      "title": "Eshop service",
       "type": "row"
     },
     {
@@ -449,9 +530,7 @@
       "dashes": false,
       "datasource": null,
       "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
+        "defaults": {},
         "overrides": []
       },
       "fill": 1,
@@ -460,7 +539,7 @@
         "h": 6,
         "w": 12,
         "x": 0,
-        "y": 14
+        "y": 23
       },
       "hiddenSeries": false,
       "id": 10,
@@ -482,7 +561,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.3.5",
+      "pluginVersion": "7.5.5",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -573,9 +652,7 @@
       "dashes": false,
       "datasource": null,
       "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
+        "defaults": {},
         "overrides": []
       },
       "fill": 1,
@@ -584,7 +661,7 @@
         "h": 6,
         "w": 12,
         "x": 12,
-        "y": 14
+        "y": 23
       },
       "hiddenSeries": false,
       "id": 8,
@@ -604,7 +681,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.3.5",
+      "pluginVersion": "7.5.5",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -669,9 +746,7 @@
       "dashes": false,
       "datasource": null,
       "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
+        "defaults": {},
         "overrides": []
       },
       "fill": 1,
@@ -680,7 +755,7 @@
         "h": 6,
         "w": 12,
         "x": 0,
-        "y": 20
+        "y": 29
       },
       "hiddenSeries": false,
       "id": 2,
@@ -700,7 +775,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "7.3.5",
+      "pluginVersion": "7.5.5",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -759,8 +834,8 @@
       }
     }
   ],
-  "refresh": "",
-  "schemaVersion": 26,
+  "refresh": "5s",
+  "schemaVersion": 27,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -774,5 +849,5 @@
   "timezone": "",
   "title": "OTUS homework API",
   "uid": "57NbjHEGk",
-  "version": 26
+  "version": 8
 }

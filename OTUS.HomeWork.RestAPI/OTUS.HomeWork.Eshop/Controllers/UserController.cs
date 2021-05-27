@@ -19,23 +19,20 @@ namespace OTUS.HomeWork.EShop.Controllers
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
         private HttpContext _hcontext;
-        private readonly ILogger<UserController> _logger;
 
         public UserController(IUserService userService
             , IMapper mapper
-            , IHttpContextAccessor haccess
-            , ILogger<UserController> logger)
+            , IHttpContextAccessor haccess)
         {
             _userService = userService;
             _mapper = mapper;
-            _logger = logger;
             _hcontext = haccess.HttpContext;
         }
        
         [HttpPut("signin")]
         public async Task<IActionResult> Authentification()
         {            
-            var nameIdentifier = _hcontext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var nameIdentifier = _hcontext.User.FindFirst(ClaimTypes.Name).Value;
             var newUser = await _userService.CreateUserAsync(new User
             {
                 UserName = nameIdentifier,

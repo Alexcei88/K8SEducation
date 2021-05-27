@@ -18,17 +18,10 @@ namespace OTUS.HomeWork.EShop.DAL
 
         public async Task<Bucket[]> UpdateBucketsAsync(IEnumerable<Bucket> buckets, Guid userId)
         {
-            foreach (var bucket in buckets)
-            {
-                var existBucket = await _orderContext.Buckets.FirstOrDefaultAsync(g => g.UserId == bucket.UserId && g.ProductId == bucket.ProductId);
-                if (existBucket != null)
-                {
-                    existBucket.Quantity = bucket.Quantity;
-                    _orderContext.Buckets.Update(existBucket);
-                }
-                else
-                    _orderContext.Buckets.Add(bucket);
-            }
+            var existBuckets = await _orderContext.Buckets.Where(g => g.UserId == userId).ToArrayAsync();
+            _orderContext.Buckets.RemoveRange(existBuckets);
+
+            _orderContext.Buckets.AddRange(buckets);
             await _orderContext.SaveChangesAsync();
             return await _orderContext.Buckets.Where(g => g.UserId == userId).ToArrayAsync();
         }
