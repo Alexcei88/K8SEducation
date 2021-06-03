@@ -4,7 +4,7 @@ using OTUS.HomeWork.Common;
 namespace OTUS.HomeWork.NotificationService.Contract.Messages
 {
     public class OrderCreated
-        : IBrokerMessage
+        : BrokerMessage
     {
         public const string TYPE = "OrderCreated";
 
@@ -17,6 +17,16 @@ namespace OTUS.HomeWork.NotificationService.Contract.Messages
         public string BillingAddressId { get; set; }
 
         public override string MessageType => TYPE;
+
+        public override string Id { get; }
+
+        public OrderCreated()
+        { }
+
+        public OrderCreated(string id)
+        {
+            Id = id;
+        }
 
     }
 }

@@ -43,7 +43,7 @@ namespace OTUS.HomeWork.MessageExchangeSerializer
 		}
 
 		public TRequest DeserializeRequest<TRequest>(Stream stream)
-			where TRequest : IBrokerMessage, new()
+			where TRequest : BrokerMessage, new()
 		{
 			var sr = new StreamReader(stream);
 			var jsonTextReader = new JsonTextReader(sr);
@@ -58,7 +58,7 @@ namespace OTUS.HomeWork.MessageExchangeSerializer
 		}
 
 		public TResponse DeserializeResponse<TResponse>(Stream stream)
-			where TResponse : IBrokerMessage, new()
+			where TResponse : BrokerMessage, new()
 		{
 			var sr = new StreamReader(stream);
 			var jsonTextReader = new JsonTextReader(sr);
@@ -78,7 +78,7 @@ namespace OTUS.HomeWork.MessageExchangeSerializer
 		}
 
 		public MemoryStream SerializeRequest<TRequest>(TRequest obj)
-			where TRequest : IBrokerMessage, new()
+			where TRequest : BrokerMessage, new()
 		{
 			var stream = new MemoryStream();
 			var wr = new StreamWriter(stream);
@@ -90,7 +90,7 @@ namespace OTUS.HomeWork.MessageExchangeSerializer
 		}
 
 		public MemoryStream SerializeResponse<TResponse>(TResponse obj)
-			where TResponse : IBrokerMessage, new()
+			where TResponse : BrokerMessage, new()
 		{
 			var stream = new MemoryStream();
 			var wr = new StreamWriter(stream);

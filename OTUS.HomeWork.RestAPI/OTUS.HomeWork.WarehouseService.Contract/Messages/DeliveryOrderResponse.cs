@@ -4,7 +4,7 @@ using OTUS.HomeWork.Common;
 namespace OTUS.HomeWork.WarehouseService.Contract.Messages
 {
     public class DeliveryOrderResponse
-        : IBrokerMessage
+        : BrokerMessage
     {
         public const string TYPE = "DeliveryOrderResponse";
 
@@ -16,5 +16,16 @@ namespace OTUS.HomeWork.WarehouseService.Contract.Messages
         public string OrderNumber { get; set; }
 
         public override string MessageType => TYPE;
+
+        public override  string Id { get; }
+
+        public DeliveryOrderResponse()
+        { }
+
+        public DeliveryOrderResponse(string id)
+        {
+            Id = id;
+        }
+
     }
 }

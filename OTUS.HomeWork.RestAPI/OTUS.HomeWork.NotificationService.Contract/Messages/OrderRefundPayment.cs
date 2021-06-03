@@ -4,7 +4,7 @@ using OTUS.HomeWork.Common;
 namespace OTUS.HomeWork.NotificationService.Contract.Messages
 {
     public class OrderRefundPayment
-        : IBrokerMessage
+        : BrokerMessage
     {
         public const string TYPE = "OrderRefundPayment";
 
@@ -17,6 +17,16 @@ namespace OTUS.HomeWork.NotificationService.Contract.Messages
         public string BillingId { get; set; }
 
         public override string MessageType => TYPE;
+
+        public override string Id { get; }
+
+        public OrderRefundPayment()
+        { }
+
+        public OrderRefundPayment(string id)
+        {
+            Id = id;
+        }
 
     }
 }

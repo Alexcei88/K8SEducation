@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using OTUS.HomeWork.Common;
@@ -20,6 +21,7 @@ namespace OTUS.HomeWork.WarehouseService.Extensions
             services.AddSingleton(sp =>
             {
                 var rabbitMQOption = sp.GetService<IOptions<WarehouseRabbitMQOption>>()?.Value;
+                var distributedCache = sp.GetService<IDistributedCache>();
                 if (rabbitMQOption == null)
                     throw new ArgumentNullException("RabbitMQ Options is not being initialized");
 
@@ -30,15 +32,24 @@ namespace OTUS.HomeWork.WarehouseService.Extensions
                         using var serviceScope = sp.GetRequiredService<IServiceScopeFactory>().CreateScope();
                         List<IMessageHandler> allHandlers = new();
                         allHandlers.Add(new DeliveryResponseMessageHandler(serviceScope, serializer));
+                        allHandlers.Add(new UpdateProductCounterByReserveMessageHandler(serviceScope, serializer));
 
-                        IBrokerMessage message = serializer.DeserializeRequest<IBrokerMessage>(body);
+                        BrokerMessage message = serializer.DeserializeRequest<BrokerMessage>(body);
                         body.Position = 0;
+                        string cacheKey = message.MessageType + message.Id;
+                        if (distributedCache.GetAsync(cacheKey) != null)
+                            return;
 
                         var handler = allHandlers.FirstOrDefault(g => g.MessageType == message.MessageType);
                         if (handler == null)
                             throw new Exception($"Не найден обработчик сообщения {message.MessageType}");
 
                         await handler.HandleAsync(body);
+
+                        distributedCache.Set(cacheKey, Array.Empty<byte>(), new DistributedCacheEntryOptions
+                        {
+                            AbsoluteExpiration = DateTime.UtcNow.AddDays(2)
+                        });
                     });
             });
         }

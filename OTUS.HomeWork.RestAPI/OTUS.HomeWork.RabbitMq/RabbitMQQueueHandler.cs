@@ -9,7 +9,6 @@ using RabbitMQ.Client.Events;
 
 namespace OTUS.HomeWork.RabbitMq
 {
-
     public class RabbitMQQueueConsumer
     {
         private RabbitMqConnection _rabbitMqConnection;
@@ -29,7 +28,7 @@ namespace OTUS.HomeWork.RabbitMq
         private IMessageExchangeSerializer _messageExchangeSerializer;
 
         private Action<MemoryStream, IMessageExchangeSerializer> _handler;
-
+        
         public RabbitMQQueueConsumer(string queueName, RabbitMqConnectionPool connectionPool,
             Action<MemoryStream, IMessageExchangeSerializer> handler)
         {

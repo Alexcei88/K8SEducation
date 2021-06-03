@@ -6,7 +6,7 @@ using OTUS.HomeWork.Common;
 namespace OTUS.HomeWork.DeliveryService.Contract.Messages
 {
     public class DeliveryOrderRequest
-        : IBrokerMessage
+        : BrokerMessage
     {
         public class DeliveryProduct
         {
@@ -28,6 +28,16 @@ namespace OTUS.HomeWork.DeliveryService.Contract.Messages
         public List<DeliveryProduct> Products { get; set; }
 
         public override string MessageType => TYPE;
+
+        public override string Id { get; }
+
+        public DeliveryOrderRequest()
+        { }
+
+        public DeliveryOrderRequest(string id)
+        {
+            Id = id;
+        }
 
     }
 }

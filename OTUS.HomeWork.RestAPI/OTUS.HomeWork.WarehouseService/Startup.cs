@@ -44,14 +44,15 @@ namespace OTUS.HomeWork.WarehouseService
                     options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")).UseSnakeCaseNamingConvention());
 
             services.Configure<WarehouseRabbitMQOption>(Configuration.GetSection("RabbitMq"));
+            services.Configure<RedisOption>(Configuration.GetSection("Redis"));
             services.AddScoped<ProductRepository>();
             services.AddScoped<Services.WarehouseService>();
             services.AddHttpClient();
 
-            var deliverySettingSection = Configuration.GetSection("DeliveryService");
+            var deliveryOptionsSection = Configuration.GetSection("DeliveryService");
             services.AddScoped((sp) =>
             {
-                var options = deliverySettingSection.Get<ServiceAddressOption>();
+                var options = deliveryOptionsSection.Get<ServiceAddressOption>();
                 var client = sp.GetService<IHttpClientFactory>()?.CreateClient("DeliveryService");
                 return new DeliveryServiceClient(options.Url, client);
             });
@@ -73,6 +74,11 @@ namespace OTUS.HomeWork.WarehouseService
                     , chPool
                     , new JsonNetMessageExchangeSerializer());
 
+                new RabbitMQMessageSender(rabbitMQOption.ExchangeName
+                    , rabbitMQOption.WarehouseRouteKey
+                    , chPool
+                    , new JsonNetMessageExchangeSerializer());
+
                 return new RabbitMQMessageSender(rabbitMQOption.ExchangeName
                     , rabbitMQOption.EshopNotificationRouteKey
                     , chPool
@@ -87,6 +93,13 @@ namespace OTUS.HomeWork.WarehouseService
             services.AddHangfireServer();
 
             services.AddRabbitMQConsumer();
+
+            var redisOption = Configuration.GetSection("Redis").Get<RedisOption>();
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = redisOption.Url;
+            });
+
             services.AddAuthentication(g =>
             {
                 g.DefaultAuthenticateScheme = SimpleCustomAuthenticationHandler.AuthentificationScheme;

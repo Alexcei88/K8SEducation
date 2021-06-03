@@ -88,7 +88,7 @@ namespace OTUS.HomeWork.RabbitMq
 		}
 
 
-		public bool SendMessage<T>(T request, string destination) where T : IBrokerMessage, new()
+		public bool SendMessage<T>(T request, string destination) where T : BrokerMessage, new()
 		{
 			RabbitMQChannel? channel = null;
 			try
@@ -116,7 +116,7 @@ namespace OTUS.HomeWork.RabbitMq
 			}
 		}
 
-		public Task<bool> SendMessageAsync<T>(T requests, string destination = null) where T : IBrokerMessage, new()
+		public Task<bool> SendMessageAsync<T>(T requests, string destination = null) where T : BrokerMessage, new()
 		{
 			return Task.FromResult(SendMessage(requests, destination));
 		}

@@ -10,6 +10,7 @@ data:
   DELIVERY_SERVICE_URL: "http://delivery-service.default.svc.cluster.local:15040"
   WAREHOUSE_SERVICE_URL: "http://warehouse-service.default.svc.cluster.local:15050"
   PRICING_SERVICE_URL:  "http://pricing-service.default.svc.cluster.local:15070"
+  REDIS_URL: "http://redis-release-master.default.svc.cluster.local:6379"
   appsettings.json: |-
     {
       "Logging": {
@@ -21,7 +22,7 @@ data:
       },
       "RabbitMq": {
         "ConnectionString": "amqp://eshop:eshop@rabbitmq.rabbitmq.svc.cluster.local:5672/"
-      }
+      },      
     }
 
 ---

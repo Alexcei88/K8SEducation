@@ -7,5 +7,6 @@ namespace OTUS.HomeWork.WarehouseService.Options
     {
         public string DeliveryRouteKey {get; set; }
         public string EshopNotificationRouteKey { get; set; }
+        public string WarehouseRouteKey { get; set; }
     }
 }

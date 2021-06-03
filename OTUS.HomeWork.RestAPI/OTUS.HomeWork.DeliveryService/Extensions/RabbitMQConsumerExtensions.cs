@@ -31,7 +31,7 @@ namespace OTUS.HomeWork.DeliveryService.Extensions
                         List<IMessageHandler> allHandlers = new();
                         allHandlers.Add(new DeliveryRequestMessageHandler(serviceScope, serializer, rabbitMQOption.WarehouseQueueName));
 
-                        IBrokerMessage message = serializer.DeserializeRequest<IBrokerMessage>(body);
+                        BrokerMessage message = serializer.DeserializeRequest<BrokerMessage>(body);
                         body.Position = 0;
 
                         var handler = allHandlers.FirstOrDefault(g => g.MessageType == message.MessageType);

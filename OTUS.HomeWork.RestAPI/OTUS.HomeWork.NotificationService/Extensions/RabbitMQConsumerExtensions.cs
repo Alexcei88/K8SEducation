@@ -27,7 +27,7 @@ namespace OTUS.HomeWork.NotificationService.Extensions
                         using var serviceScope = sp.GetRequiredService<IServiceScopeFactory>().CreateScope();                        
                         var repository = serviceScope.ServiceProvider.GetService<NotificationRepository>();
 
-                        IBrokerMessage message = serializer.DeserializeRequest<IBrokerMessage>(body);
+                        BrokerMessage message = serializer.DeserializeRequest<BrokerMessage>(body);
                         body.Position = 0;
                         switch(message.MessageType)
                         {

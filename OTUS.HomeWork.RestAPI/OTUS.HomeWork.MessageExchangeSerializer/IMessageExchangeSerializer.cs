@@ -11,13 +11,13 @@ namespace OTUS.HomeWork.MessageExchangeSerializer
 	{
 		string Serialize<T>(T obj);
 
-		MemoryStream SerializeRequest<TRequest>(TRequest obj) where TRequest : IBrokerMessage, new();
+		MemoryStream SerializeRequest<TRequest>(TRequest obj) where TRequest : BrokerMessage, new();
 
-		MemoryStream SerializeResponse<TResponse>(TResponse obj) where TResponse : IBrokerMessage, new();
+		MemoryStream SerializeResponse<TResponse>(TResponse obj) where TResponse : BrokerMessage, new();
 
-		TRequest DeserializeRequest<TRequest>(Stream stream) where TRequest : IBrokerMessage, new();
+		TRequest DeserializeRequest<TRequest>(Stream stream) where TRequest : BrokerMessage, new();
 
-		TResponse DeserializeResponse<TResponse>(Stream stream) where TResponse : IBrokerMessage, new();
+		TResponse DeserializeResponse<TResponse>(Stream stream) where TResponse : BrokerMessage, new();
 
 		string MimeTypeName { get; }
 	}
