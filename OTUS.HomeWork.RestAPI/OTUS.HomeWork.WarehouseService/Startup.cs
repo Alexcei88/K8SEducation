@@ -98,6 +98,7 @@ namespace OTUS.HomeWork.WarehouseService
             services.AddStackExchangeRedisCache(options =>
             {
                 options.Configuration = redisOption.Url;
+                options.InstanceName = "Instance-1";
             });
 
             services.AddAuthentication(g =>

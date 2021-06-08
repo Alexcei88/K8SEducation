@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace OTUS.HomeWork.WarehouseService.Messages
 {
-    public class UpdateProductCounterByResetReserveRequest
+    public class UpdateProductCounterByShipmentRequest
         : BrokerMessage
     {
         public class ReserveProduct
@@ -14,7 +14,7 @@ namespace OTUS.HomeWork.WarehouseService.Messages
             public Guid ProductId { get; set; }
         }
 
-        public const string TYPE = "UpdateProductCounterByResetReserveRequest";
+        public const string TYPE = "UpdateProductCounterByShipmentRequest";
 
         public List<ReserveProduct> Products { get; set; }
 
@@ -22,10 +22,10 @@ namespace OTUS.HomeWork.WarehouseService.Messages
 
         public override string Id { get; set; }
 
-        public UpdateProductCounterByResetReserveRequest()
+        public UpdateProductCounterByShipmentRequest()
         { }
 
-        public UpdateProductCounterByResetReserveRequest(string id)
+        public UpdateProductCounterByShipmentRequest(string id)
         {
             Id = id; 
         }

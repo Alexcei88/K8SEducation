@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -25,6 +24,7 @@ namespace OTUS.HomeWork.EShop.Authentication
             {
                 context.Succeed(requirement);
             }
+            context.Fail();
         }
 
         private async Task<bool> IsOwner(ClaimsPrincipal user, object resource)

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 using OTUS.HomeWork.MessageExchangeSerializer;
 using OTUS.HomeWork.RabbitMq.Pool;
 using RabbitMQ.Client;
@@ -27,10 +28,10 @@ namespace OTUS.HomeWork.RabbitMq
 
         private IMessageExchangeSerializer _messageExchangeSerializer;
 
-        private Action<MemoryStream, IMessageExchangeSerializer> _handler;
+        private Func<MemoryStream, IMessageExchangeSerializer, Task> _handler;
         
         public RabbitMQQueueConsumer(string queueName, RabbitMqConnectionPool connectionPool,
-            Action<MemoryStream, IMessageExchangeSerializer> handler)
+            Func<MemoryStream, IMessageExchangeSerializer, Task> handler)
         {
             _rabbitMqConnectionPool = connectionPool;
             _queueName = queueName;
@@ -104,7 +105,7 @@ namespace OTUS.HomeWork.RabbitMq
                 {
                     using (var body = new MemoryStream(ea.Body.ToArray(), 0, ea.Body.Length))
                     {
-                        _handler(body, _messageExchangeSerializer);
+                        _handler(body, _messageExchangeSerializer).GetAwaiter().GetResult();
                         ConfirmMessage(ea);
                     }
                 }

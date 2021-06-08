@@ -13,7 +13,7 @@ namespace OTUS.HomeWork.NotificationService.Contract.Messages
         public string Message { get; set; }
         public override string MessageType => TYPE;
 
-        public override string Id { get; }
+        public override string Id { get; set; }
 
         public OrderCreatedError()
         { }

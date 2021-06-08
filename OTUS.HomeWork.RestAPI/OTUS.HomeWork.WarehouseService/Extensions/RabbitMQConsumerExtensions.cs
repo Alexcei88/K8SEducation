@@ -33,11 +33,12 @@ namespace OTUS.HomeWork.WarehouseService.Extensions
                         List<IMessageHandler> allHandlers = new();
                         allHandlers.Add(new DeliveryResponseMessageHandler(serviceScope, serializer));
                         allHandlers.Add(new UpdateProductCounterByReserveMessageHandler(serviceScope, serializer));
+                        allHandlers.Add(new UpdateProductCounterByShipmentMessageHandler(serviceScope, serializer));
+                        allHandlers.Add(new UpdateProductCounterByResetReserveMessageHandler(serviceScope, serializer));
 
                         BrokerMessage message = serializer.DeserializeRequest<BrokerMessage>(body);
-                        body.Position = 0;
                         string cacheKey = message.MessageType + message.Id;
-                        if (distributedCache.GetAsync(cacheKey) != null)
+                        if (await distributedCache.GetAsync(cacheKey) != null)
                             return;
 
                         var handler = allHandlers.FirstOrDefault(g => g.MessageType == message.MessageType);

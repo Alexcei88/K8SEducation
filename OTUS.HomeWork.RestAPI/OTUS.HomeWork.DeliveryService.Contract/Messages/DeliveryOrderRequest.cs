@@ -29,7 +29,7 @@ namespace OTUS.HomeWork.DeliveryService.Contract.Messages
 
         public override string MessageType => TYPE;
 
-        public override string Id { get; }
+        public override string Id { get; set; }
 
         public DeliveryOrderRequest()
         { }

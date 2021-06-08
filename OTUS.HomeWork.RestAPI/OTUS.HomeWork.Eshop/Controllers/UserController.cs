@@ -31,8 +31,9 @@ namespace OTUS.HomeWork.EShop.Controllers
        
         [HttpPut("signin")]
         public async Task<IActionResult> Authentification()
-        {            
-            var nameIdentifier = _hcontext.User.FindFirst(ClaimTypes.Name).Value;
+        {
+            var nameIdentifier = Guid.NewGuid().ToString(); 
+                //_hcontext.User.FindFirst(ClaimTypes.Name).Value;
             var newUser = await _userService.CreateUserAsync(new User
             {
                 UserName = nameIdentifier,

@@ -20,7 +20,7 @@ namespace OTUS.HomeWork.WarehouseService.Messages
 
         public override string MessageType => TYPE;
 
-        public override string Id { get; }
+        public override string Id { get; set; }
 
         public UpdateProductCounterByReserveRequest()
         { }

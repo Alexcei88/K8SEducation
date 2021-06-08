@@ -21,16 +21,13 @@ namespace OTUS.HomeWork.WarehouseService.Services
     public class WarehouseService
     {
         private readonly WarehouseContext _warehouseContext;
-        private readonly DeliveryServiceClient _deliveryServiceClient;
         private readonly RabbitMQMessageSender _mqSender;
         private IOptions<WarehouseRabbitMQOption> _mqOptions;        
         public WarehouseService(WarehouseContext warehouseContext
-            , DeliveryServiceClient deliveryServiceClient
             , RabbitMQMessageSender mqSender
             , IOptions<WarehouseRabbitMQOption> mqOptions)
         {
             _warehouseContext = warehouseContext;
-            _deliveryServiceClient = deliveryServiceClient;
             _mqSender = mqSender;
             _mqOptions = mqOptions;
         }
@@ -39,8 +36,6 @@ namespace OTUS.HomeWork.WarehouseService.Services
         public async Task<ReserveProduct[]> ReserveProductsAsync(ReserveProduct[] products, string orderNumber)
         {
             var reserveProductsList = new List<ReserveProduct>();
-            // TODO выставляю Serializable, чтобы однопоточно менять значения счетчиков, но на самом деле схема по изменению счетчика и количества должна быть на очередях,
-            // а здесь мы просто должны регать завяку и просто проверять, что нужное количество на данный момент имеется
             using (var scope = new TransactionScope(TransactionScopeOption.Required, TransactionScopeAsyncFlowOption.Enabled))
             {
                 DateTime reserveDate = DateTime.UtcNow;
@@ -108,8 +103,6 @@ namespace OTUS.HomeWork.WarehouseService.Services
         
         public async Task<bool> ResetReserveProductsAsync(string orderNumber)
         {
-            // TODO выставляю Serializable, чтобы однопоточно менять значения счетчиков, но на самом деле схема по изменению счетчика и количества должна быть на очередях,
-            // а здесь мы просто должны регать завяку и просто проверять, что нужное количество на данный момент имеется
             using (var scope = new TransactionScope(TransactionScopeOption.Required, TransactionScopeAsyncFlowOption.Enabled))
             {
                 var reservers = await _warehouseContext.Reserves.Where(g => g.OrderNumber == orderNumber).ToArrayAsync();
@@ -136,24 +129,21 @@ namespace OTUS.HomeWork.WarehouseService.Services
         {
             try
             {
-                using (var scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions
-                {
-                    IsolationLevel = IsolationLevel.Serializable
-                }, TransactionScopeAsyncFlowOption.Enabled))
+                using (var scope = new TransactionScope(TransactionScopeOption.Required, TransactionScopeAsyncFlowOption.Enabled))
                 {
                     // 1. снимаем с резервирования
                     var reservers = await _warehouseContext.Reserves.Include(g => g.Product).Where(g => g.OrderNumber == orderNumber).ToArrayAsync();
                     if (!reservers.Any())
                         return false;
 
-                    var allProductIds = reservers.Select(g => g.ProductId).ToArray();
-                    var products = _warehouseContext.Products.Where(g => allProductIds.Contains(g.Id));
-                    //foreach (var reserve in reservers)
-                    //{
-                    //    await UnReserveProduct(reserve);
-                    //}
-                    var readyToShipment = DateTime.UtcNow.AddHours(4);
+                    foreach (var res in reservers)
+                    {
+                        _warehouseContext.Reserves.Remove(res);
+                    }
+
                     // 2. формируем заявку на отгрузку
+                    var allProductIds = reservers.Select(g => g.ProductId).ToArray();
+                    var readyToShipment = DateTime.UtcNow.AddHours(4);
                     _warehouseContext.Shipments.Add(new ShipmentOrder
                     {
                         DeliveryAddress = deliveryAddress,
@@ -165,20 +155,28 @@ namespace OTUS.HomeWork.WarehouseService.Services
                         UserId = userId,
                     });
 
-                    // 3. снимаем с остатков
+                    // 3. проверяем, что требуемое количество товаров существует
                     foreach (var reserver in reservers)
                     {
                         var remainProductCounter = await _warehouseContext.Counters.FirstOrDefaultAsync(g => g.ProductId == reserver.ProductId);
                         if (remainProductCounter == null)
                             // нет такого товара
                             return false;
-                        remainProductCounter.RemainCount -= reserver.Count;
-                        if (remainProductCounter.RemainCount < 0)
+                        if (remainProductCounter.RemainCount < reserver.Count)
                             // нет нужного количества на складе
                             return false;
                     }
+                    // 4. посылаем сообщение об измении количества товаров
+                    await _mqSender.SendMessageAsync(new UpdateProductCounterByShipmentRequest(orderNumber)
+                    {
+                        Products = reservers.Where(g => g.Count > 0).Select(g => new UpdateProductCounterByShipmentRequest.ReserveProduct
+                        {
+                            Count = g.Count,
+                            ProductId = g.ProductId
+                        }).ToList()
+                    }, _mqOptions.Value.WarehouseRouteKey);
 
-                    // 4. сообщаем сервису доставки о необходимости забирания товара(в будущем это будет делаться через шину данных)
+                    // 5. сообщаем сервису доставки о необходимости забирания товара(в будущем это будет делаться через шину данных)
                     await _mqSender.SendMessageAsync(new DeliveryOrderRequest
                     {
                         DeliveryAddress = deliveryAddress,
@@ -225,14 +223,13 @@ namespace OTUS.HomeWork.WarehouseService.Services
                 shipment.WasCancelled = false;
                 shipment.Status = ShipmentOrderStatus.ErrorShipment;
                 shipment.ErrorDescription = response.ErrorDescription;
-
                 // здесь нужна логика по возврату заказа пользователю
             }
             _warehouseContext.Shipments.Update(shipment);
             await _warehouseContext.SaveChangesAsync();
         }
 
-        public async Task UpdateReserveCounterAsync(IEnumerable<ReserveProduct> reserves)
+        public async Task<bool> UpdateReserveCounterAsync(IEnumerable<ReserveProduct> reserves)
         {
             foreach (var res in reserves)
             {
@@ -240,10 +237,13 @@ namespace OTUS.HomeWork.WarehouseService.Services
                 if (existCounter != null)
                 {
                     existCounter.ReserveCount += res.Count;
+                    if (existCounter.RemainCount < existCounter.ReserveCount)
+                        return false;
                 }
                 _warehouseContext.Counters.Update(existCounter);
             }
             await _warehouseContext.SaveChangesAsync();
+            return false;
         }
 
         public async Task UpdateUnReserveCounterAsync(IEnumerable<ReserveProduct> reserves)
@@ -258,6 +258,24 @@ namespace OTUS.HomeWork.WarehouseService.Services
                 _warehouseContext.Counters.Update(existCounter);
             }
             await _warehouseContext.SaveChangesAsync();
+        }
+
+        public async Task<bool> UpdateCounterByShipmentAsync(IEnumerable<ReserveProduct> reserves)
+        {
+            foreach (var res in reserves)
+            {
+                var existCounter = await _warehouseContext.Counters.FirstOrDefaultAsync(g => g.ProductId == res.ProductId);
+                if (existCounter != null)
+                {
+                    existCounter.ReserveCount -= res.Count;
+                    existCounter.RemainCount -= res.Count;
+                    if (existCounter.RemainCount < 0)
+                        return false;
+                }
+                _warehouseContext.Counters.Update(existCounter);
+            }
+            await _warehouseContext.SaveChangesAsync();
+            return true;
         }
     }
 }

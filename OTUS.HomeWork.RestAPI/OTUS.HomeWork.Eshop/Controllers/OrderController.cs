@@ -11,7 +11,7 @@ namespace OTUS.HomeWork.EShop.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Policy = "OnlyOwner")]
+    //[Authorize(Policy = "OnlyOwner")]
     public class OrderController : ControllerBase
     {
         private readonly OrderService _orderService;
