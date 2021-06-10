@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -11,7 +12,7 @@ namespace OTUS.HomeWork.EShop.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    //[Authorize(Policy = "OnlyOwner")]
+    [Authorize(Policy = "OnlyOwner")]
     public class OrderController : ControllerBase
     {
         private readonly OrderService _orderService;
@@ -34,6 +35,13 @@ namespace OTUS.HomeWork.EShop.Controllers
             return Ok(_mapper.Map<OrderDTO>(newOrder));
         }
 
+        [HttpGet("{userId}")]
+        public async Task<ActionResult<OrderDTO[]>> GetOrders([FromRoute] Guid userId, [DefaultValue(0)] int skip, [DefaultValue(20)] int limit)
+        {
+            var userOrders = await _orderService.GetOrders(userId, skip, limit);
+            return Ok(_mapper.Map<OrderDTO[]>(userOrders));
+        }
+
         [HttpPut("{userId}/cancel")]
         public async Task<ActionResult<OrderDTO>> CancelOrder([FromRoute] Guid userId, CreateOrderDTO orderDTO)
         {
@@ -46,5 +54,7 @@ namespace OTUS.HomeWork.EShop.Controllers
             DeliveryLocationDTO location = await _deliveryServiceClient.DeliveryAsync(orderNumber);
             return Ok(_mapper.Map<OrderLocationDTO>(location));
         }
+
+
     }
 }

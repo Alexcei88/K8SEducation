@@ -142,7 +142,7 @@ namespace OTUS.HomeWork.EShop.Services
             return order;
         }
 
-        private async Task<decimal> CalculateTotalPriceAsync(List<OrderItem> items, Guid userId)
+        public async Task<decimal> CalculateTotalPriceAsync(List<OrderItem> items, Guid userId)
         {
             var response = await _pricingClient.PriceAsync(userId, new PriceRequestDTO
             {
@@ -178,6 +178,7 @@ namespace OTUS.HomeWork.EShop.Services
             if (order.BillingId != null)
                 throw new Exception("Заказ с id={orderId} уже оплачен");
 
+            bool result = true;
             if (paymentResultDTO.IsSuccessfully)
             {
                 // 1. обновляем заказ 
@@ -205,11 +206,12 @@ namespace OTUS.HomeWork.EShop.Services
                     UserId = paymentResultDTO.UserId,
                     Message = $"Не удалось оплатить товар по причине {paymentResultDTO.ErrorDescription ?? string.Empty}. Заказ товара отменен. Попробуйте выполнить заказ повторно!",
                 });
+                result = false;
             }
 
             _orderContext.Update(order);
             await _orderContext.SaveChangesAsync();
-            return true;
+            return result;
         }
 
         private async Task<Order> SendRequestOnShipment(Order order)
@@ -241,6 +243,11 @@ namespace OTUS.HomeWork.EShop.Services
                 // просто логируем, что заказ еще не оплачен, ничего не делаем
             }
             return order;
+        }
+
+        public Task<Order[]> GetOrders(Guid userId, int skip, int limit)
+        {
+            return _orderContext.Orders.Where(g => g.UserId == userId).Skip(skip).Take(limit).ToArrayAsync();
         }
     }
 }

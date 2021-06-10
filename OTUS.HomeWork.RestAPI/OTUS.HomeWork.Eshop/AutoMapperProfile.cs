@@ -47,6 +47,15 @@ namespace OTUS.HomeWork.EShop
                     Quantity = g.Quantity
                 }).ToList()));
 
+            CreateMap<Bucket[], BucketResponseDTO>()
+                .ForMember(g => g.SummaryPrice, m => m.Ignore())
+                .ForMember(g => g.Discount, m => m.Ignore())
+                .ForMember(g => g.Items, m => m.MapFrom(s => s.Select(g => new BucketItemDTO
+                {
+                    ProductId = g.ProductId,
+                    Quantity = g.Quantity,
+                }).ToList()));
+
             CreateMap<DeliveryLocationDTO, OrderLocationDTO>()
                 .ForMember(g => g.DeliveryDate, m => m.MapFrom(s => s.DeliveryDate.UtcDateTime));
         }

@@ -28,6 +28,7 @@ namespace OTUS.HomeWork.WarehouseService.Domain
         public Guid UserId { get; set; }
         public DateTime ReadyToShipmentDate { get; set; }
         public DateTime ShipmentDate { get; set; }
+        
         public string ErrorDescription { get; set; }
     }
 }

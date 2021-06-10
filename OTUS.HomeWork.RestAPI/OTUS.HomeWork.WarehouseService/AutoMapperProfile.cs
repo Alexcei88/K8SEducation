@@ -20,6 +20,9 @@ namespace OTUS.HomeWork.WarehouseService
                 .ReverseMap()
                 .ForMember(g => g.ProductId, m => m.MapFrom(s => s.Id))
                 .ForMember(g => g.OrderNumber, m => m.Ignore());
+
+            CreateMap<Product, ProductCategoryDTO>()
+                .ForMember(g => g.Name, m => m.MapFrom(s => s.Category));
         }
     }
 }

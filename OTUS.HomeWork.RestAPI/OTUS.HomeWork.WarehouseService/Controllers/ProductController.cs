@@ -13,7 +13,7 @@ namespace OTUS.HomeWork.WarehouseService.Controllers
 {
     [ApiController]
     [Route("api/product")]
-    //[Authorize]
+    [Authorize]
     public class ProductController : ControllerBase
     {
         private readonly ProductRepository _productRepository;
@@ -26,11 +26,11 @@ namespace OTUS.HomeWork.WarehouseService.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ProductDTO[]>> GetProducts([DefaultValue(0)]int skip, [DefaultValue(20)] int limit)
+        public async Task<ActionResult<ProductDTO[]>> GetProducts([DefaultValue(0)]int skip, [DefaultValue(20)] int limit, [FromQuery]string categoryName)
         {
             // TODO в отдельный сервис вероятно лучше запихнуть и создать какой-то агрегатный класс,соединяющий описание товара и их количество
-            var products = await _productRepository.GetProductsAsync(skip, limit);
-            var counters = await _productRepository.GetProductCounter(products.Select(g => g.Id));
+            var products = await _productRepository.GetProductsAsync(skip, limit, categoryName);
+            var counters = await _productRepository.GetProductCounterAsync(products.Select(g => g.Id));
             List<ProductDTO> result = new();
             foreach(var product in products)
             {
@@ -43,11 +43,14 @@ namespace OTUS.HomeWork.WarehouseService.Controllers
             return Ok(result);
         }
 
-        //[HttpGet]
-        //public IEnumerable<ProductDTO> Get(List<Guid> productIds)
-        //{
-        //    return null;
-        //}
-
+        [HttpGet("categories")]
+        public async Task<ActionResult<ProductCategoryDTO[]>> GetCategories()
+        {
+            var categories = await _productRepository.GetCategoriesAsync();
+            return Ok(categories.Select(g => new ProductCategoryDTO
+            {
+                Name = g
+            }));
+        }
     }
 }

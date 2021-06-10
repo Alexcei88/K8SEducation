@@ -16,9 +16,19 @@ namespace OTUS.HomeWork.WarehouseService.DAL
             _warehouseContext = orderContext;
         }
 
-        public Task<Product[]> GetProductsAsync(int skip, int limit)
+        public Task<Product[]> GetProductsAsync(int skip, int limit, string categoryName)
         {
-            return _warehouseContext.Products.OrderBy(s => s.Id).Skip(skip).Take(limit).ToArrayAsync();
+            var products = _warehouseContext.Products as IQueryable<Product>;
+            if(!string.IsNullOrEmpty(categoryName))
+            {
+                products = products.Where(g => g.Category == categoryName);
+            }
+            return products.OrderBy(s => s.Id).Skip(skip).Take(limit).ToArrayAsync();
+        }
+
+        public Task<string[]> GetCategoriesAsync()
+        {
+            return _warehouseContext.Products.GroupBy(g => g.Category).Select(g => g.Key).ToArrayAsync();
         }
 
         public async Task<Guid> CreateProduct(Product product)
@@ -28,7 +38,7 @@ namespace OTUS.HomeWork.WarehouseService.DAL
             return product.Id;
         }
 
-        public Task<ProductCounter[]> GetProductCounter(IEnumerable<Guid> productIds)
+        public Task<ProductCounter[]> GetProductCounterAsync(IEnumerable<Guid> productIds)
         {
             return _warehouseContext.Counters.Where(g => productIds.Contains(g.ProductId)).ToArrayAsync();
         }

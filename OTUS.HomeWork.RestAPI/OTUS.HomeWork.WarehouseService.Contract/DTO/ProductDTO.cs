@@ -13,5 +13,7 @@ namespace OTUS.HomeWork.WarehouseService.Contract.DTO
         public string Description { get; set; }
 
         public long RemainCount { get; set; }
+
+        public string Category { get; set; }
     }
 }

@@ -166,7 +166,7 @@ namespace OTUS.HomeWork.WarehouseService.Services
                             // нет нужного количества на складе
                             return false;
                     }
-                    // 4. посылаем сообщение об измении количества товаров
+                    // 4. посылаем сообщение, что товар продан
                     await _mqSender.SendMessageAsync(new UpdateProductCounterByShipmentRequest(orderNumber)
                     {
                         Products = reservers.Where(g => g.Count > 0).Select(g => new UpdateProductCounterByShipmentRequest.ReserveProduct
@@ -224,6 +224,7 @@ namespace OTUS.HomeWork.WarehouseService.Services
                 shipment.Status = ShipmentOrderStatus.ErrorShipment;
                 shipment.ErrorDescription = response.ErrorDescription;
                 // здесь нужна логика по возврату заказа пользователю
+
             }
             _warehouseContext.Shipments.Update(shipment);
             await _warehouseContext.SaveChangesAsync();

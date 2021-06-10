@@ -20,5 +20,6 @@ namespace OTUS.HomeWork.WarehouseService.Domain
 
         public double Space { get; init; }
 
+        public string Category { get; init; }
     }
 }

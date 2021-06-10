@@ -7,25 +7,28 @@ using OTUS.HomeWork.EShop.DAL;
 using System.Linq;
 using OTUS.HomeWork.EShop.Domain;
 using AutoMapper;
+using OTUS.HomeWork.Clients;
 
 namespace OTUS.HomeWork.EShop.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    //[Authorize(Policy = "OnlyOwner")]
+    [Authorize(Policy = "OnlyOwner")]
     public class BucketController : Controller
     {
         private readonly BucketRepository _bucketRepository;
+        private readonly PriceServiceClient _priceClient;
         private readonly IMapper _mapper;
 
-        public BucketController(BucketRepository bucketRepository, IMapper mapper)
+        public BucketController(BucketRepository bucketRepository, PriceServiceClient priceClient, IMapper mapper)
         {
             _bucketRepository = bucketRepository;
+            _priceClient = priceClient;
             _mapper = mapper;
         }
 
         [HttpPut("{userId}")]
-        public async Task<ActionResult<BucketRequestDTO>> UpdateBucket([FromRoute] Guid userId, BucketRequestDTO bucket)
+        public async Task<ActionResult<BucketResponseDTO>> UpdateBucket([FromRoute] Guid userId, BucketRequestDTO bucket)
         {
             var buckets = bucket.Items.Select(g => new Bucket
             {
@@ -34,14 +37,34 @@ namespace OTUS.HomeWork.EShop.Controllers
                 UserId = userId
             });
             var updateBuckets = await _bucketRepository.UpdateBucketsAsync(buckets, userId);
-            return Ok(_mapper.Map<BucketRequestDTO>(updateBuckets));
+            var priceResponse = await _priceClient.PriceAsync(userId, new PriceRequestDTO
+            {
+                Products = updateBuckets.Select(g => new PProductDTO
+                {
+                    ProductId = g.ProductId.ToString(),
+                    Quantity = g.Quantity.ToString()
+                }).ToList()
+            });
+            var bucketsDTO = _mapper.Map<BucketResponseDTO>(updateBuckets);
+            bucketsDTO.SummaryPrice = priceResponse.SummaryPrice;
+            return Ok(bucketsDTO);
         }
 
         [HttpGet("{userId}")]
-        public async Task<ActionResult<BucketRequestDTO>> GetBucket([FromRoute] Guid userId)
+        public async Task<ActionResult<BucketResponseDTO>> GetBucket([FromRoute] Guid userId)
         {
             var buckets = await _bucketRepository.GetBucketForUserAsync(userId);
-            return Ok(_mapper.Map<BucketRequestDTO>(buckets));
+            var priceResponse = await _priceClient.PriceAsync(userId, new PriceRequestDTO
+            {
+                Products = buckets.Select(g => new PProductDTO
+                {
+                    ProductId = g.ProductId.ToString(),
+                    Quantity = g.Quantity.ToString()
+                }).ToList()
+            });
+            var bucketsDTO = _mapper.Map<BucketResponseDTO>(buckets);
+            bucketsDTO.SummaryPrice = priceResponse.SummaryPrice;
+            return Ok(bucketsDTO);
         }
     }
 }

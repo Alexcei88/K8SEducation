@@ -6,6 +6,8 @@ namespace OTUS.HomeWork.EShop.Domain.DTO
     {        
         public List<BucketItemDTO> Items { get; init; }
 
-        public decimal SummaryPrice { get; init; }
+        public decimal SummaryPrice { get; set; }
+
+        public double Discount { get; set; }
     }
 }

@@ -32,6 +32,7 @@ namespace OTUS.HomeWork.WarehouseService.DAL
                 BasePrice = 100,
                 Space = 1,
                 Weight = 2,
+                Category = "Инвертарь",
                 Id = productId1
             });
 
@@ -52,7 +53,8 @@ namespace OTUS.HomeWork.WarehouseService.DAL
                 BasePrice = 400,
                 Space = 0.5,
                 Weight = 1.5,
-                Id = productId2
+                Id = productId2,
+                Category = "Инвентарь",
             });
             modelBuilder.Entity<ProductCounter>().HasData(new ProductCounter
             {
@@ -71,7 +73,8 @@ namespace OTUS.HomeWork.WarehouseService.DAL
                 BasePrice = 20,
                 Space = 0.1,
                 Weight = 0.7,
-                Id = productId3
+                Id = productId3,
+                Category = "Одежда",
             });
 
             modelBuilder.Entity<ProductCounter>().HasData(new ProductCounter
@@ -91,7 +94,8 @@ namespace OTUS.HomeWork.WarehouseService.DAL
                 BasePrice = 20,
                 Space = 0.1,
                 Weight = 0.4,
-                Id = productId4
+                Id = productId4,
+                Category = "Одежда",
             });
 
             modelBuilder.Entity<ProductCounter>().HasData(new ProductCounter
@@ -103,6 +107,50 @@ namespace OTUS.HomeWork.WarehouseService.DAL
                 SoldCount = 3
             });
 
+            var productId5 = Guid.NewGuid();
+            modelBuilder.Entity<Product>().HasData(new Product
+            {
+                Description = "",
+                Name = "Бутсы",
+                BasePrice = 20,
+                Space = 0.1,
+                Weight = 0.4,
+                Id = productId5,
+                Category = "Обувь",
+            });
+
+            modelBuilder.Entity<ProductCounter>().HasData(new ProductCounter
+            {
+                Id = Guid.NewGuid(),
+                ProductId = productId5,
+                RemainCount = 25,
+                ReserveCount = 1,
+                SoldCount = 3
+            });
+
+            var productId6 = Guid.NewGuid();
+            modelBuilder.Entity<Product>().HasData(new Product
+            {
+                Description = "",
+                Name = "Футбольные фишки",
+                BasePrice = 10,
+                Space = 1.5,
+                Weight = 0.3,
+                Id = productId6,
+                Category = "Инвентарь",
+            });
+
+            modelBuilder.Entity<ProductCounter>().HasData(new ProductCounter
+            {
+                Id = Guid.NewGuid(),
+                ProductId = productId6,
+                RemainCount = 25,
+                ReserveCount = 1,
+                SoldCount = 3
+            });
+
+
+            modelBuilder.Entity<Product>().HasIndex(g => g.Category);
             modelBuilder.Entity<ReserveProduct>().HasKey(g => new { g.ProductId, g.OrderNumber });
 
             #endregion

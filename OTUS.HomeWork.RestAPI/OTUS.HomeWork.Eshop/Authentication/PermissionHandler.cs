@@ -23,6 +23,7 @@ namespace OTUS.HomeWork.EShop.Authentication
             if (await IsOwner(context.User, context.Resource))
             {
                 context.Succeed(requirement);
+                return;
             }
             context.Fail();
         }
