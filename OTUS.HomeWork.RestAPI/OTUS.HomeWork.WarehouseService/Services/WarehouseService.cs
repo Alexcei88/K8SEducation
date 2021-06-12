@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Options;
 using OTUS.HomeWork.Clients;
+using OTUS.HomeWork.Clients.Eshop;
+using OTUS.HomeWork.Common;
 using OTUS.HomeWork.DeliveryService.Contract.Messages;
 using OTUS.HomeWork.NotificationService.Contract.Messages;
 using OTUS.HomeWork.RabbitMq;
@@ -22,14 +24,18 @@ namespace OTUS.HomeWork.WarehouseService.Services
     {
         private readonly WarehouseContext _warehouseContext;
         private readonly RabbitMQMessageSender _mqSender;
-        private IOptions<WarehouseRabbitMQOption> _mqOptions;        
+        private IOptions<WarehouseRabbitMQOption> _mqOptions;
+        private EshopServiceClient _eshopServiceClient;
+
         public WarehouseService(WarehouseContext warehouseContext
             , RabbitMQMessageSender mqSender
+            , EshopServiceClient eshopServiceClient
             , IOptions<WarehouseRabbitMQOption> mqOptions)
         {
             _warehouseContext = warehouseContext;
             _mqSender = mqSender;
             _mqOptions = mqOptions;
+            _eshopServiceClient = eshopServiceClient;
         }
 
         // TODO выделить минифункци reserve, код станет чище
@@ -207,14 +213,18 @@ namespace OTUS.HomeWork.WarehouseService.Services
             if (shipment == null)
                 throw new Exception($"Order with number={response.OrderNumber} is not exist");
 
-            if(response.IsCanDelivery)
+            _eshopServiceClient.AddHeader(Constants.USERID_HEADER, shipment.UserId.ToString());
+            var user = await _eshopServiceClient.UserAsync(shipment.UserId);
+            if (user == null)
+                throw new Exception($"User with id={shipment.UserId} not exist");
+            if (response.IsCanDelivery)
             {
                 shipment.Status = ShipmentOrderStatus.DeliveryConfirmed;
                 shipment.ShipmentDate = response.ShipmentDate;
 
                 await _mqSender.SendMessageAsync(new OrderReadyToDelivery
                 {
-                    UserId = shipment.UserId,
+                    UserEmail = user.UserName,
                     OrderNumber = shipment.OrderNumber
                 });
             }

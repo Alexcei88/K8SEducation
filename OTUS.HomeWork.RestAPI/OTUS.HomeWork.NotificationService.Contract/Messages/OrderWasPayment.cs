@@ -8,7 +8,7 @@ namespace OTUS.HomeWork.NotificationService.Contract.Messages
     {
         public const string TYPE = "OrderWasPayment";
 
-        public Guid UserId { get; set; }
+        public string UserEmail { get; set; }
 
         public string OrderNumber { get; set; }
         

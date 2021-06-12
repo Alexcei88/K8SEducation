@@ -10,6 +10,7 @@ data:
   DELIVERY_SERVICE_URL: "http://delivery-service.default.svc.cluster.local:15040"
   WAREHOUSE_SERVICE_URL: "http://warehouse-service.default.svc.cluster.local:15050"
   PRICING_SERVICE_URL:  "http://pricing-service.default.svc.cluster.local:15070"
+  ESHOP_SERVICE_URL: "http://eshop-service.default.svc.cluster.local:15020"
   REDIS_URL: "redis-release-master.default.svc.cluster.local:6379"
   appsettings.json: |-
     {
@@ -37,3 +38,5 @@ data:
   WAREHOUSE_DATABASE_URI: SG9zdD1wb3N0Z3JlcztEYXRhYmFzZT1vdHVzX3dhcmVob3VzZTtVc2VybmFtZT1wb3N0Z3JlcztQYXNzd29yZD10Y18xMjM0NTY=
   DELIVERY_DATABASE_URI: SG9zdD1wb3N0Z3JlcztEYXRhYmFzZT1vdHVzX2RlbGl2ZXJ5O1VzZXJuYW1lPXBvc3RncmVzO1Bhc3N3b3JkPXRjXzEyMzQ1Ng==
   PRICING_DATABASE_URI: SG9zdD1wb3N0Z3JlcztEYXRhYmFzZT1vdHVzX3ByaWNpbmc7VXNlcm5hbWU9cG9zdGdyZXM7UGFzc3dvcmQ9dGNfMTIzNDU2    
+  GMAIL_PASSWORD: "NDc2ZnR5aXV2aGJrajA5OGk3"
+

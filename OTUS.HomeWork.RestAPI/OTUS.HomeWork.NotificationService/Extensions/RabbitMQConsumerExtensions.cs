@@ -6,6 +6,7 @@ using OTUS.HomeWork.NotificationService.DAL;
 using System;
 using OTUS.HomeWork.RabbitMq;
 using OTUS.HomeWork.RabbitMq.Pool;
+using OTUS.HomeWork.NotificationService.Services;
 
 namespace OTUS.HomeWork.NotificationService.Extensions
 {
@@ -26,6 +27,8 @@ namespace OTUS.HomeWork.NotificationService.Extensions
                     {
                         using var serviceScope = sp.GetRequiredService<IServiceScopeFactory>().CreateScope();                        
                         var repository = serviceScope.ServiceProvider.GetService<NotificationRepository>();
+                        
+                        var smtpService = serviceScope.ServiceProvider.GetService<SmtpService>();
 
                         BrokerMessage message = serializer.DeserializeRequest<BrokerMessage>(body);
                         body.Position = 0;
@@ -34,56 +37,35 @@ namespace OTUS.HomeWork.NotificationService.Extensions
                             case OrderCreated.TYPE:
                                 {
                                     var orderCreated = serializer.DeserializeRequest<OrderCreated>(body);
-                                    await repository.AddNotificationAsync(new Domain.Notification
-                                    {
-                                        UserId = orderCreated.UserId,
-                                        CreatedDateUtc = DateTime.UtcNow,
-                                        Message = $"Заказ №{orderCreated.OrderNumber} на сумму {orderCreated.Price} успено оплачен"                                        
-                                    });
+                                    smtpService.SendEmail("Заказ оплачен", @$"Заказ №{ orderCreated.OrderNumber}
+                                        на сумму { orderCreated.Price}
+                                        успешно оплачен", orderCreated.UserEmail);
                                 break;
                                 }
                             case OrderCreatedError.TYPE:
                                 {
                                     var orderCreatedError = serializer.DeserializeRequest<OrderCreatedError>(body);
-                                    await repository.AddNotificationAsync(new Domain.Notification
-                                    {
-                                        UserId = orderCreatedError.UserId,
-                                        CreatedDateUtc = DateTime.UtcNow,
-                                        Message = $"Заказ отменен по причине {orderCreatedError.Message}"
-                                    });
+                                    smtpService.SendEmail("Заказ отменен", $"Заказ отменен по причине {orderCreatedError.Message}", orderCreatedError.UserEmail);
                                 }
                                 break;
                             case OrderWasPayment.TYPE:
                                 {
                                     var orderWasPayment = serializer.DeserializeRequest<OrderWasPayment>(body);
-                                    await repository.AddNotificationAsync(new Domain.Notification
-                                    {
-                                        CreatedDateUtc = DateTime.UtcNow,
-                                        Message = $"Заказ №{orderWasPayment.OrderNumber} на сумму {orderWasPayment.Price} успешно оплачен",
-                                        UserId = orderWasPayment.UserId
-                                    });
+                                    smtpService.SendEmail("Заказ оплачен", $"Заказ №{orderWasPayment.OrderNumber} на сумму {orderWasPayment.Price} успешно оплачен", orderWasPayment.UserEmail);
                                 }
                                 break;
                             case OrderRefundPayment.TYPE:
                                 {
                                     var orderRefundPayment = serializer.DeserializeRequest<OrderRefundPayment>(body);
-                                    await repository.AddNotificationAsync(new Domain.Notification
-                                    {
-                                        CreatedDateUtc = DateTime.UtcNow,
-                                        Message = $"Возврат оплаты заказа №{orderRefundPayment.OrderNumber} на сумму {orderRefundPayment.Price}",
-                                        UserId = orderRefundPayment.UserId
-                                    });
+                                    smtpService.SendEmail("Возврат денежных средства", $"Возврат оплаты заказа №{ orderRefundPayment.OrderNumber} на сумму { orderRefundPayment.Price}"
+                                        , orderRefundPayment.UserEmail);
                                 }
                                 break;
                             case OrderReadyToDelivery.TYPE:
                                 {
                                     var orderToDelivery = serializer.DeserializeRequest<OrderReadyToDelivery>(body);
-                                    await repository.AddNotificationAsync(new Domain.Notification
-                                    {
-                                        CreatedDateUtc = DateTime.UtcNow,
-                                        Message = $"Заказ ${orderToDelivery.OrderNumber} готов к отгрузке. Вы можете отслеживать заказ на сайте гдемойтовар",
-                                        UserId = orderToDelivery.UserId
-                                    });
+                                    smtpService.SendEmail("Товар отгружен", $"Заказ ${orderToDelivery.OrderNumber} отгружен. Вы можете отслеживать заказ на сайте http://гдемойтовар"
+                                        , orderToDelivery.UserEmail);
                                 }
                                 break;
                             default:

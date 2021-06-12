@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using OTUS.HomeWork.Clients;
+using OTUS.HomeWork.Clients.Eshop;
 using OTUS.HomeWork.Common;
 using OTUS.HomeWork.MessageExchangeSerializer;
 using OTUS.HomeWork.RabbitMq;
@@ -56,6 +57,15 @@ namespace OTUS.HomeWork.WarehouseService
                 var client = sp.GetService<IHttpClientFactory>()?.CreateClient("DeliveryService");
                 return new DeliveryServiceClient(options.Url, client);
             });
+
+            var billingSettingSection = Configuration.GetSection("EshopService");
+            services.AddScoped((sp) =>
+            {
+                var options = billingSettingSection.Get<ServiceAddressOption>();
+                var client = sp.GetService<IHttpClientFactory>()?.CreateClient("EshopService");
+                return new EshopServiceClient(options.Url, client);
+            });
+
 
             services.AddSingleton(provider => {
                 return new MapperConfiguration(cfg =>

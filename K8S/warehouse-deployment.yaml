@@ -52,6 +52,11 @@ spec:
                configMapKeyRef: 
                   name: homework-config
                   key: DELIVERY_SERVICE_URL
+          - name: "EshopService__Url"
+            valueFrom:
+               configMapKeyRef: 
+                  name: homework-config
+                  key: ESHOP_SERVICE_URL
           - name: "Redis__Url"
             valueFrom:
                configMapKeyRef: 

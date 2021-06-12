@@ -12,6 +12,8 @@ using Microsoft.OpenApi.Models;
 using OTUS.HomeWork.Common;
 using OTUS.HomeWork.NotificationService.DAL;
 using OTUS.HomeWork.NotificationService.Extensions;
+using OTUS.HomeWork.NotificationService.Options;
+using OTUS.HomeWork.NotificationService.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,6 +38,9 @@ namespace OTUS.HomeWork.NotificationService
             services.AddScoped<NotificationRepository>();
 
             services.Configure<RabbitMQOption>(Configuration.GetSection("RabbitMq"));
+            services.Configure<SmtpOption>(Configuration.GetSection("Smtp"));
+
+            services.AddScoped<SmtpService>();
             services.AddSingleton(provider => {
                 return new MapperConfiguration(cfg =>
                 {

@@ -13,29 +13,30 @@ using OTUS.HomeWork.NotificationService.Contract.Messages;
 using OTUS.HomeWork.EShop.Monitoring;
 using OTUS.HomeWork.Common;
 using OTUS.HomeWork.Clients.Warehouse;
+using OTUS.HomeWork.RestAPI.Abstraction.DAL;
 
 namespace OTUS.HomeWork.EShop.Services
 {
     public class OrderService
     {
         private readonly OrderContext _orderContext;
-        private readonly PaymentGatewayClient _paymentGatewayClient;
         private readonly PriceServiceClient _pricingClient;
         private readonly WarehouseServiceClient _warehouseServiceClient;
         private readonly BucketRepository _bucketRepository;
         private readonly RabbitMQMessageSender _mqSender;
         private readonly MetricReporter _metricReporter;
-
+        private readonly UserContext _userContext;
+            
         public OrderService(OrderContext orderContext
+            , UserContext userContext
             , BucketRepository bucketRepository
-            , PaymentGatewayClient paymentGatewayClient
             , PriceServiceClient pricingClient
             , WarehouseServiceClient warehouseServiceClient
             , RabbitMQMessageSender mqSender
             , MetricReporter metricReporter)
         {
             _orderContext = orderContext;
-            _paymentGatewayClient = paymentGatewayClient;
+            _userContext = userContext;
             _pricingClient = pricingClient;
             _warehouseServiceClient = warehouseServiceClient;
             _bucketRepository = bucketRepository;
@@ -185,6 +186,8 @@ namespace OTUS.HomeWork.EShop.Services
                 throw new Exception("Заказ с id={orderId} уже оплачен");
 
             bool result = true;
+            var user = _userContext.Users.First(g => g.Id == paymentResultDTO.UserId);
+
             if (paymentResultDTO.IsSuccessfully)
             {
                 // 1. обновляем заказ 
@@ -195,7 +198,7 @@ namespace OTUS.HomeWork.EShop.Services
                 // 2. отправляем уведомление об успешной оплате
                 await _mqSender.SendMessageAsync(new OrderWasPayment
                 {
-                    UserId = paymentResultDTO.UserId,
+                    UserEmail = user.UserName,
                     BillingId = order.BillingId.ToString(),
                     OrderNumber = order.OrderNumber.ToString(),
                     Price = order.TotalPrice,
@@ -209,7 +212,7 @@ namespace OTUS.HomeWork.EShop.Services
                 // 2. отправляем уведомление о плохой оплате
                 await _mqSender.SendMessageAsync(new OrderCreatedError
                 {
-                    UserId = paymentResultDTO.UserId,
+                    UserEmail = user.UserName,
                     Message = $"Не удалось оплатить товар по причине {paymentResultDTO.ErrorDescription ?? string.Empty}. Заказ товара отменен. Попробуйте выполнить заказ повторно!",
                 });
                 result = false;
