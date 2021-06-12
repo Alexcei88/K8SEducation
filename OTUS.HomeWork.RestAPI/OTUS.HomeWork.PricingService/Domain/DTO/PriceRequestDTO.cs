@@ -5,7 +5,7 @@ namespace OTUS.HomeWork.PricingService.Domain.DTO
     public class PProductDTO
     {
         public string ProductId { get; set; }
-        public string Quantity { get; set; }
+        public int Quantity { get; set; }
     }
     
     public class PriceRequestDTO

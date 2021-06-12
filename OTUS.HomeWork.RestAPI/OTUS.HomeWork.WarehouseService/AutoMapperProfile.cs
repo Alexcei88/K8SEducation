@@ -23,6 +23,8 @@ namespace OTUS.HomeWork.WarehouseService
 
             CreateMap<Product, ProductCategoryDTO>()
                 .ForMember(g => g.Name, m => m.MapFrom(s => s.Category));
+
+            CreateMap<Product, ProductPriceDTO>();
         }
     }
 }

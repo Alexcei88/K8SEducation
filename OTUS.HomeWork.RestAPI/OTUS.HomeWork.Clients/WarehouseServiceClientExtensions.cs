@@ -13,7 +13,7 @@
 
 using System.Collections.Generic;
 
-namespace OTUS.HomeWork.Clients
+namespace OTUS.HomeWork.Clients.Warehouse
 {
     public partial class WarehouseServiceClient
     {

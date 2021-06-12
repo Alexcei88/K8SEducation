@@ -12,6 +12,7 @@ using OTUS.HomeWork.RabbitMq;
 using OTUS.HomeWork.NotificationService.Contract.Messages;
 using OTUS.HomeWork.EShop.Monitoring;
 using OTUS.HomeWork.Common;
+using OTUS.HomeWork.Clients.Warehouse;
 
 namespace OTUS.HomeWork.EShop.Services
 {
@@ -67,7 +68,7 @@ namespace OTUS.HomeWork.EShop.Services
                 }).ToList();
 
                 // 1. расчитываем стоимость
-                var totalPrice = await CalculateTotalPriceAsync(orderItems, userId);
+                (decimal totalPrice, decimal discount) price = await CalculateTotalPriceAsync(orderItems, userId);
 
                 // 2. сохраняем заказ в БД
                 using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
@@ -79,7 +80,7 @@ namespace OTUS.HomeWork.EShop.Services
                         Items = orderItems,
                         Status = OrderStatus.Pending,
                         UserId = userId,
-                        TotalPrice = totalPrice
+                        TotalPrice = price.totalPrice
                     };
                     foreach (var item in orderItems)
                     {
@@ -142,12 +143,17 @@ namespace OTUS.HomeWork.EShop.Services
             return order;
         }
 
-        public async Task<decimal> CalculateTotalPriceAsync(List<OrderItem> items, Guid userId)
+        public async Task<(decimal summaryPrice, decimal discount)> CalculateTotalPriceAsync(List<OrderItem> items, Guid userId)
         {
             var response = await _pricingClient.PriceAsync(userId, new PriceRequestDTO
             {
-            });
-            return response.SummaryPrice;
+                Products = items.Select(g => new PProductDTO
+                {
+                    ProductId = g.ProductId.ToString(),
+                    Quantity = g.Quantity
+                }).ToArray()
+            }); 
+            return (response.SummaryPrice, response.Discount);
         }
 
         public async Task<Order> OrderWasPaid(PaymentResultDTO paymentResultDTO, Guid orderId)

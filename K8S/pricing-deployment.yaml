@@ -47,6 +47,11 @@ spec:
               secretKeyRef:
                 name: homework-secret
                 key: PRICING_DATABASE_URI
+          - name: "WarehouseService__Url"
+            valueFrom:
+               configMapKeyRef: 
+                  name: homework-config
+                  key: WAREHOUSE_SERVICE_URL
         volumeMounts:
           - name: config-volume
             mountPath: /app/config          

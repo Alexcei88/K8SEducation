@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using OTUS.HomeWork.Clients;
+using OTUS.HomeWork.Clients.Warehouse;
 using OTUS.HomeWork.Common;
 using OTUS.HomeWork.EShop.Authentication;
 using OTUS.HomeWork.EShop.DAL;

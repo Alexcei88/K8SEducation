@@ -52,5 +52,12 @@ namespace OTUS.HomeWork.WarehouseService.Controllers
                 Name = g
             }));
         }
+
+        [HttpGet("productPrice")]
+        public async Task<ActionResult<ProductPriceDTO[]>> GetProductsPrice([FromQuery] Guid[] productIds)
+        {
+            var products = await _productRepository.GetProductsAsync(productIds);
+            return Ok(_mapper.Map<ProductPriceDTO[]>(products));
+        }
     }
 }

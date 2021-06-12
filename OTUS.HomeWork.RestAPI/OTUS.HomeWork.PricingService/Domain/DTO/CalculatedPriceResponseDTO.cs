@@ -2,20 +2,19 @@
 
 namespace OTUS.HomeWork.PricingService.Domain.DTO
 {
-    public class ProductPriceDTO
+    public class CalculatedProductPriceDTO
     {
         public string ProductId { get; set; }
         public string Quantity { get; set; }
-
-        public decimal Price { get; set; }
-
-        public decimal Discount { get; set; }
+        public decimal Price { get; set; }        
     }
     
-    public class PriceResponseDTO
+    public class CalculatedPriceResponseDTO
     {
-        public List<ProductPriceDTO> Products { get; set; }
+        public List<CalculatedProductPriceDTO> Products { get; set; }
 
         public decimal SummaryPrice { get; set; }
+
+        public decimal Discount { get; set; }
     }
 }

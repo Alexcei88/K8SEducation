@@ -42,11 +42,12 @@ namespace OTUS.HomeWork.EShop.Controllers
                 Products = updateBuckets.Select(g => new PProductDTO
                 {
                     ProductId = g.ProductId.ToString(),
-                    Quantity = g.Quantity.ToString()
+                    Quantity = g.Quantity
                 }).ToList()
             });
             var bucketsDTO = _mapper.Map<BucketResponseDTO>(updateBuckets);
             bucketsDTO.SummaryPrice = priceResponse.SummaryPrice;
+            bucketsDTO.Discount = priceResponse.Discount;
             return Ok(bucketsDTO);
         }
 
@@ -59,11 +60,12 @@ namespace OTUS.HomeWork.EShop.Controllers
                 Products = buckets.Select(g => new PProductDTO
                 {
                     ProductId = g.ProductId.ToString(),
-                    Quantity = g.Quantity.ToString()
+                    Quantity = g.Quantity
                 }).ToList()
             });
             var bucketsDTO = _mapper.Map<BucketResponseDTO>(buckets);
             bucketsDTO.SummaryPrice = priceResponse.SummaryPrice;
+            bucketsDTO.Discount = priceResponse.Discount;
             return Ok(bucketsDTO);
         }
     }

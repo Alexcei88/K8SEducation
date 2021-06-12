@@ -8,6 +8,6 @@ namespace OTUS.HomeWork.EShop.Domain.DTO
 
         public decimal SummaryPrice { get; set; }
 
-        public double Discount { get; set; }
+        public decimal Discount { get; set; }
     }
 }

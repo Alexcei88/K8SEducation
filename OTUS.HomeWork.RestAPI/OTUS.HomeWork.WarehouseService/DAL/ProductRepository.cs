@@ -43,9 +43,9 @@ namespace OTUS.HomeWork.WarehouseService.DAL
             return _warehouseContext.Counters.Where(g => productIds.Contains(g.ProductId)).ToArrayAsync();
         }
 
-        public async Task<decimal?> GetPriceOfProductAsync(Guid productId)
+        public Task<Product[]> GetProductsAsync(Guid[] productIds)
         {
-            return (await _warehouseContext.Products.FirstOrDefaultAsync(g => g.Id == productId))?.BasePrice;
+            return _warehouseContext.Products.Where(g => productIds.Contains(g.Id)).ToArrayAsync();
         }
     }
 }
