@@ -111,6 +111,13 @@ namespace OTUS.HomeWork.EShop
                     , new JsonNetMessageExchangeSerializer());
             });
 
+            var redisOption = Configuration.GetSection("Redis").Get<RedisOption>();
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = redisOption.Url;
+                options.InstanceName = "Instance-1";
+            });
+
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddAuthentication(g =>
             {

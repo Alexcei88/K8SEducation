@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using OTUS.HomeWork.EShop.DAL;
@@ -9,9 +10,10 @@ using OTUS.HomeWork.EShop.DAL;
 namespace OTUS.HomeWork.EShop.Migrations
 {
     [DbContext(typeof(OrderContext))]
-    partial class OrderContextModelSnapshot : ModelSnapshot
+    [Migration("20210612173303_bucket_domain_reorganization")]
+    partial class bucket_domain_reorganization
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,16 +24,17 @@ namespace OTUS.HomeWork.EShop.Migrations
 
             modelBuilder.Entity("OTUS.HomeWork.EShop.Domain.Bucket", b =>
                 {
+                    b.Property<Guid>("UserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("user_id");
-
-                    b.HasKey("Id")
+                    b.HasKey("UserId")
                         .HasName("pk_buckets");
 
                     b.ToTable("buckets");
@@ -47,9 +50,9 @@ namespace OTUS.HomeWork.EShop.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("product_id");
 
-                    b.Property<Guid?>("BucketId1")
+                    b.Property<Guid?>("BucketUserId")
                         .HasColumnType("uuid")
-                        .HasColumnName("bucket_id1");
+                        .HasColumnName("bucket_user_id");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("integer")
@@ -58,8 +61,8 @@ namespace OTUS.HomeWork.EShop.Migrations
                     b.HasKey("BucketId", "ProductId")
                         .HasName("pk_bucket_item");
 
-                    b.HasIndex("BucketId1")
-                        .HasDatabaseName("ix_bucket_item_bucket_id1");
+                    b.HasIndex("BucketUserId")
+                        .HasDatabaseName("ix_bucket_item_bucket_user_id");
 
                     b.ToTable("bucket_item");
                 });
@@ -158,8 +161,8 @@ namespace OTUS.HomeWork.EShop.Migrations
 
                     b.HasOne("OTUS.HomeWork.EShop.Domain.Bucket", null)
                         .WithMany("Items")
-                        .HasForeignKey("BucketId1")
-                        .HasConstraintName("fk_bucket_item_buckets_bucket_id1");
+                        .HasForeignKey("BucketUserId")
+                        .HasConstraintName("fk_bucket_item_buckets_bucket_user_id");
 
                     b.Navigation("Bucket");
                 });

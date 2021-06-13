@@ -40,21 +40,20 @@ namespace OTUS.HomeWork.EShop
                     m => m.MapFrom(s => s.Id))
                 .ReverseMap();
 
-            CreateMap<Bucket[], BucketRequestDTO>()
-                .ForMember(g => g.Items, m => m.MapFrom(s => s.Select(g => new OrderItemDTO
-                {
-                    ProductId = g.ProductId,
-                    Quantity = g.Quantity
-                }).ToList()));
 
-            CreateMap<Bucket[], BucketResponseDTO>()
+            CreateMap<BucketRequestDTO, Bucket>()
+                .ForMember(g => g.Items, m => m.MapFrom(s => s.Items))
+                .ForMember(g => g.UserId, m => m.Ignore());
+
+            CreateMap<OrderItemDTO, BucketItem>()
+                .ForMember(g => g.Bucket, m => m.Ignore())
+                .ForMember(g => g.BucketId, m => m.Ignore());
+
+            CreateMap<Bucket, BucketResponseDTO>()
                 .ForMember(g => g.SummaryPrice, m => m.Ignore())
-                .ForMember(g => g.Discount, m => m.Ignore())
-                .ForMember(g => g.Items, m => m.MapFrom(s => s.Select(g => new BucketItemDTO
-                {
-                    ProductId = g.ProductId,
-                    Quantity = g.Quantity,
-                }).ToList()));
+                .ForMember(g => g.Discount, m => m.Ignore());
+
+            CreateMap<BucketItem, BucketItemDTO>();
 
             CreateMap<DeliveryLocationDTO, OrderLocationDTO>()
                 .ForMember(g => g.DeliveryDate, m => m.MapFrom(s => s.DeliveryDate.UtcDateTime));

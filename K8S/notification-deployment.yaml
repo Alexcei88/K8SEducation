@@ -27,6 +27,11 @@ spec:
                 configMapKeyRef: 
                   name: homework-config
                   key: POSTGRES_PORT
+            - name: "Smtp__Password"
+              valueFrom:
+               secretKeyRef: 
+                  name: homework-secret
+                  key: GMAIL_PASSWORD  
           command:
             - sh
             - "-c"

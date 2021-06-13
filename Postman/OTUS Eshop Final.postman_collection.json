@@ -46,10 +46,7 @@
 					"script": {
 						"exec": [
 							"pm.test(\"empty bucket\", function() {\r",
-							"    pm.response.to.have.status(200);\r",
-							"\r",
-							"    const responseJson = pm.response.json();\r",
-							"    pm.expect(responseJson.items).to.eql([]);\r",
+							"    pm.response.to.have.status(404);\r",
 							"})"
 						],
 						"type": "text/javascript"
@@ -99,9 +96,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{eshopBaseUrl}}/api/bucket/{{userId1}}",
+					"raw": "{{eshopBaseUrlD}}/api/bucket/{{userId1}}",
 					"host": [
-						"{{eshopBaseUrl}}"
+						"{{eshopBaseUrlD}}"
 					],
 					"path": [
 						"api",
@@ -242,7 +239,8 @@
 							"pm.test(\"get product categories list successfully\", function() {\r",
 							"    pm.response.to.have.status(200);\r",
 							"\r",
-							"    pm.expect(responseJson.length).to.eql(2);\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.length).to.eql(1);\r",
 							"})\r",
 							""
 						],
@@ -689,95 +687,6 @@
 			"response": []
 		},
 		{
-			"name": "getNotifications",
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [
-							"setTimeout(function(){}, 4000);\r",
-							""
-						],
-						"type": "text/javascript"
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"pm.test(\"user has received a notification with success ordering\", function() {\r",
-							"    pm.response.to.have.status(200);\r",
-							"})"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"protocolProfileBehavior": {
-				"disabledSystemHeaders": {
-					"host": true
-				},
-				"disableBodyPruning": true
-			},
-			"request": {
-				"auth": {
-					"type": "basic",
-					"basic": [
-						{
-							"key": "username",
-							"value": "{{userId1}}",
-							"type": "string"
-						},
-						{
-							"key": "password",
-							"value": "{{password}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [
-					{
-						"key": "host",
-						"value": "arch.homework",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{notificationBaseUrl}}/api/notification/{{userId1}}?skip=3",
-					"host": [
-						"{{notificationBaseUrl}}"
-					],
-					"path": [
-						"api",
-						"notification",
-						"{{userId1}}"
-					],
-					"query": [
-						{
-							"key": null,
-							"value": null,
-							"disabled": true
-						},
-						{
-							"key": "skip",
-							"value": "3"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "getOrderLocation",
 			"event": [
 				{
@@ -845,9 +754,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{eshopBaseUrl}}/api/order/{{userId1}}/{{orderNumber}}/location",
+					"raw": "{{eshopBaseUrlD}}/api/order/{{userId1}}/{{orderNumber}}/location",
 					"host": [
-						"{{eshopBaseUrl}}"
+						"{{eshopBaseUrlD}}"
 					],
 					"path": [
 						"api",

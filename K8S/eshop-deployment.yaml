@@ -67,6 +67,11 @@ spec:
                configMapKeyRef: 
                   name: homework-config
                   key: DELIVERY_SERVICE_URL
+          - name: "Redis__Url"
+            valueFrom:
+               configMapKeyRef: 
+                  name: homework-config
+                  key: REDIS_URL
         volumeMounts:
           - name: config-volume
             mountPath: /app/config          

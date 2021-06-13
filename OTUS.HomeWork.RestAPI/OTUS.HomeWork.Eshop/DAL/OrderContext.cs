@@ -14,6 +14,8 @@ namespace OTUS.HomeWork.EShop.DAL
         public DbSet<Order> Orders { get; set; }
 
         public DbSet<Bucket> Buckets { get; set; }
+        public DbSet<BucketItem> BucketItems { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -31,7 +33,17 @@ namespace OTUS.HomeWork.EShop.DAL
                 .HasIndex(c => c.IdempotencyKey)
                 .IsUnique();
 
-            modelBuilder.Entity<Bucket>().HasKey(g => new { g.UserId, g.ProductId });
+            modelBuilder.Entity<Bucket>().HasKey(g => new { g.Id });
+            modelBuilder.Entity<BucketItem>().HasKey(g => new { g.BucketId, g.ProductId });
+
+            modelBuilder.Entity<Bucket>()
+                .HasMany<BucketItem>()
+                .WithOne(g => g.Bucket)
+                .HasForeignKey(g => g.BucketId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
+
+
         }
     }
 }

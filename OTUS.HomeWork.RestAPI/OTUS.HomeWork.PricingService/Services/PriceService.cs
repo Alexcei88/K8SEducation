@@ -37,7 +37,7 @@ namespace OTUS.HomeWork.PricingService.Services
                 var price = basePrices.First(k => k.Id == Guid.Parse(prod.ProductId)).BasePrice;
                 result.SummaryPrice += price * prod.Quantity;
             }
-            result.Discount = discount;
+            result.Discount = 100 - discount * 100;
             result.SummaryPrice *= discount;
             result.SummaryPrice = decimal.Round(result.SummaryPrice, 2);
             return result;

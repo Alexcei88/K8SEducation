@@ -35,6 +35,8 @@ namespace OTUS.HomeWork.DeliveryService.Controllers
         public async Task<ActionResult<DeliveryLocationDTO>> GetLocation([FromRoute] string orderNumber)
         {
             var deliveryLocation = await _deliveryService.GetLocationOfOrderAsync(orderNumber);
+            if (deliveryLocation == null)
+                return NotFound();
             return Ok(_mapper.Map<DeliveryLocationDTO>(_mapper.Map<DeliveryLocationDTO>(deliveryLocation)));
         }
     }

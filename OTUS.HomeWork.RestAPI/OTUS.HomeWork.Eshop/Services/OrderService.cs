@@ -14,6 +14,7 @@ using OTUS.HomeWork.EShop.Monitoring;
 using OTUS.HomeWork.Common;
 using OTUS.HomeWork.Clients.Warehouse;
 using OTUS.HomeWork.RestAPI.Abstraction.DAL;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace OTUS.HomeWork.EShop.Services
 {
@@ -26,14 +27,16 @@ namespace OTUS.HomeWork.EShop.Services
         private readonly RabbitMQMessageSender _mqSender;
         private readonly MetricReporter _metricReporter;
         private readonly UserContext _userContext;
-            
+        private readonly IDistributedCache _distributedCache;
+
         public OrderService(OrderContext orderContext
             , UserContext userContext
             , BucketRepository bucketRepository
             , PriceServiceClient pricingClient
             , WarehouseServiceClient warehouseServiceClient
             , RabbitMQMessageSender mqSender
-            , MetricReporter metricReporter)
+            , MetricReporter metricReporter
+            , IDistributedCache distributedCache)
         {
             _orderContext = orderContext;
             _userContext = userContext;
@@ -42,6 +45,7 @@ namespace OTUS.HomeWork.EShop.Services
             _bucketRepository = bucketRepository;
             _mqSender = mqSender;
             _metricReporter = metricReporter;
+            _distributedCache = distributedCache;
         }
 
         public async Task<Order> CreateOrderAsync(Guid userId, CreateOrderDTO orderRequest)
@@ -55,23 +59,23 @@ namespace OTUS.HomeWork.EShop.Services
             bool wasReserveProducts = false;
             try
             {
-                var products = await _bucketRepository.GetBucketForUserAsync(userId);
-                if (!products.Any())
+                var bucket = await _bucketRepository.GetBucketForUserAsync(userId);
+                if (bucket == null || !bucket.Items.Any())
                     return new Order
                     {
                         Status = OrderStatus.Error
                     };
+                
+                // 1. расчитываем стоимость                
+                (decimal totalPrice, decimal discount) price = await CalculateTotalPriceAsync(bucket, userId);
 
-                var orderItems = products.Select(g => new OrderItem
+                // 2. сохраняем заказ в БД
+                var orderItems = bucket.Items.Select(g => new OrderItem
                 {
                     ProductId = g.ProductId,
                     Quantity = g.Quantity
                 }).ToList();
 
-                // 1. расчитываем стоимость
-                (decimal totalPrice, decimal discount) price = await CalculateTotalPriceAsync(orderItems, userId);
-
-                // 2. сохраняем заказ в БД
                 using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
                 {
                     order = new Order
@@ -144,17 +148,32 @@ namespace OTUS.HomeWork.EShop.Services
             return order;
         }
 
-        public async Task<(decimal summaryPrice, decimal discount)> CalculateTotalPriceAsync(List<OrderItem> items, Guid userId)
+        public async Task<(decimal summaryPrice, decimal discount)> CalculateTotalPriceAsync(Bucket bucket, Guid userId, bool force = false)
         {
-            var response = await _pricingClient.PriceAsync(userId, new PriceRequestDTO
+            string priceCacheKey = "bucketPrice" + bucket.Id;
+            string discountCacheKey = "bucketDiscount" + bucket.Id;
+            var precalculatePrice = await _distributedCache.GetAsync(priceCacheKey);
+            var precalculateDiscount = await _distributedCache.GetAsync(discountCacheKey);
+            if (!force && precalculatePrice != null && precalculateDiscount != null)
             {
-                Products = items.Select(g => new PProductDTO
+                return (BitconverterExt.ToDecimal(precalculatePrice), BitconverterExt.ToDecimal(precalculateDiscount));
+            }
+            else
+            {
+                var response = await _pricingClient.PriceAsync(userId, new PriceRequestDTO
                 {
-                    ProductId = g.ProductId.ToString(),
-                    Quantity = g.Quantity
-                }).ToArray()
-            }); 
-            return (response.SummaryPrice, response.Discount);
+                    Products = bucket.Items.Select(g => new PProductDTO
+                    {
+                        ProductId = g.ProductId.ToString(),
+                        Quantity = g.Quantity
+                    }).ToArray()
+                });
+
+                _distributedCache.Set(priceCacheKey, BitconverterExt.GetBytes(response.SummaryPrice) , new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = new TimeSpan(0, 5, 0) });
+                _distributedCache.Set(discountCacheKey, BitconverterExt.GetBytes(response.Discount), new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = new TimeSpan(0, 5, 0) });
+
+                return (response.SummaryPrice, response.Discount);
+            }
         }
 
         public async Task<Order> OrderWasPaid(PaymentResultDTO paymentResultDTO, Guid orderId)

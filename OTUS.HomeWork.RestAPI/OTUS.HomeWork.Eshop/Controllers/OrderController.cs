@@ -52,9 +52,9 @@ namespace OTUS.HomeWork.EShop.Controllers
         public async Task<ActionResult<OrderLocationDTO>> GetLocation([FromRoute] Guid userId, [FromRoute]string orderNumber)
         {
             DeliveryLocationDTO location = await _deliveryServiceClient.DeliveryAsync(orderNumber);
+            if (location == null)
+                return NotFound();
             return Ok(_mapper.Map<OrderLocationDTO>(location));
         }
-
-
     }
 }

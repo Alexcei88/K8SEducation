@@ -64,7 +64,7 @@ namespace OTUS.HomeWork.NotificationService.Extensions
                             case OrderReadyToDelivery.TYPE:
                                 {
                                     var orderToDelivery = serializer.DeserializeRequest<OrderReadyToDelivery>(body);
-                                    smtpService.SendEmail("Товар отгружен", $"Заказ ${orderToDelivery.OrderNumber} отгружен. Вы можете отслеживать заказ на сайте http://гдемойтовар"
+                                    smtpService.SendEmail("Товар отгружен", $"Заказ ${orderToDelivery.OrderNumber} отгружен. Отслеживайте местоположения заказа на сайте http://гдемойтовар/{orderToDelivery.OrderNumber}"
                                         , orderToDelivery.UserEmail);
                                 }
                                 break;
