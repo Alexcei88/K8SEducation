@@ -59,5 +59,23 @@ namespace OTUS.HomeWork.WarehouseService.Controllers
             var products = await _productRepository.GetProductsAsync(productIds);
             return Ok(_mapper.Map<ProductPriceDTO[]>(products));
         }
+
+        [HttpGet("productInfo")]
+        public async Task<ActionResult<ProductDTO[]>> GetProducts([FromQuery] Guid[] productIds)
+        {
+            var products = await _productRepository.GetProductsAsync(productIds);
+            var counters = await _productRepository.GetProductCounterAsync(products.Select(g => g.Id));
+            List<ProductDTO> result = new();
+            foreach (var product in products)
+            {
+                ProductDTO productDTO = _mapper.Map<ProductDTO>(product);
+                productDTO.RemainCount = counters.First(g => g.ProductId == product.Id).RemainCount - counters.First(g => g.ProductId == product.Id).ReserveCount;
+                if (productDTO.RemainCount < 0)
+                    productDTO.RemainCount = 0;
+                result.Add(productDTO);
+            }
+
+            return Ok(result);
+        }
     }
 }

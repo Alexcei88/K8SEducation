@@ -227,6 +227,7 @@ namespace OTUS.HomeWork.EShop.Services
             {
                 order.Status = OrderStatus.Error;
                 // 1. снимаем с резервирования
+                _warehouseServiceClient.AddHeader(Constants.USERID_HEADER, order.UserId.ToString());
                 await _warehouseServiceClient.CancelAsync(order.OrderNumber.ToString());
                 // 2. отправляем уведомление о плохой оплате
                 await _mqSender.SendMessageAsync(new OrderCreatedError

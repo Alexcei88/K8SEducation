@@ -292,6 +292,85 @@ namespace OTUS.HomeWork.Clients.Warehouse
 
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
+        public System.Threading.Tasks.Task<System.Collections.Generic.ICollection<ProductDTO>> ProductInfoAsync(System.Collections.Generic.IEnumerable<System.Guid> productIds)
+        {
+            return ProductInfoAsync(productIds, System.Threading.CancellationToken.None);
+        }
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>Success</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<ProductDTO>> ProductInfoAsync(System.Collections.Generic.IEnumerable<System.Guid> productIds, System.Threading.CancellationToken cancellationToken)
+        {
+            var urlBuilder_ = new System.Text.StringBuilder();
+            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/product/productInfo?");
+            if (productIds != null)
+            {
+                foreach (var item_ in productIds) { urlBuilder_.Append(System.Uri.EscapeDataString("productIds") + "=").Append(System.Uri.EscapeDataString(ConvertToString(item_, System.Globalization.CultureInfo.InvariantCulture))).Append("&"); }
+            }
+            urlBuilder_.Length--;
+
+            var client_ = _httpClient;
+            var disposeClient_ = false;
+            try
+            {
+                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                {
+                    request_.Method = new System.Net.Http.HttpMethod("GET");
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
+
+                    PrepareRequest(client_, request_, urlBuilder_);
+
+                    var url_ = urlBuilder_.ToString();
+                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+
+                    PrepareRequest(client_, request_, url_);
+
+                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                    var disposeResponse_ = true;
+                    try
+                    {
+                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        if (response_.Content != null && response_.Content.Headers != null)
+                        {
+                            foreach (var item_ in response_.Content.Headers)
+                                headers_[item_.Key] = item_.Value;
+                        }
+
+                        ProcessResponse(client_, response_);
+
+                        var status_ = (int)response_.StatusCode;
+                        if (status_ == 200)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<ProductDTO>>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            return objectResponse_.Object;
+                        }
+                        else
+                        {
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                        }
+                    }
+                    finally
+                    {
+                        if (disposeResponse_)
+                            response_.Dispose();
+                    }
+                }
+            }
+            finally
+            {
+                if (disposeClient_)
+                    client_.Dispose();
+            }
+        }
+
+        /// <returns>Success</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
         public System.Threading.Tasks.Task<ReserveProductResponseDTO> ReserveAsync(ReserveProductRequestDTO body)
         {
             return ReserveAsync(body, System.Threading.CancellationToken.None);
@@ -655,7 +734,7 @@ namespace OTUS.HomeWork.Clients.Warehouse
         public System.Guid Id { get; set; }
 
         [Newtonsoft.Json.JsonProperty("basePrice", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public decimal BasePrice { get; set; }
+        public double BasePrice { get; set; }
 
 
     }
