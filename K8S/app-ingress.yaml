@@ -72,8 +72,13 @@ metadata:
     nginx.ingress.kubernetes.io/server-snippet: |
       proxy_intercept_errors on;
       error_page 404 = @custom_404;
-
+      error_page 503 = @custom_503;
+    
       location @custom_404 {
+          return 200;
+      }
+
+      location @custom_503 {
           return 200;
       }
 spec:
@@ -85,7 +90,10 @@ spec:
           serviceName: oauth2-proxy
           servicePort: 4180
         path: /signout
-
+  tls:
+  - hosts:
+    - arch.homework
+    secretName: test-tls-secret
 ---
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress

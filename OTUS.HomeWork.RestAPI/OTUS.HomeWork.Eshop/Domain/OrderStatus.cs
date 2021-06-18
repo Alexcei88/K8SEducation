@@ -13,7 +13,7 @@ namespace OTUS.HomeWork.EShop.Domain
         Processing = 20,
 
         /// <summary>
-        /// Complete(was shipment)
+        /// Complete(was shipment request)
         /// </summary>
         Complete = 30,
 
